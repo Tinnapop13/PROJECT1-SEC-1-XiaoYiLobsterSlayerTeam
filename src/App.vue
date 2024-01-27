@@ -11,7 +11,6 @@ const push_score = (user_score) => { score_counting.push(user_score) }
 </script>
 
 <template>
-	<h1>Simon Says</h1>
 </template>
 
 <style scoped>
