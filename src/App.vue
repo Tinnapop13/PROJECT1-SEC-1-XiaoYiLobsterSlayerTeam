@@ -68,4 +68,5 @@ const showTraceState = (buttonNumber) => {
 </template> 
 
 <style scoped>  
+
 </style>
