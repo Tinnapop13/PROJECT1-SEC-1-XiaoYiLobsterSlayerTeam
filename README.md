@@ -1,29 +1,15 @@
 # PROJECT1-SEC-1-XiaoYiLobsterSlayerTeam
+⭐
 
-This template should help get you started developing with Vue 3 in Vite.
+## Member
+- 65130500022 ณัฐศรัณย์ แซ่อึ่ง
+- 65130500023 ติณณภพ เทียนบาง
+- 65130500041 ปภังกร กิจสกุลรัตน์
+- 65130500046 พชรดล แตงพลับ
 
-## Recommended IDE Setup
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+<table align=center>
+  <th>
+    <img src="https://cdn.discordapp.com/attachments/1196805209381404682/1200079939706302576/Z.png?ex=65c4e08a&is=65b26b8a&hm=7b9c6f2bf49d2006dac6f93cfc10ce7daefa398d3f0f61ed0090bdc2e90552a6&" height="300" width="300" alt="lobster">
+  </th>
+</table>
