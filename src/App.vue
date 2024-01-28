@@ -1,6 +1,8 @@
 <script setup>
 
+
 import {ref, reactive} from "vue"
+
 
 const playerLog = ref([]) //[{score: x, round: x}]
 const playerScore = ref(1)
@@ -68,7 +70,6 @@ const showTraceState = (buttonNumber) => {
     }
   
 }
-
 </script>
 
 <template>
@@ -87,10 +88,8 @@ const showTraceState = (buttonNumber) => {
       <button class="btn btn-primary mt-10" @click="displayTrace">Start</button>
     </section>
   </div>
-  
-</template>
 
-<style scoped></style>
+</template> 
 
-
-
+<style scoped>
+</style>
