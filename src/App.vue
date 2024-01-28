@@ -1,9 +1,40 @@
 <script setup>
+import { ref } from "vue"
+
+const playerScore = ref(1)
+let gameRoundPointer = 0
+let traceButtonIndex = ref(-1)
+
+const displayTrace = () => {
+  const gameInterval = setInterval(() => {
+    const randomButtonId = randomNumber(4)
+    setTimeout(() => {traceButtonIndex.value = randomButtonId},500)
+    setTimeout(() => {traceButtonIndex.value = -1},750)
+    gameRoundPointer++
+    if (gameRoundPointer >= playerScore.value) {
+      clearInterval(gameInterval)
+      gameRoundPointer = 0
+    }
+  },750)
+}
+
+const randomNumber = (max) => {
+  return Math.floor(Math.random() * max);
+}
+
+const showTraceState = (buttonNumber)=>{
+  return {
+        'whitebtn': traceButtonIndex.value === buttonNumber,
+  }
+}
+
 </script>
 
 <template>
-  <h1>Simon Says</h1>
+   
 </template>
 
 <style scoped>
-</style>
+.whitebtn {
+  background-color: white;
+}</style>  
