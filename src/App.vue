@@ -31,25 +31,7 @@ const showTraceState = (buttonNumber)=>{
 </script>
 
 <template>
-   <div class="flex  justify-center items-center">
-    <button class="btn btn-square btn-outline m-2" :class="showTraceState(0)"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-        stroke="currentColor"></svg></button>
-    <button class="btn btn-square btn-outline m-2" :class="showTraceState(1)"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-        stroke="currentColor"></svg></button>
-  </div>
-
-  <div class="flex  justify-center items-center">
-    <button class="btn btn-square btn-outline m-2 " :class="showTraceState(2)"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-        stroke="currentColor"></svg></button>
-    <button class="btn btn-square btn-outline m-2" :class="showTraceState(3)"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-        stroke="currentColor"></svg></button>
-    </div>
-
-  <div class="flex justify-center">
-    <button class="btn btn-outline btn-accent text-center" @click="mainGame">Start</button>
-  </div>
-  
-
+   
 </template>
 
 <style scoped>
