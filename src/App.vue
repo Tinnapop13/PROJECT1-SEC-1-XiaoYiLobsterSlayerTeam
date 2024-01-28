@@ -1,5 +1,11 @@
 <script setup>
-import { ref } from "vue"
+import { ref } from 'vue'
+
+const playerLog = ref([]) //[{score: x, round: x}]
+const playerScore = ref(0)
+
+const scoreCounting = () => { return playerScore++ }
+const playerToLog = () => { playerLog.push({score: playerScore, round: playerScore}) }
 
 const playerScore = ref(1)
 let gameRoundPointer = 0
@@ -27,14 +33,12 @@ const showTraceState = (buttonNumber)=>{
         'whitebtn': traceButtonIndex.value === buttonNumber,
   }
 }
-
 </script>
 
 <template>
-   
 </template>
 
 <style scoped>
 .whitebtn {
   background-color: white;
-}</style>  
+}</style>
