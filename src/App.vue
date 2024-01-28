@@ -1,40 +1,55 @@
 <script setup>
 
-import { ref, reactive} from "vue"
+
+import {ref, reactive} from "vue"
+
 
 const playerLog = ref([]) //[{score: x, round: x}]
 const playerScore = ref(1)
 const scoreCounting = () => {
-  return playerScore++
+  return playerScore.value++
 }
 const playerToLog = () => {
   playerLog.push({score: playerScore, round: playerScore})
 }
 
 let gameRoundPointer = 0
-let traceButtonIndex = ref(-1)
+const traceButtonIndex = ref(-1)
+const traces = []
 
 const displayTrace = () => {
   const gameInterval = setInterval(() => {
     const randomButtonId = randomNumber(4)
 
     setTimeout(() => {
-      traceButtonIndex.value = randomButtonId
+      if(gameRoundPointer < playerScore.value){
+        traceButtonIndex.value = traces[gameRoundPointer-1]
+      }
+      else{
+        traceButtonIndex.value = randomButtonId
+        traces.push(traceButtonIndex.value)
+        console.log(traces);
+      }
+      console.log(gameRoundPointer);
+      
+      
     }, 500)
+
     setTimeout(() => {
       traceButtonIndex.value = -1
+      
     }, 750)
 
-    setTimeout(() => {traceButtonIndex.value = randomButtonId},500)
-    setTimeout(() => {traceButtonIndex.value = -1},750)
-
     gameRoundPointer++
-    if (gameRoundPointer >= playerScore.value) {
+    if (gameRoundPointer > playerScore.value) {
       clearInterval(gameInterval)
       gameRoundPointer = 0
       playerScore.value++
     }
+
   }, 750)
+  
+  
 }
 
 const randomNumber = (max) => {
@@ -53,7 +68,7 @@ const showTraceState = (buttonNumber) => {
     "bg-[#fff]": traceButtonIndex.value === buttonNumber,
     [buttons[buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
     }
-  },750)
+  
 }
 </script>
 
