@@ -1,5 +1,6 @@
 <script setup>
-import {openBlock, ref, reactive} from "vue"
+
+import { ref, reactive} from "vue"
 
 const playerLog = ref([]) //[{score: x, round: x}]
 const playerScore = ref(1)
@@ -16,12 +17,17 @@ let traceButtonIndex = ref(-1)
 const displayTrace = () => {
   const gameInterval = setInterval(() => {
     const randomButtonId = randomNumber(4)
+
     setTimeout(() => {
       traceButtonIndex.value = randomButtonId
     }, 500)
     setTimeout(() => {
       traceButtonIndex.value = -1
     }, 750)
+
+    setTimeout(() => {traceButtonIndex.value = randomButtonId},500)
+    setTimeout(() => {traceButtonIndex.value = -1},750)
+
     gameRoundPointer++
     if (gameRoundPointer >= playerScore.value) {
       clearInterval(gameInterval)
@@ -46,11 +52,13 @@ const showTraceState = (buttonNumber) => {
   return {
     "bg-[#fff]": traceButtonIndex.value === buttonNumber,
     [buttons[buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
-  }
+    }
+  },750)
 }
 </script>
 
 <template>
+
   <div class="w-full h-full">
     <section class="min-h-screen flex flex-col items-center justify-center">
       <h1 class="font-bold text-5xl py-20">Simon Says</h1>
@@ -65,8 +73,8 @@ const showTraceState = (buttonNumber) => {
       <button class="btn btn-primary mt-10" @click="displayTrace">Start</button>
     </section>
   </div>
+
 </template> 
 
-<style scoped>  
-
+<style scoped>
 </style>
