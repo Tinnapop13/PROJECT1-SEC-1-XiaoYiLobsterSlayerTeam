@@ -1,12 +1,12 @@
 <script setup>
 
-import { ref } from 'vue';
+import { ref } from 'vue'
 
-const user_event_log = ref([]) //[{x: x, x: x}]
-const score_counting = ref([]) //[{round: x, score: x}]
+const playerLog = ref([]) //[{score: x, round: x}]
+const playerScore = ref(0)
 
-const push_log = (user_event) => { user_event_log.push(user_event) }
-const push_score = (user_score) => { score_counting.push(user_score) }
+const scoreCounting = () => { return playerScore++ }
+const playerToLog = () => { playerLog.push({score: playerScore, round: playerScore}) }
 
 </script>
 
