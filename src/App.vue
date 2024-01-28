@@ -55,7 +55,7 @@ const showTraceState = (buttonNumber) => {
     }
   },750)
 }
-
+</script>
 
 <template>
 
@@ -76,10 +76,5 @@ const showTraceState = (buttonNumber) => {
 
 </template> 
 
-
-
-
-<style scoped></style>
-
-
-
+<style scoped>
+</style>
