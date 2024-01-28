@@ -1,6 +1,6 @@
 <script setup>
 
-import {openBlock, ref, reactive} from "vue"
+import { ref, reactive} from "vue"
 
 const playerLog = ref([]) //[{score: x, round: x}]
 const playerScore = ref(1)
@@ -75,6 +75,7 @@ const showTraceState = (buttonNumber) => {
   </div>
 
 </template> 
+
 
 
 
