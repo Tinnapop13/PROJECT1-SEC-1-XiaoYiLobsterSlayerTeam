@@ -65,8 +65,8 @@ const showTraceState = (buttonNumber) => {
       <button class="btn btn-primary mt-10" @click="displayTrace">Start</button>
     </section>
   </div>
-</template> 
+</template>
 
-<style scoped>  
+<style scoped>
 
 </style>
