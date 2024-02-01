@@ -30,6 +30,7 @@ const traces = []
 
 const displayTrace = () => {
   isPlaying = false
+  playerTimer()
   const gameInterval = setInterval(() => {
     const randomButtonId = randomNumber(4)
 
@@ -43,15 +44,10 @@ const displayTrace = () => {
         traces.push(traceButtonIndex.value)
        
       }
-      
-      
-      
     }, 500)
 
     setTimeout(() => {
-      traceButtonIndex.value = -1
-      
-      
+      traceButtonIndex.value = -1  
     }, 750)
 
     gameRoundPointer++
@@ -60,12 +56,8 @@ const displayTrace = () => {
       clearInterval(gameInterval)
       gameRoundPointer = 0
       isPlaying = true
-      
     }
-    
-    
   }, 750)
-  
 }
 
 const randomNumber = (max) => {
@@ -115,7 +107,7 @@ const playerClick = (event) => {
     round.value = 0
     isPlaying = false
   }
-
+}
 
 const playerTimer = () => {
         const timer = setInterval(() => {
@@ -178,15 +170,8 @@ const calculateScore = () => {
     </section>
   </div>
   
-          
-  
 </template> 
-
-
-
-
 
 <style scoped>
 
 </style>
-
