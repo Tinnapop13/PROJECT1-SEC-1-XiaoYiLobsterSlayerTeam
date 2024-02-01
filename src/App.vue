@@ -81,10 +81,8 @@ const start = () => {
   showPopupMode.value = false
 }
 
-// const end = () => {
-//   showHomePage.value = true
-//   showGamePage.value = false
-// }
+
+
 </script>
 
 <template>
