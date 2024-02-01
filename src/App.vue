@@ -1,14 +1,14 @@
 <script setup>
 import {ref, reactive} from "vue"
 
-let score = ref(0)
+// let score = ref(0)
 const playerLog = ref([]) //[{score: x, round: x}]
-const playerScore = ref(1)
+const round = ref(1)
 const scoreCounting = () => {
-  return playerScore.value++
+  return round.value++
 }
 const playerToLog = () => {
-  playerLog.push({score: playerScore, round: playerScore})
+  playerLog.push({score: round, round: round})
 }
 
 let gameRoundPointer = 0
@@ -16,19 +16,21 @@ const traceButtonIndex = ref(-1)
 const traces = []
 
 const displayTrace = () => {
+  isPlaying = false
   const gameInterval = setInterval(() => {
     const randomButtonId = randomNumber(4)
 
     setTimeout(() => {
-      if(gameRoundPointer < playerScore.value){
+      if(gameRoundPointer < round.value){
         traceButtonIndex.value = traces[gameRoundPointer-1]
+        
       }
       else{
         traceButtonIndex.value = randomButtonId
         traces.push(traceButtonIndex.value)
-        // console.log(traces)
+       
       }
-      // console.log(gameRoundPointer)
+      
       
       
     }, 500)
@@ -36,15 +38,19 @@ const displayTrace = () => {
     setTimeout(() => {
       traceButtonIndex.value = -1
       
+      
     }, 750)
 
     gameRoundPointer++
-    if (gameRoundPointer > playerScore.value) {
+    if (gameRoundPointer > round.value) {
+      console.log(traces)
       clearInterval(gameInterval)
       gameRoundPointer = 0
-      playerScore.value++
+      isPlaying = true
+      
     }
-
+    
+    
   }, 750)
   
 }
@@ -68,7 +74,9 @@ const showTraceState = (buttonNumber) => {
   
 }
 
-let logLst = []
+const logLst = []
+let logIndex = 0
+let isPlaying = false
 
 const playerClick = (event) => {
   let itemClick = Number(event.target.id)
@@ -77,14 +85,22 @@ const playerClick = (event) => {
   setTimeout(() => {
     traceButtonIndex.value = -1
   }, 100)
-  if( logLst.length === traces.length && JSON.stringify(logLst) !== JSON.stringify(traces)){
-    console.log("lose")
-    score.value = 0
+  if(logLst[logIndex] === traces[logIndex] ){
+    logIndex++
+    if( logLst.length === traces.length ){
+      logLst.splice(0,logLst.length) // reset Array
+      logIndex = 0
+      round.value++
+      displayTrace()
+    }
   }
-  if(JSON.stringify(logLst) === JSON.stringify(traces)){
-    logLst = []
-    displayTrace()
-    score.value++
+  else{
+    console.log('lose')
+    logLst.splice(0,logLst.length) // reset Array
+    traces.splice(0,traces.length) // reset Array
+    logIndex = 0
+    round.value = 0
+    isPlaying = false
   }
 
 }
@@ -92,7 +108,7 @@ const playerClick = (event) => {
 </script>
 
 <template>
-  <div><h3>Score : {{ score }}</h3></div>
+  <div><h3>Round : {{ round }}</h3></div>
   <div class="w-full h-full">
     <section class="min-h-screen flex flex-col items-center justify-center">
       <h1 class="font-bold text-5xl py-20">Simon Says</h1>
@@ -103,9 +119,10 @@ const playerClick = (event) => {
           :key="buttonNumber"
           class="rounded-md h-44 hover:brightness-90" @click="playerClick"
           :id="buttonNumber.number"
+          :disabled="!isPlaying"
         ></button>
       </main>
-      <button class="btn btn-primary mt-10" @click="displayTrace">Start</button>
+      <button class="btn btn-primary mt-10" @click="displayTrace" :disabled="isPlaying">Start</button>
     </section>
   </div>
   
