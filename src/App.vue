@@ -1,6 +1,11 @@
 <script setup>
 import {ref, reactive} from "vue"
 
+const showHomePage = ref(true)
+const showGamePage = ref(false)
+const showPopupTutorial = ref(false)
+const showPopupMode = ref(false)
+
 const playerLog = ref([])
 const isEndPopup = ref(false)
 const playerScore = ref(1)
@@ -10,68 +15,62 @@ const round = ref(1)
 
 const defaultTimes = ref(59)
 
+const togglePopupMode = () => {
+  showPopupMode.value = !showPopupMode.value
+}
+
+const togglePopupTutorial = () => {
+  showPopupTutorial.value = !showPopupTutorial.value
+}
+
+const startToggle = () => {
+  showGamePage.value = true
+  showHomePage.value = false
+  showPopupMode.value = false
+}
+
 const firstUint = ref(defaultTimes.value)
 const secondUint = ref(defaultTimes.value)
 
 const playerToLog = () => {
-        playerLog.value.push({ round: playerRound.value, score: playerScore.value, time: sumTimes.value })
+  playerLog.value.push({
+    round: playerRound.value,
+    score: playerScore.value,
+    time: sumTimes.value,
+  })
 }
 
 let gameRoundPointer = 0
 const traceButtonIndex = ref(-1)
 const traces = []
 
-const start = () => {
-  showGamePage.value = true
-  showHomePage.value = false
-}
 
-const playerTimer = () => {
-        const timer = setInterval(() => {
-                firstUint.value--
-
-                if (firstUint.value < 10) firstUint.value = `0${firstUint.value}`
-
-                if (firstUint.value == 0) {
-                        secondUint.value--
-                        if (secondUint.value < 10) secondUint.value = `0${secondUint.value}`
-                        firstUint.value = 59
-                }
-
-                if (secondUint.value == 0) {
-                        clearInterval(timer)
-                        sumTimes.value = `${secondUint.value}:${firstUint.value}`
-                        playerToLog()
-                        console.log(playerLog.value)
-                        firstUint.value = defaultTimes.value
-                        secondUint.value = defaultTimes.value
-                        isEndPopup.value = true
-                }
-        }, 1000)
-}
 
 const displayTrace = () => {
   isPlaying = false
   playerTimer()
   const gameInterval = setInterval(() => {
     const randomButtonId = randomNumber(4)
+
     setTimeout(() => {
       if(gameRoundPointer < round.value){
         traceButtonIndex.value = traces[gameRoundPointer-1]
-
+        
       }
       else{
         traceButtonIndex.value = randomButtonId
         traces.push(traceButtonIndex.value)
+       
       }
     }, 500)
 
     setTimeout(() => {
-      traceButtonIndex.value = -1
+      traceButtonIndex.value = -1  
     }, 750)
 
     gameRoundPointer++
-    if (gameRoundPointer > playerScore.value) {
+    if (gameRoundPointer > round.value) {
+      console.log(traces)
       clearInterval(gameInterval)
       gameRoundPointer = 0
       isPlaying = true
@@ -125,6 +124,31 @@ const playerClick = (event) => {
     round.value = 0
     isPlaying = false
   }
+}
+
+const playerTimer = () => {
+  const timer = setInterval(() => {
+    firstUint.value--
+
+    if (firstUint.value < 10) firstUint.value = `0${firstUint.value}`
+
+    if (firstUint.value == 0) {
+      secondUint.value--
+      if (secondUint.value < 10) secondUint.value = `0${secondUint.value}`
+      firstUint.value = 59
+    }
+
+    if (secondUint.value == 0) {
+      clearInterval(timer)
+      sumTimes.value = `${secondUint.value}:${firstUint.value}`
+      playerToLog()
+      console.log(playerLog.value)
+      firstUint.value = defaultTimes.value
+      secondUint.value = defaultTimes.value
+      isEndPopup.value = true
+    }
+  }, 1000)
+}
 
 const calculateScore = () => {
         // Temp....
@@ -150,8 +174,7 @@ const calculateScore = () => {
       >
         <div class="flex flex-col justify-center">
           <h1 class="text-2xl sm:text-7xl font-bold text-white">Simon Says</h1>
-          <span class="countdown font-mono text-2xl"
-            >{{ secondUint }} : {{ firstUint }}</span
+
           >
           <p class="text-gray-400 py-4 max-w-md">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas quos
@@ -215,7 +238,10 @@ const calculateScore = () => {
           </div>
         </div>
 
-        <button @click="start" class="btn btn-primary text-white w-20 h-10">
+        <button
+          @click="startToggle"
+          class="btn btn-primary text-white w-20 h-10"
+        >
           PLAY
         </button>
 
@@ -258,6 +284,9 @@ const calculateScore = () => {
       class="min-h-screen flex flex-col items-center justify-center"
     >
       <h1 class="font-bold text-5xl py-20">Simon Says</h1>
+      <span class="countdown font-mono text-2xl"
+        >{{ secondUint }} : {{ firstUint }}</span
+      >
       <main class="grid grid-cols-2 gap-x-5 gap-y-5 w-96 sm:h-96 max-sm:w-80">
         <button
           v-for="buttonNumber in buttons"
@@ -265,6 +294,7 @@ const calculateScore = () => {
           :key="buttonNumber"
           :id="buttonNumber.number"
           class="rounded-md h-44 hover:brightness-90 active:brightness-150"
+          @click="playerClick"
         ></button>
       </main>
       <button
