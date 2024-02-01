@@ -17,7 +17,6 @@ const secondUint = ref(defaultTimes.value)
 const scoreCounting = () => {
         return playerScore.value++
 }
-
 const playerToLog = () => {
         playerLog.value.push({ round: playerRound.value, score: playerScore.value, time: sumTimes.value })
 }
