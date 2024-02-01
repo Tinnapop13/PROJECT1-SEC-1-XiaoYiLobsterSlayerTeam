@@ -14,10 +14,6 @@ const defaultTimes = ref(59)
 const firstUint = ref(defaultTimes.value)
 const secondUint = ref(defaultTimes.value)
 
-const scoreCounting = () => {
-        return playerScore.value++
-}
-
 const playerToLog = () => {
         playerLog.value.push({ round: playerRound.value, score: playerScore.value, time: sumTimes.value })
 }
@@ -133,9 +129,8 @@ const randomNumber = (max) => {
 <template>
         <div class="w-full h-full">
                 <section class="min-h-screen flex flex-col items-center justify-center">
-                        <h1 class="font-bold text-5xl py-20">Simon Says</h1>
                         <span class="countdown font-mono text-2xl">{{ secondUint }} : {{ firstUint }}</span>
-                        <br>
+                        <h1 class="font-bold text-5xl py-20">Simon Says</h1>
                         <main class="grid grid-cols-2 auto-rows-auto gap-x-5 gap-y-5 w-96 h-96">
                                 <button v-for="buttonNumber in buttons" :class="showTraceState(buttonNumber.number)"
                                         :key="buttonNumber" class="rounded-md h-44 hover:brightness-90"></button>
