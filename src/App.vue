@@ -3,17 +3,23 @@
 import { ref, reactive } from "vue"
 
 
-const playerLog = ref([]) //[{round: x, score: x, time: x}]
+const playerLog = ref([])
+const isPopup = ref(false)
 const playerScore = ref(1)
+const playerRound = ref(0)
 const sumTimes = ref(0)
-const firstUint = ref(59)
-const secondUint = ref(59)
+
+const defaultTimes = ref(59)
+
+const firstUint = ref(defaultTimes.value)
+const secondUint = ref(defaultTimes.value)
 
 const scoreCounting = () => {
         return playerScore.value++
 }
+
 const playerToLog = () => {
-        playerLog.value.push({ round: 'x', score: playerScore, time: sumTimes.value })
+        playerLog.value.push({ round: playerRound.value, score: playerScore.value, time: sumTimes.value })
 }
 
 let gameRoundPointer = 0
@@ -36,10 +42,12 @@ const playerTimer = () => {
                         clearInterval(timer)
                         sumTimes.value = `${secondUint.value}:${firstUint.value}`
                         playerToLog()
-                        firstUint.value = '00'
-                        secondUint.value = '00'
+                        console.log(playerLog.value)
+                        firstUint.value = defaultTimes.value
+                        secondUint.value = defaultTimes.value
+                        isPopup.value = true
                 }
-        }, 1000)
+        }, 1)
 }
 
 const calculateScore = () => {
@@ -56,6 +64,7 @@ const calculateScore = () => {
 
 const displayTrace = () => {
         playerTimer()
+        playerRound.value++
         const gameInterval = setInterval(() => {
                 const randomButtonId = randomNumber(4)
 
@@ -125,13 +134,17 @@ const randomNumber = (max) => {
         <div class="w-full h-full">
                 <section class="min-h-screen flex flex-col items-center justify-center">
                         <h1 class="font-bold text-5xl py-20">Simon Says</h1>
-                        {{ secondUint }} : {{ firstUint }}
+                        <span class="countdown font-mono text-2xl">{{ secondUint }} : {{ firstUint }}</span>
+                        <br>
                         <main class="grid grid-cols-2 auto-rows-auto gap-x-5 gap-y-5 w-96 h-96">
                                 <button v-for="buttonNumber in buttons" :class="showTraceState(buttonNumber.number)"
                                         :key="buttonNumber" class="rounded-md h-44 hover:brightness-90"></button>
                         </main>
                         <div>
                                 <button class="btn btn-primary mt-10" @click="displayTrace">Start</button>
+                        </div>
+                        <div class="w-full h-full" v-if="isPopup">
+                                
                         </div>
                 </section>
         </div>
