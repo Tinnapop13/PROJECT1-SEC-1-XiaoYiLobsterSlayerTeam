@@ -3,7 +3,10 @@ import {ref, reactive} from "vue"
 
 const playerLog = ref([]) //[{score: x, round: x}]
 const playerScore = ref(1)
-const isGameStart = ref(true)
+const showHomePage = ref(true)
+const showGamePage = ref(false)
+const showPopupTutorial = ref(false)
+const showPopupMode = ref(false)
 
 const scoreCounting = () => {
   return playerScore.value++
@@ -61,12 +64,6 @@ const showTraceState = (buttonNumber) => {
   }
 }
 
-const showHomePage = ref(true)
-const showGamePage = ref(false)
-const showPopupTutorial = ref(false)
-const showPopupMode = ref(false)
-// const showScore = ref(false)
-
 const togglePopupTutorial = () => {
   showPopupTutorial.value = !showPopupTutorial.value
 }
@@ -80,9 +77,6 @@ const start = () => {
   showHomePage.value = false
   showPopupMode.value = false
 }
-
-
-
 </script>
 
 <template>
@@ -163,12 +157,12 @@ const start = () => {
           PLAY
         </button>
 
-        <!-- <button
+        <button
           @click="togglePopupMode"
           class="btn btn-warning  text-white px-4 py-2 mt-4"
         >
           Close
-        </button> -->
+        </button>
       </div>
     </section>
 
@@ -214,7 +208,7 @@ const start = () => {
         Start
       </button>
     </section>
-  </div>  
+  </div>
 </template>
 
 <style scoped></style>
