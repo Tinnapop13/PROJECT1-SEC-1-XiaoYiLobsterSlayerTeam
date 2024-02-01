@@ -3,7 +3,7 @@
 import { ref, reactive } from "vue"
 
 
-const playerLog = ref([]) //[{score: x, round: x, time: x}]
+const playerLog = ref([]) //[{round: x, score: x, time: x}]
 const playerScore = ref(1)
 const sumTimes = ref(0)
 const firstUint = ref(59)
@@ -13,7 +13,7 @@ const scoreCounting = () => {
         return playerScore.value++
 }
 const playerToLog = () => {
-        playerLog.value.push({ score: playerScore, round: 'x', time: sumTimes.value })
+        playerLog.value.push({ round: 'x', score: playerScore, time: sumTimes.value })
 }
 
 let gameRoundPointer = 0
