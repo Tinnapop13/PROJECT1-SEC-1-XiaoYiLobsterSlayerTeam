@@ -1,33 +1,69 @@
 <script setup>
 import {ref, reactive} from "vue"
 
-const playerLog = ref([]) //[{score: x, round: x}]
+const playerLog = ref([])
+const isEndPopup = ref(false)
 const playerScore = ref(1)
-const isGameStart = ref(true)
+const playerRound = ref(0)
+const sumTimes = ref(0)
+const round = ref(1)
 
-const scoreCounting = () => {
-  return playerScore.value++
-}
+const defaultTimes = ref(59)
+
+const firstUint = ref(defaultTimes.value)
+const secondUint = ref(defaultTimes.value)
+
 const playerToLog = () => {
-  playerLog.push({score: playerScore, round: playerScore})
+        playerLog.value.push({ round: playerRound.value, score: playerScore.value, time: sumTimes.value })
 }
 
 let gameRoundPointer = 0
 const traceButtonIndex = ref(-1)
 const traces = []
 
+const start = () => {
+  showGamePage.value = true
+  showHomePage.value = false
+}
+
+const playerTimer = () => {
+        const timer = setInterval(() => {
+                firstUint.value--
+
+                if (firstUint.value < 10) firstUint.value = `0${firstUint.value}`
+
+                if (firstUint.value == 0) {
+                        secondUint.value--
+                        if (secondUint.value < 10) secondUint.value = `0${secondUint.value}`
+                        firstUint.value = 59
+                }
+
+                if (secondUint.value == 0) {
+                        clearInterval(timer)
+                        sumTimes.value = `${secondUint.value}:${firstUint.value}`
+                        playerToLog()
+                        console.log(playerLog.value)
+                        firstUint.value = defaultTimes.value
+                        secondUint.value = defaultTimes.value
+                        isEndPopup.value = true
+                }
+        }, 1000)
+}
+
 const displayTrace = () => {
+  isPlaying = false
+  playerTimer()
   const gameInterval = setInterval(() => {
     const randomButtonId = randomNumber(4)
     setTimeout(() => {
-      if (gameRoundPointer < playerScore.value) {
-        traceButtonIndex.value = traces[gameRoundPointer - 1]
-      } else {
+      if(gameRoundPointer < round.value){
+        traceButtonIndex.value = traces[gameRoundPointer-1]
+
+      }
+      else{
         traceButtonIndex.value = randomButtonId
         traces.push(traceButtonIndex.value)
-        console.log(traces)
       }
-      console.log(gameRoundPointer)
     }, 500)
 
     setTimeout(() => {
@@ -38,7 +74,7 @@ const displayTrace = () => {
     if (gameRoundPointer > playerScore.value) {
       clearInterval(gameInterval)
       gameRoundPointer = 0
-      playerScore.value++
+      isPlaying = true
     }
   }, 750)
 }
@@ -61,32 +97,62 @@ const showTraceState = (buttonNumber) => {
   }
 }
 
-const togglePopupTutorial = () => {
-  showPopupTutorial.value = !showPopupTutorial.value
-}
+const logLst = []
+let logIndex = 0
+let isPlaying = false
 
-const togglePopupMode = () => {
-  showPopupMode.value = !showPopupMode.value
-}
+const playerClick = (event) => {
+  let itemClick = Number(event.target.id)
+  traceButtonIndex.value = itemClick
+  logLst.push(itemClick)
+  setTimeout(() => {
+    traceButtonIndex.value = -1
+  }, 100)
+  if(logLst[logIndex] === traces[logIndex] ){
+    logIndex++
+    if( logLst.length === traces.length ){
+      logLst.splice(0,logLst.length) // reset Array
+      logIndex = 0
+      round.value++
+      displayTrace()
+    }
+  }
+  else{
+    console.log('lose')
+    logLst.splice(0,logLst.length) // reset Array
+    traces.splice(0,traces.length) // reset Array
+    logIndex = 0
+    round.value = 0
+    isPlaying = false
+  }
 
-const start = () => {
-  showGamePage.value = true
-  showHomePage.value = false
-  showPopupMode.value = false
+const calculateScore = () => {
+        // Temp....
+
+        // if (playerLog.score < 5 && timeCounter.value >= 10) {
+
+        // } else if (playerLog.score < 15 && timeCounter.value >= 20) {
+
+        // } else if (playerLog.score < 20 && timeCounter.value >= 30) {
+
+        // }
 }
 </script>
 
 <template>
-  <div class="w-full">
-    <!-- Home page  -->
-    <!-- TODO: gameDesc, mode, sizeOfBlock, playButton, tutorialBtn-->
+  <div>
+    <h3>Round : {{ round }}</h3>
+  </div>
+  <div class="w-full h-full">
     <section v-if="showHomePage" class="flex flex-col h-screen">
       <div
         class="max-w-screen-lg mx-auto flex flex-col gap-20 items-center justify-center h-screen px-4 md:flex-row"
       >
         <div class="flex flex-col justify-center">
           <h1 class="text-2xl sm:text-7xl font-bold text-white">Simon Says</h1>
-
+          <span class="countdown font-mono text-2xl"
+            >{{ secondUint }} : {{ firstUint }}</span
+          >
           <p class="text-gray-400 py-4 max-w-md">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas quos
             et vel recusandae illum, voluptates iusto deleniti dolorem obcaecati
@@ -111,7 +177,6 @@ const start = () => {
         >
           PLAY
         </button>
-        <!-- play -> mode -> game page -->
       </div>
 
       <div class="flex justify-end m-5">
@@ -198,10 +263,15 @@ const start = () => {
           v-for="buttonNumber in buttons"
           :class="showTraceState(buttonNumber.number)"
           :key="buttonNumber"
+          :id="buttonNumber.number"
           class="rounded-md h-44 hover:brightness-90 active:brightness-150"
         ></button>
       </main>
-      <button class="btn btn-primary mt-20 max-sm:size-" @click="displayTrace">
+      <button
+        class="btn btn-primary mt-20 max-sm:size-"
+        @click="displayTrace"
+        :disabled="isPlaying"
+      >
         Start
       </button>
     </section>
