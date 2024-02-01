@@ -4,7 +4,7 @@ import { ref, reactive } from "vue"
 
 
 const playerLog = ref([])
-const isPopup = ref(false)
+const isEndPopup = ref(false)
 const playerScore = ref(1)
 const playerRound = ref(0)
 const sumTimes = ref(0)
@@ -45,7 +45,7 @@ const playerTimer = () => {
                         console.log(playerLog.value)
                         firstUint.value = defaultTimes.value
                         secondUint.value = defaultTimes.value
-                        isPopup.value = true
+                        isEndPopup.value = true
                 }
         }, 1)
 }
@@ -143,8 +143,17 @@ const randomNumber = (max) => {
                         <div>
                                 <button class="btn btn-primary mt-10" @click="displayTrace">Start</button>
                         </div>
-                        <div class="w-full h-full" v-if="isPopup">
-                                
+                        <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" v-if="isEndPopup">
+                                <div class="w-80 text-center bg-white p-8 rounded-lg">
+                                        <h1 class="text-2xl font-bold mb-4">This is a tutorial</h1>
+
+                                        <div>
+                                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
+                                                incidunt mollitia alias enim! Hic pariatur, nisi magnam, accusamus
+                                                excepturi corporis dolorum, libero eos aspernatur sequi totam odio ab
+                                                recusandae facilis?
+                                        </div>
+                                </div>
                         </div>
                 </section>
         </div>
