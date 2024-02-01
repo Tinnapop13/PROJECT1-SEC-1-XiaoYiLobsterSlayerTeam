@@ -30,7 +30,10 @@ const traces = []
 
 const displayTrace = () => {
   isPlaying = false
+<<<<<<< HEAD
   playerTimer()
+=======
+>>>>>>> 544444c82e3ab984da62b98cb8cd2e81c2c826d0
   const gameInterval = setInterval(() => {
     const randomButtonId = randomNumber(4)
 
@@ -44,10 +47,22 @@ const displayTrace = () => {
         traces.push(traceButtonIndex.value)
        
       }
+<<<<<<< HEAD
     }, 500)
 
     setTimeout(() => {
       traceButtonIndex.value = -1  
+=======
+      
+      
+      
+    }, 500)
+
+    setTimeout(() => {
+      traceButtonIndex.value = -1
+      
+      
+>>>>>>> 544444c82e3ab984da62b98cb8cd2e81c2c826d0
     }, 750)
 
     gameRoundPointer++
@@ -56,8 +71,17 @@ const displayTrace = () => {
       clearInterval(gameInterval)
       gameRoundPointer = 0
       isPlaying = true
+<<<<<<< HEAD
     }
   }, 750)
+=======
+      
+    }
+    
+    
+  }, 750)
+  
+>>>>>>> 544444c82e3ab984da62b98cb8cd2e81c2c826d0
 }
 
 const randomNumber = (max) => {
@@ -107,7 +131,11 @@ const playerClick = (event) => {
     round.value = 0
     isPlaying = false
   }
+<<<<<<< HEAD
 }
+=======
+
+>>>>>>> 544444c82e3ab984da62b98cb8cd2e81c2c826d0
 
 const playerTimer = () => {
         const timer = setInterval(() => {
@@ -170,6 +198,11 @@ const calculateScore = () => {
     </section>
   </div>
   
+<<<<<<< HEAD
+=======
+          
+  
+>>>>>>> 544444c82e3ab984da62b98cb8cd2e81c2c826d0
 </template> 
 
 
@@ -179,3 +212,7 @@ const calculateScore = () => {
 <style scoped>
 
 </style>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 544444c82e3ab984da62b98cb8cd2e81c2c826d0
