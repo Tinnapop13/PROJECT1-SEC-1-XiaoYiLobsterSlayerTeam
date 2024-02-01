@@ -5,7 +5,6 @@ const playerLog = ref([]) //[{score: x, round: x}]
 const playerScore = ref(1)
 const isGameStart = ref(true)
 
-
 const scoreCounting = () => {
   return playerScore.value++
 }
@@ -61,9 +60,6 @@ const showTraceState = (buttonNumber) => {
     [buttons[buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
   }
 }
-
-
-
 
 const togglePopupTutorial = () => {
   showPopupTutorial.value = !showPopupTutorial.value
