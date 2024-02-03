@@ -68,8 +68,8 @@ const showTraceState = (buttonNumber) => {
     "bg-[#fff]": traceButtonIndex.value === buttonNumber,
     [buttons[buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
     }
-  
 }
+
 </script>
 
 <template>
