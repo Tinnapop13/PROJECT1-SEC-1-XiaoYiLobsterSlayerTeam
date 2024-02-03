@@ -163,7 +163,7 @@ const calculateScore = () => {
 }
 
 const i = ref(0)
-const progressBarWidth = ref("0%")
+const progressBarWidth = ref(0)
 
 const move = () => {
   if (i.value === 0) {
