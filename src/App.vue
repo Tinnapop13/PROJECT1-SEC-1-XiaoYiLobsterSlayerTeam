@@ -11,7 +11,7 @@ const showProgressBar = ref(false)
 const showPopupEnd = ref(false)
 
 
-const playerLog = ref([])
+const playerLog = ref([{round:0}])
 const round = ref(1)
 
 const firstUint = ref(59)
@@ -158,7 +158,7 @@ const playerTimer = () => {
       })
       showPopupEnd.value = true
     }
-  }, 10)
+  }, 1000)
 }
 
 const calculateScore = () => {
