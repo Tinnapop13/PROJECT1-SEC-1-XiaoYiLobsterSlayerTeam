@@ -41,6 +41,8 @@ const togglePopupTutorial = () => {
 const togglePopupEnd = () => {
   showPopupEnd.value = !showPopupEnd.value
   round.value = 1
+  firstUint.value = 59
+  secondUint.value = 9
 }
 
 const startToggle = () => {
@@ -57,9 +59,6 @@ const progressBarShow = () => {
   setTimeout(() => {
     showProgressBar.value = false
   }, 1001)
-
-  showPopupEnd.value = false
-
 }
 
 const displayTrace = () => {
@@ -129,86 +128,84 @@ const playerClick = (event) => {
       round.value++
       displayTrace()
     }
-    else {
-      console.log('lose')
-      sumRound.value = round.value
-      logLst.splice(0, logLst.length) // reset Array
-      traces.splice(0, traces.length) // reset Array
-      logIndex = 0
-      disableStart = false
+  }
+  else {
+    console.log('lose')
+    logLst.splice(0, logLst.length) // reset Array
+    traces.splice(0, traces.length) // reset Array
+    logIndex = 0
+    disableStart = false
+    showPopupEnd.value = true
+  }
+}
+
+const playerTimer = () => {
+  const timer = setInterval(() => {
+    firstUint.value--
+
+    if (firstUint.value < 10) firstUint.value = `0${firstUint.value}`
+
+    if (firstUint.value == 0) {
+      secondUint.value--
+      secondUint.value === 0 ? firstUint.value = 0 : firstUint.value = 59
+    }
+
+    if (showPopupEnd.value || secondUint.value <= 0) {
+      clearInterval(timer)
+      playerLog.value.push({
+        time: `${secondUint.value}:${firstUint.value}`,
+        round: round.value-1,
+      })
       showPopupEnd.value = true
     }
-  }
+  }, 10)
+}
 
-  const playerTimer = () => {
-    const timer = setInterval(() => {
-      firstUint.value--
+const calculateScore = () => {
+  // Temp....
 
-      if (firstUint.value < 10) firstUint.value = `0${firstUint.value}`
+  // if (playerLog.score < 5 && timeCounter.value >= 10) {
+  // } else if (playerLog.score < 15 && timeCounter.value >= 20) {
+  // } else if (playerLog.score < 20 && timeCounter.value >= 30) {
+  // }
 
-      if (firstUint.value == 0) {
-        secondUint.value--
-        if (secondUint.value < 10) secondUint.value = `0${secondUint.value}`
-        firstUint.value = 59
+  // if (playerLog.score < 5 && timeCounter.value >= 10) {
+
+  // } else if (playerLog.score < 15 && timeCounter.value >= 20) 
+
+  // } else if (playerLog.score < 20 && timeCounter.value >= 30) 
+}
+
+const move = () => {
+  if (i.value === 0) {
+    i.value = 1
+    let width = 1
+    const id = setInterval(() => {
+      if (width >= 100) {
+        clearInterval(id)
+        i.value = 0
+      } else {
+        width++
+        progressBarWidth.value = `${width}%`
       }
-
-      if (showPopupEnd.value || secondUint.value === 0) {
-        clearInterval(timer)
-        playerLog.value.push({
-          time: `${secondUint.value}:${firstUint.value}`,
-          round: round.value,
-        })
-        firstUint.value = 59
-        secondUint.value = 9
-      }
-    }, 1000)
+    }, 10)
   }
+}
 
-  const calculateScore = () => {
-    // Temp....
+const gameSize = reactive([
+  {
+    size1: "2 x 2",
+    size2: "3 x 3",
+  },
+])
 
-    // if (playerLog.score < 5 && timeCounter.value >= 10) {
-    // } else if (playerLog.score < 15 && timeCounter.value >= 20) {
-    // } else if (playerLog.score < 20 && timeCounter.value >= 30) {
-    // }
-
-    // if (playerLog.score < 5 && timeCounter.value >= 10) {
-
-    // } else if (playerLog.score < 15 && timeCounter.value >= 20) 
-
-    // } else if (playerLog.score < 20 && timeCounter.value >= 30) 
-  }
-
-  const move = () => {
-    if (i.value === 0) {
-      i.value = 1
-      let width = 1
-      const id = setInterval(() => {
-        if (width >= 100) {
-          clearInterval(id)
-          i.value = 0
-        } else {
-          width++
-          progressBarWidth.value = `${width}%`
-        }
-      }, 10)
-    }
-  }
-
-  const gameSize = reactive([
-    {
-      size1: "2 x 2",
-      size2: "3 x 3",
-    },
-  ])
-
-  const difficultyLevel = reactive([
-    {
-      mode1: "easy",
-      mode2: "normal",
-      mode3: "hard",
-    },
-  ])
+const difficultyLevel = reactive([
+  {
+    mode1: "easy",
+    mode2: "normal",
+    mode3: "hard",
+  },
+])
 </script>
 
 <template>
@@ -216,8 +213,6 @@ const playerClick = (event) => {
     <div class="max-w-screen-lg mx-auto flex flex-col gap-20 items-center justify-center h-screen px-4 md:flex-row">
       <div class="flex flex-col justify-center">
         <h1 class="text-2xl sm:text-7xl font-bold text-white">Simon Says</h1>
-
-        >
         <p class="text-gray-400 py-4 max-w-md">
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas quos
           et vel recusandae illum, voluptates iusto deleniti dolorem obcaecati
@@ -313,8 +308,8 @@ const playerClick = (event) => {
     <h1 class="font-bold text-5xl py-20">Simon Says</h1>
     <span class="countdown font-mono text-2xl">{{ secondUint }} : {{ firstUint }}</span>
     <main class="grid grid-cols-2 gap-x-5 gap-y-5 w-96 sm:h-96 max-sm:w-80">
-      <button v-for="buttonNumber in buttons" :class="showTraceState(buttonNumber.number)" :disabled="disablePlay" :key="buttonNumber"
-        :id="buttonNumber.number" class="rounded-md h-44 hover:brightness-90 active:brightness-150"
+      <button v-for="buttonNumber in buttons" :class="showTraceState(buttonNumber.number)" :disabled="disablePlay"
+        :key="buttonNumber" :id="buttonNumber.number" class="rounded-md h-44 hover:brightness-90 active:brightness-150"
         @click="playerClick"></button>
     </main>
     <button class="btn btn-primary mt-20 max-sm:size-" @click="displayTrace" :disabled="disableStart">
@@ -327,10 +322,9 @@ const playerClick = (event) => {
       <h1 class="text-2xl font-bold mb-4">End!</h1>
 
       <div>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
-        incidunt mollitia alias enim! Hic pariatur, nisi magnam, accusamus
-        excepturi corporis dolorum, libero eos aspernatur sequi totam odio ab
-        recusandae facilis?
+        Round: {{ playerLog[playerLog.length - 1].round }}
+        <br>
+        Time: {{ playerLog[playerLog.length - 1].time }}
       </div>
 
       <button @click="togglePopupEnd" class="btn btn-warning text-white px-4 py-2 mt-4">
