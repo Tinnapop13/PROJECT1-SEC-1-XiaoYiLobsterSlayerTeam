@@ -1,17 +1,19 @@
 <script setup>
-import {ref, reactive} from "vue"
+import { ref, reactive } from "vue"
 
 const showHomePage = ref(true)
 const showGamePage = ref(false)
 const showPopupTutorial = ref(false)
 const showPopupMode = ref(false)
+
 const showProgressBar = ref(false)
 
+const showPopupEnd = ref(false)
+
+
 const playerLog = ref([])
-const isEndPopup = ref(false)
-const playerScore = ref(1)
-const playerRound = ref(0)
 const sumTimes = ref(0)
+const sumRound = ref(0)
 const round = ref(1)
 
 const defaultTimes = ref(59)
@@ -24,10 +26,15 @@ const togglePopupTutorial = () => {
   showPopupTutorial.value = !showPopupTutorial.value
 }
 
+const togglePopupEnd = () => {
+  showPopupEnd.value = !showPopupEnd.value
+}
+
 const startToggle = () => {
   showGamePage.value = true
   showHomePage.value = false
   showPopupMode.value = false
+
   showProgressBar.value = true
   move()
   progressBarShow()
@@ -37,6 +44,9 @@ const progressBarShow = () => {
   setTimeout(() => {
     showProgressBar.value = false
   }, 1001)
+
+  showPopupEnd.value = false
+
 }
 
 const firstUint = ref(defaultTimes.value)
@@ -44,8 +54,7 @@ const secondUint = ref(defaultTimes.value)
 
 const playerToLog = () => {
   playerLog.value.push({
-    round: playerRound.value,
-    score: playerScore.value,
+    round: round.value,
     time: sumTimes.value,
   })
 }
@@ -63,9 +72,17 @@ const displayTrace = () => {
     setTimeout(() => {
       if (gameRoundPointer < round.value) {
         traceButtonIndex.value = traces[gameRoundPointer - 1]
+
       } else {
         traceButtonIndex.value = randomButtonId
         traces.push(traceButtonIndex.value)
+
+      }
+      else {
+        traceButtonIndex.value = randomButtonId
+        traces.push(traceButtonIndex.value)
+
+
       }
     }, 500)
 
@@ -88,10 +105,10 @@ const randomNumber = (max) => {
 }
 
 const buttons = reactive([
-  {number: 0, color: "bg-[#FF0000]"},
-  {number: 1, color: "bg-[#228B22]"},
-  {number: 2, color: "bg-[#0000FF]"},
-  {number: 3, color: "bg-[#FFFF00]"},
+  { number: 0, color: "bg-[#FF0000]" },
+  { number: 1, color: "bg-[#228B22]" },
+  { number: 2, color: "bg-[#0000FF]" },
+  { number: 3, color: "bg-[#FFFF00]" },
 ])
 
 const showTraceState = (buttonNumber) => {
@@ -120,12 +137,19 @@ const playerClick = (event) => {
       round.value++
       displayTrace()
     }
+
   } else {
     console.log("lose")
+
+  }
+  else {
+    console.log('lose')
+    sumRound.value = round.value
+
     logLst.splice(0, logLst.length) // reset Array
     traces.splice(0, traces.length) // reset Array
     logIndex = 0
-    round.value = 0
+    showPopupEnd.value = true
     isPlaying = false
   }
 }
@@ -142,26 +166,32 @@ const playerTimer = () => {
       firstUint.value = 59
     }
 
-    if (secondUint.value == 0) {
+    if (showPopupEnd.value === true || secondUint.value === 0) {
       clearInterval(timer)
       sumTimes.value = `${secondUint.value}:${firstUint.value}`
-      playerToLog()
-      console.log(playerLog.value)
       firstUint.value = defaultTimes.value
       secondUint.value = defaultTimes.value
-      isEndPopup.value = true
+      playerToLog()
+      console.log(playerLog.value) //debug
     }
   }, 1000)
 }
 
 const calculateScore = () => {
   // Temp....
+
   // if (playerLog.score < 5 && timeCounter.value >= 10) {
   // } else if (playerLog.score < 15 && timeCounter.value >= 20) {
   // } else if (playerLog.score < 20 && timeCounter.value >= 30) {
   // }
-}
+  
+  // if (playerLog.score < 5 && timeCounter.value >= 10) {
 
+  // } else if (playerLog.score < 15 && timeCounter.value >= 20) 
+
+  // } else if (playerLog.score < 20 && timeCounter.value >= 30) 
+
+ 
 const i = ref(0)
 const progressBarWidth = ref(0)
 
@@ -198,7 +228,7 @@ const difficultyLevel = reactive([
 </script>
 
 <template>
-  <section v-if="showHomePage" class="flex flex-col max-h-screen">
+<section v-if="showHomePage" class="flex flex-col max-h-screen">
     <div
       class="max-w-screen-2xl h-screen mx-auto flex flex-row gap-10 items-center justify-center max-sm:flex-col"
     >
@@ -329,11 +359,12 @@ const difficultyLevel = reactive([
     v-if="showGamePage"
     class="h-full flex flex-col gap-5 items-center justify-center"
   >
-    <div>
-      <h3>Round : {{ round }}</h3>
-    </div>
+    <h3 class="text-3xl">Round : {{ round }}</h3>
 
-    <h1 class="font-bold text-5xl">Simon Says</h1>
+    <img
+      src="https://cdn.discordapp.com/attachments/1196805209381404682/1203349161668247602/e6accda7-92b1-47e8-b317-1a6da0333512-removebg-preview.png?ex=65d0c53d&is=65be503d&hm=e6fd7ceaf9b3593b122400a06073c93a7ece7d9009b08583f5b14bc18ce53916&"
+      class="w-48 rounded-full"
+    />
     <span class="countdown font-mono text-2xl"
       >{{ secondUint }} : {{ firstUint }}</span
     >
@@ -353,10 +384,5 @@ const difficultyLevel = reactive([
   </section>
 </template>
 
-<style scoped>
-.myBar {
-  height: 30px;
-  background-color: #4caf50;
-  transition: width 0.1s;
-}
-</style>
+<style scoped></style>
+
