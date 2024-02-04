@@ -52,7 +52,6 @@ const startToggle = () => {
 
 const resetGame = () => {
   playerLog.value = [{ round: 0 }]
-  round.value = 0
   gameRoundPointer = 0
   traceButtonIndex.value = -1
   traces.splice(0, traces.length)
@@ -135,8 +134,10 @@ const playerClick = (event) => {
     logIndex = 0
     disableStart = false
     disablePlay = true
-    showPopupEnd.value = true
+    showPopupEnd.value = true //ntf
     disableReset = true
+
+    
   }
 }
 
@@ -152,24 +153,25 @@ const togglePopupEnd = () => {
 const playerTimer = () => {
   const timer = setInterval(() => {
     firstUint.value--
-
     if (firstUint.value < 10) firstUint.value = `0${firstUint.value}`
 
     if (firstUint.value == 0) {
       secondUint.value--
       secondUint.value === 0 ? (firstUint.value = 0) : (firstUint.value = 59)
     }
+  }, 1000)
 
+  const checkTimer = setInterval(()=>{
     if (showPopupEnd.value || secondUint.value <= 0) {
       clearInterval(timer)
+      clearInterval(checkTimer)
       playerLog.value.push({
         time: `${secondUint.value}:${firstUint.value}`,
         round: round.value,
       })
-      showPopupEnd.value = true
       new Audio("https://cdn.discordapp.com/attachments/1196805209381404682/1203710805413986344/rock-eyebrow-raise-sound-effect.mp3?ex=65d2160b&is=65bfa10b&hm=289ed8577d1a08479c2cd3f9607a37cb48240dac25744204c1ab4181e91992c1&").play()
     }
-  }, 1000)
+  },100)
 }
 
 
