@@ -5,17 +5,21 @@ import { ref, reactive } from "vue"
 const showHomePage = ref(true)
 const showGamePage = ref(false)
 const showPopupTutorial = ref(false)
-
 const showProgressBar = ref(false)
+const i = ref(0)
+const progressBarWidth = ref(0)
+let disableStart = false
+let disablePlay = true
 
+
+// [phatcharadol] Game Result Variable , Game Result UI Variable , Timer Variable
 const showPopupEnd = ref(false)
 const firstUint = ref(59)
 const secondUint = ref(9)
 const playerLog = ref([{round:0}])
 const round = ref(1)
+const printText = ref("")
 
-const firstUint = ref(59)
-const secondUint = ref(9)
 
 // [Tinnapop13] Show Trace Variable 
 let gameRoundPointer = 0
@@ -180,24 +184,6 @@ const playerTimer = () => {
   }, 1000)
 }
 
-const calculateScore = () => {
-  // Temp....
-
-  // if (playerLog.score < 5 && timeCounter.value >= 10) {
-  // } else if (playerLog.score < 15 && timeCounter.value >= 20) {
-  // } else if (playerLog.score < 20 && timeCounter.value >= 30) {
-  // }
-
-  // if (playerLog.score < 5 && timeCounter.value >= 10) {
-
-  // } else if (playerLog.score < 15 && timeCounter.value >= 20) 
-
-  // } else if (playerLog.score < 20 && timeCounter.value >= 30) 
-}
-
-
-
-
 </script>
 
 <template>
@@ -278,15 +264,29 @@ const calculateScore = () => {
     <button class="btn btn-primary m-10 max-sm:size- w-96 max-sm:w-80" @click="displayTrace" :disabled="disableStart">
       START
     </button>
+    <button class="btn btn-primary w-96 max-sm:w-80" @click="showHomePage = true" :disabled="disableStart">
+      HOME
+    </button>
   </section>
 
   <section v-if="showPopupEnd" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
     <div class="w-80 text-center bg-white p-8 rounded-lg">
       <h1 class="text-2xl font-bold mb-4">End!</h1>
       <div>
-        Round: {{ playerLog[playerLog.length - 1].round }}
+        <div v-if="playerLog[playerLog.length - 1].round <= 10">
+          TRY AGAIN NOOB!
+        </div>
+        <div v-else-if="playerLog[playerLog.length - 1].round > 10 && playerLog[playerLog.length - 1].round < 30">
+          THAT KINDA DECENT...
+        </div>
+        <div v-else>
+          EXCELLENT!
+        </div>
+        {{ printText }}
         <br>
-        Time: {{ playerLog[playerLog.length - 1].time }}
+        Finished Round: {{ playerLog[playerLog.length - 1].round }}
+        <br>
+        Finished Time: {{ playerLog[playerLog.length - 1].time }}
       </div>
 
       <button @click="togglePopupEnd" class="btn btn-warning text-white px-4 py-2 mt-4">
@@ -297,4 +297,3 @@ const calculateScore = () => {
 </template>
 
 <style scoped></style>
-
