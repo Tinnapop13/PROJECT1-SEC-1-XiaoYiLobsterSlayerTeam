@@ -1,25 +1,33 @@
 <script setup>
-import {ref, reactive} from "vue"
+import { ref, reactive } from "vue" 
+import { useDark, useToggle } from "@vueuse/core";
+
+const isDark = useDark()
+const toggleDark = useToggle(isDark)
 
 // [papangkorn00] Homepage UI Variable , Handle Malfunction Player Input ,  Loading Variable
 const showHomePage = ref(true)
 const showGamePage = ref(false)
 const showPopupTutorial = ref(false)
+const showProgressBar = ref(false)
+const i = ref(0)
+const progressBarWidth = ref(0)
 let disableStart = false
 let disablePlay = true
-let disableReset = true
+
 
 // [phatcharadol] Game Result Variable , Game Result UI Variable , Timer Variable
 const showPopupEnd = ref(false)
 const firstUint = ref(59)
 const secondUint = ref(9)
-const playerLog = ref([{round: 0}])
+const playerLog = ref([{round:0}])
 const round = ref(0)
 
 // [Tinnapop13] Show Trace Variable 
 let gameRoundPointer = 0
 const traceButtonIndex = ref(-1)
 const traces = []
+
 
 // [Nxts0] Handle Player Click Variable
 const logLst = []
@@ -32,6 +40,7 @@ const buttons = reactive([
   {number: 2, color: "bg-[#0000FF]"},
   {number: 3, color: "bg-[#FFFF00]"},
 ])
+
 
 // [papangkorn00] Homepage UI function (Tutorial,Start Button,Loading Bar)
 const togglePopupTutorial = () => {
@@ -63,6 +72,19 @@ const randomNumber = (max) => {
 const showTraceState = (buttonNumber) => {
   return {
     "bg-[#fff]": traceButtonIndex.value === buttonNumber,
+    [buttons[buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
+  }
+}
+
+// [Tinnapop13] Display Trace function
+const randomNumber = (max) => {
+  return Math.floor(Math.random
+  () * max)
+}
+
+const showTraceState = (buttonNumber) => {
+  return {
+    "bg-[#fff] ": traceButtonIndex.value === buttonNumber,
     [buttons[buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
   }
 }
@@ -102,6 +124,7 @@ const displayTrace = () => {
     }
   }, 750)
 }
+
 
 // [Nxts0] Handle Player Click function
 const playerClick = (event) => {
@@ -163,17 +186,21 @@ const playerTimer = () => {
   }, 1000)
 }
 
+
 </script>
 
 <template>
   <!-- Homepage -->
-  <section v-if="showHomePage" class="flex flex-col h-screen">
+
+  <section v-if="showHomePage" class="flex flex-col h-screen dark:bg-[#121212]">
+    <div class="flex justify-end margin mt-3 mr-5" v-if="isDark"><input type="checkbox" class="toggle" checked @click="toggleDark()" /></div>
+    <div class="flex justify-end margin mt-3 mr-5" v-else><input type="checkbox" class="toggle"  @click="toggleDark()" /></div>
     <div class="max-w-screen-lg mx-auto my-4 flex flex-col gap-20 items-center justify-center h-screen px-4 md:flex-row">
       <div class="flex flex-col justify-center">
-        <h1 class="text-2xl sm:text-7xl font-bold text-white">Simon Says</h1>
-        <p class="text-gray-400 py-4 max-w-md">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas quos et
-          vel recusandae illum, voluptates iusto deleniti dolorem obcaecati
+        <h1 class="text-2xl sm:text-7xl font-bold dark:text-white">Simon Says</h1>
+        <p class="text-gray-400 py-4 max-w-md dark:text-white">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas quos
+          et vel recusandae illum, voluptates iusto deleniti dolorem obcaecati
           similique optio adipisci assumenda dignissimos, quo quisquam eaque
           rerum! Et, molestias?
         </p>
@@ -200,12 +227,14 @@ const playerTimer = () => {
     </div>
   </section>
 
+
+
   <!-- Tutorial pop-up -->
-  <section v-if="showPopupTutorial" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="w-full sm:w-96 lg:w-1/2 text-center bg-white p-8 rounded-lg">
+  <section v-if="showPopupTutorial" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 dark:bg-[#121212]">
+    <div class="w-full sm:w-96 lg:w-1/2 text-center bg-white p-8 rounded-lg dark:bg-[#121212]">
       <h1 class="text-2xl font-bold mb-4">This is a tutorial</h1>
 
-      <div class="mb-4">
+      <div class="mb-4 ">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
         incidunt mollitia alias enim! Hic pariatur, nisi magnam, accusamus
         excepturi corporis dolorum, libero eos aspernatur sequi totam odio ab
@@ -218,15 +247,16 @@ const playerTimer = () => {
     </div>
   </section>
 
-  <!-- Gamepage UI -->
-  <Transition name="scale">
-    <section v-if="showGamePage" class="min-h-screen flex flex-col items-center justify-center transition-all">
-      <h1 class="font-bold text-5xl my-10">Simon Says</h1>
-      <div class="flex justify-between w-96 my-4 max-sm:w-80">
-        <span class="countdown font-mono text-2xl">Round : {{ round }}</span>
-        <span class="countdown font-mono text-2xl">{{ secondUint }} : {{ firstUint }}</span>
-      </div>
 
+  <!-- Gamepage UI -->
+    <section v-if="showGamePage" class="min-h-screen flex flex-col items-center justify-center dark:bg-[#121212]">
+      <div class="flex justify-end margin mt-3 mr-5" v-if="isDark"><input type="checkbox" class="toggle" checked @click="toggleDark()" /></div>
+      <div class="flex justify-end margin mt-3 mr-5" v-else><input type="checkbox" class="toggle"  @click="toggleDark()" /></div>
+      <h1 class="font-bold text-5xl my-10 dark:text-white">Simon Says</h1>
+      <div class="flex justify-between w-96 my-4 max-sm:w-80" >
+        <span class="countdown font-mono text-2xl dark:text-white">Round : {{ round }}</span>
+        <span class="countdown font-mono text-2xl dark:text-white">{{ secondUint }} : {{ firstUint }}</span>
+      </div>
       <main class="grid grid-cols-2 gap-x-5 gap-y-5 w-96 sm:h-96 max-sm:w-80">
         <button v-for="buttonNumber in buttons" :class="showTraceState(buttonNumber.number)" :disabled="disablePlay"
           :key="buttonNumber" :id="buttonNumber.number" class="rounded-md h-44 hover:brightness-90 active:brightness-150"
@@ -244,7 +274,6 @@ const playerTimer = () => {
       </button>
     </section>
   </Transition>
-
   <section v-if="showPopupEnd" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
     <div class="w-80 text-center bg-white p-8 rounded-lg">
       <h1 class="text-2xl font-bold mb-4">End!</h1>
@@ -286,4 +315,3 @@ const playerTimer = () => {
   }
 }
 </style>
-
