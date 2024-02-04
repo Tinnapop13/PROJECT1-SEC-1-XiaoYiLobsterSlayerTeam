@@ -225,7 +225,7 @@ const playerTimer = () => {
     <button class="btn btn-primary m-10 max-sm:size- w-96 max-sm:w-80" @click="displayTrace" :disabled="disableStart">
       START
     </button>
-    <button class="btn btn-primary w-96 max-sm:w-80" @click="showHomePage = true" :disabled="disableStart">
+    <button class="btn btn-primary w-96 max-sm:w-80" @click="showGamePage = false; showHomePage = true" :disabled="disableStart">
       HOME
     </button>
   </section>
@@ -260,9 +260,6 @@ const playerTimer = () => {
 <style scoped>
 .scale-enter-active {
   animation: scale 1s;
-}
-.scale-leave-active {
-  animation: scale 1s reverse;
 }
 @keyframes scale {
   0% {
