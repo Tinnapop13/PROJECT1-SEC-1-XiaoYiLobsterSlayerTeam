@@ -5,9 +5,6 @@ import { ref, reactive } from "vue"
 const showHomePage = ref(true)
 const showGamePage = ref(false)
 const showPopupTutorial = ref(false)
-const showProgressBar = ref(false)
-const i = ref(0)
-const progressBarWidth = ref(0)
 let disableStart = false
 let disablePlay = true
 
@@ -18,8 +15,6 @@ const firstUint = ref(59)
 const secondUint = ref(9)
 const playerLog = ref([{round:0}])
 const round = ref(1)
-const printText = ref("")
-
 
 // [Tinnapop13] Show Trace Variable 
 let gameRoundPointer = 0
@@ -47,35 +42,8 @@ const togglePopupTutorial = () => {
 }
 
 const startToggle = () => {
-  setTimeout(() => {
-    showGamePage.value = true
-  }, 1000)
+  showGamePage.value = true
   showHomePage.value = false
-  showProgressBar.value = true
-  move()
-  progressBarShow()
-}
-
-const progressBarShow = () => {
-  setTimeout(() => {
-    showProgressBar.value = false
-  }, 1000)
-}
-
-const move = () => {
-  if (i.value === 0) {
-    i.value = 1
-    let width = 1
-    const id = setInterval(() => {
-      if (width >= 100) {
-        clearInterval(id)
-        i.value = 0
-      } else {
-        width++
-        progressBarWidth.value = `${width}%`
-      }
-    }, 10)
-  }
 }
 
 
@@ -240,16 +208,9 @@ const playerTimer = () => {
     </div>
   </section>
 
-  <!--Loading progress bar -->
-  <section v-if="showProgressBar" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="w-64 bg-gray-300 rounded-md">
-      <div class="w-[1%] h-8 bg-gradient-to-r from-red-500 from-10% via-green-500 via-30% to-blue-500 to-90% rounded-md"
-        :style="{ width: progressBarWidth }"></div>
-    </div>
-  </section>
-
   <!-- Gamepage UI -->
-  <section v-if="showGamePage" class="min-h-screen flex flex-col items-center justify-center">
+  <Transition name="scale">
+  <section v-if="showGamePage" class="min-h-screen flex flex-col items-center justify-center transition-all">
     <h1 class="font-bold text-5xl my-10">Simon Says</h1>
     <div class="flex justify-between w-96 my-4 max-sm:w-80" >
       <span class="countdown font-mono text-2xl">Round : {{ round }}</span>
@@ -268,6 +229,7 @@ const playerTimer = () => {
       HOME
     </button>
   </section>
+</Transition>
 
   <section v-if="showPopupEnd" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
     <div class="w-80 text-center bg-white p-8 rounded-lg">
@@ -282,7 +244,6 @@ const playerTimer = () => {
         <div v-else>
           EXCELLENT!
         </div>
-        {{ printText }}
         <br>
         Finished Round: {{ playerLog[playerLog.length - 1].round }}
         <br>
@@ -296,4 +257,19 @@ const playerTimer = () => {
   </section>
 </template>
 
-<style scoped></style>
+<style scoped>
+.scale-enter-active {
+  animation: scale 1s;
+}
+.scale-leave-active {
+  animation: scale 1s reverse;
+}
+@keyframes scale {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+</style>
