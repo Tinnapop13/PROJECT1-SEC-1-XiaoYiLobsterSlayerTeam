@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive } from "vue"
+import {ref, reactive} from "vue"
 
 // [papangkorn00] Homepage UI Variable , Handle Malfunction Player Input ,  Loading Variable
 const showHomePage = ref(true)
@@ -13,7 +13,7 @@ let disableReset = true
 const showPopupEnd = ref(false)
 const firstUint = ref(59)
 const secondUint = ref(9)
-const playerLog = ref([{ round: 0 }])
+const playerLog = ref([{round: 0}])
 const round = ref(0)
 
 // [Tinnapop13] Show Trace Variable 
@@ -27,10 +27,10 @@ let logIndex = 0
 
 // Game Properties Variable
 const buttons = reactive([
-  { number: 0, color: "bg-[#FF0000]" },
-  { number: 1, color: "bg-[#228B22]" },
-  { number: 2, color: "bg-[#0000FF]" },
-  { number: 3, color: "bg-[#FFFF00]" },
+  {number: 0, color: "bg-[#FF0000]"},
+  {number: 1, color: "bg-[#228B22]"},
+  {number: 2, color: "bg-[#0000FF]"},
+  {number: 3, color: "bg-[#FFFF00]"},
 ])
 
 // [papangkorn00] Homepage UI function (Tutorial,Start Button,Loading Bar)
@@ -271,7 +271,6 @@ const playerTimer = () => {
   </section>
 </template>
 
-
 <style scoped>
 .scale-enter-active {
   animation: scale 1s;
@@ -287,3 +286,4 @@ const playerTimer = () => {
   }
 }
 </style>
+
