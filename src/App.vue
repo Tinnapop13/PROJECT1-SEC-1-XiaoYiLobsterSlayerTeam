@@ -16,9 +16,6 @@ const secondUint = ref(9)
 const playerLog = ref([{round: 0}])
 const round = ref(1)
 
-
-// [Tinnapop13] Show Trace Variable
-=======
 // [Tinnapop13] Show Trace Variable 
 let gameRoundPointer = 0
 const traceButtonIndex = ref(-1)
