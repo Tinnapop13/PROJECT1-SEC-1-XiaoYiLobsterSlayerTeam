@@ -5,15 +5,12 @@ const showHomePage = ref(true)
 const showGamePage = ref(false)
 const showPopupTutorial = ref(false)
 const showPopupMode = ref(false)
-
 const showProgressBar = ref(false)
-
 const showPopupEnd = ref(false)
 
 
 const playerLog = ref([{round:0}])
 const round = ref(1)
-
 const firstUint = ref(59)
 const secondUint = ref(9)
 
