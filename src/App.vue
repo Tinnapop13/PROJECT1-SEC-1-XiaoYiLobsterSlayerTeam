@@ -9,11 +9,9 @@ const toggleDark = useToggle(isDark)
 const showHomePage = ref(true)
 const showGamePage = ref(false)
 const showPopupTutorial = ref(false)
-const showProgressBar = ref(false)
-const i = ref(0)
-const progressBarWidth = ref(0)
 let disableStart = false
 let disablePlay = true
+let disableReset = true
 
 
 // [phatcharadol] Game Result Variable , Game Result UI Variable , Timer Variable
@@ -67,19 +65,6 @@ const resetGame = () => {
 // [Tinnapop13] Display Trace function
 const randomNumber = (max) => {
   return Math.floor(Math.random() * max)
-}
-
-const showTraceState = (buttonNumber) => {
-  return {
-    "bg-[#fff]": traceButtonIndex.value === buttonNumber,
-    [buttons[buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
-  }
-}
-
-// [Tinnapop13] Display Trace function
-const randomNumber = (max) => {
-  return Math.floor(Math.random
-  () * max)
 }
 
 const showTraceState = (buttonNumber) => {
@@ -249,6 +234,7 @@ const playerTimer = () => {
 
 
   <!-- Gamepage UI -->
+  <Transition name="scale">
     <section v-if="showGamePage" class="min-h-screen flex flex-col items-center justify-center dark:bg-[#121212]">
       <div class="flex justify-end margin mt-3 mr-5" v-if="isDark"><input type="checkbox" class="toggle" checked @click="toggleDark()" /></div>
       <div class="flex justify-end margin mt-3 mr-5" v-else><input type="checkbox" class="toggle"  @click="toggleDark()" /></div>
