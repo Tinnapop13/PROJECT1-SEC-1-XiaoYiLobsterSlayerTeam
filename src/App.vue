@@ -134,6 +134,7 @@ const playerClick = (event) => {
     traces.splice(0, traces.length) // reset Array
     logIndex = 0
     disableStart = false
+    disablePlay = true
     showPopupEnd.value = true
     disableReset = true
   }
