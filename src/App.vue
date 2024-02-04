@@ -46,7 +46,9 @@ const togglePopupTutorial = () => {
 }
 
 const startToggle = () => {
-  showGamePage.value = true
+  setTimeout(() => {
+    showGamePage.value = true
+  }, 1000)
   showHomePage.value = false
   showProgressBar.value = true
   move()
