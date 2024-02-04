@@ -257,4 +257,16 @@ const playerTimer = () => {
   </section>
 </template>
 
-<style scoped></style>
+<style scoped>
+.scale-enter-active {
+  animation: scale 1s;
+}
+@keyframes scale {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+</style>
