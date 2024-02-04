@@ -1,29 +1,39 @@
 <script setup>
-import {ref, reactive} from "vue"
+import { ref, reactive } from "vue"
 
 const showHomePage = ref(true)
 const showGamePage = ref(false)
 const showPopupTutorial = ref(false)
-
+const showPopupMode = ref(false)
 const showProgressBar = ref(false)
 
-const playerLog = ref([])
-const isEndPopup = ref(false)
-const playerScore = ref(1)
-const playerRound = ref(0)
-const sumTimes = ref(0)
+const showPopupEnd = ref(false)
+
+
+const playerLog = ref([{round:0}])
 const round = ref(1)
 
 const defaultTimes = ref(59)
+
+const togglePopupMode = () => {
+  showPopupMode.value = !showPopupMode.value
+}
 
 const togglePopupTutorial = () => {
   showPopupTutorial.value = !showPopupTutorial.value
 }
 
+const togglePopupEnd = () => {
+  showPopupEnd.value = !showPopupEnd.value
+  round.value = 1
+  firstUint.value = 59
+  secondUint.value = 9
+}
+
 const startToggle = () => {
   showGamePage.value = true
   showHomePage.value = false
-
+  showPopupMode.value = false
   showProgressBar.value = true
   moveProgress()
   progressBarShow()
@@ -35,23 +45,8 @@ const progressBarShow = () => {
   }, 1001)
 }
 
-const firstUint = ref(defaultTimes.value)
-const secondUint = ref(defaultTimes.value)
-
-const playerToLog = () => {
-  playerLog.value.push({
-    round: playerRound.value,
-    score: playerScore.value,
-    time: sumTimes.value,
-  })
-}
-
-let gameRoundPointer = 0
-const traceButtonIndex = ref(-1)
-const traces = []
-
 const displayTrace = () => {
-  isPlaying = true
+  isPlaying = false
   playerTimer()
   const gameInterval = setInterval(() => {
     const randomButtonId = randomNumber(4)
@@ -59,9 +54,11 @@ const displayTrace = () => {
     setTimeout(() => {
       if (gameRoundPointer < round.value) {
         traceButtonIndex.value = traces[gameRoundPointer - 1]
+
       } else {
         traceButtonIndex.value = randomButtonId
         traces.push(traceButtonIndex.value)
+
       }
     }, 500)
 
@@ -74,7 +71,7 @@ const displayTrace = () => {
       console.log(traces)
       clearInterval(gameInterval)
       gameRoundPointer = 0
-      isPlaying = true
+      disablePlay = false
     }
   }, 750)
 }
@@ -84,10 +81,10 @@ const randomNumber = (max) => {
 }
 
 const buttons = reactive([
-  {number: 0, color: "bg-[#FF0000]"},
-  {number: 1, color: "bg-[#228B22]"},
-  {number: 2, color: "bg-[#0000FF]"},
-  {number: 3, color: "bg-[#FFFF00]"},
+  { number: 0, color: "bg-[#FF0000]" },
+  { number: 1, color: "bg-[#228B22]" },
+  { number: 2, color: "bg-[#0000FF]" },
+  { number: 3, color: "bg-[#FFFF00]" },
 ])
 
 const showTraceState = (buttonNumber) => {
@@ -96,10 +93,6 @@ const showTraceState = (buttonNumber) => {
     [buttons[buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
   }
 }
-
-const logLst = []
-let logIndex = 0
-let isPlaying = false
 
 const playerClick = (event) => {
   let itemClick = Number(event.target.id)
@@ -116,13 +109,14 @@ const playerClick = (event) => {
       round.value++
       displayTrace()
     }
-  } else {
-    console.log("lose")
+  }
+  else {
+    console.log('lose')
     logLst.splice(0, logLst.length) // reset Array
     traces.splice(0, traces.length) // reset Array
     logIndex = 0
-    round.value = 0
-    isPlaying = false
+    disableStart = false
+    showPopupEnd.value = true
   }
 }
 
@@ -134,32 +128,34 @@ const playerTimer = () => {
 
     if (firstUint.value == 0) {
       secondUint.value--
-      if (secondUint.value < 10) secondUint.value = `0${secondUint.value}`
-      firstUint.value = 59
+      secondUint.value === 0 ? firstUint.value = 0 : firstUint.value = 59
     }
 
-    if (secondUint.value == 0) {
+    if (showPopupEnd.value || secondUint.value <= 0) {
       clearInterval(timer)
-      sumTimes.value = `${secondUint.value}:${firstUint.value}`
-      playerToLog()
-      console.log(playerLog.value)
-      firstUint.value = defaultTimes.value
-      secondUint.value = defaultTimes.value
-      isEndPopup.value = true
+      playerLog.value.push({
+        time: `${secondUint.value}:${firstUint.value}`,
+        round: round.value-1,
+      })
+      showPopupEnd.value = true
     }
   }, 1000)
 }
 
 const calculateScore = () => {
   // Temp....
+
   // if (playerLog.score < 5 && timeCounter.value >= 10) {
   // } else if (playerLog.score < 15 && timeCounter.value >= 20) {
   // } else if (playerLog.score < 20 && timeCounter.value >= 30) {
   // }
-}
 
-const i = ref(0)
-const progressBarWidth = ref(0)
+  // if (playerLog.score < 5 && timeCounter.value >= 10) {
+
+  // } else if (playerLog.score < 15 && timeCounter.value >= 20) 
+
+  // } else if (playerLog.score < 20 && timeCounter.value >= 30) 
+}
 
 const moveProgress = () => {
   if (i.value === 0) {
@@ -179,20 +175,13 @@ const moveProgress = () => {
 </script>
 
 <template>
-  <section v-if="showHomePage" class="flex flex-col max-h-screen">
-    <div
-      class="max-w-screen-2xl h-screen mx-auto flex flex-row gap-10 items-center justify-center max-sm:flex-col"
-    >
-      <div class="">
-        <h1
-          class="text-2xl sm:text-7xl font-bold text-white max-sm:text-center"
-        >
-          Simon Says
-        </h1>
-
-        <p class="text-gray-400 py-4 max-w-xl max-sm:mx-10">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas quos et
-          vel recusandae illum, voluptates iusto deleniti dolorem obcaecati
+  <section v-if="showHomePage" class="flex flex-col h-screen">
+    <div class="max-w-screen-lg mx-auto flex flex-col gap-20 items-center justify-center h-screen px-4 md:flex-row">
+      <div class="flex flex-col justify-center">
+        <h1 class="text-2xl sm:text-7xl font-bold text-white">Simon Says</h1>
+        <p class="text-gray-400 py-4 max-w-md">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas quos
+          et vel recusandae illum, voluptates iusto deleniti dolorem obcaecati
           similique optio adipisci assumenda dignissimos, quo quisquam eaque
           rerum! Et, molestias?
         </p>
@@ -201,15 +190,13 @@ const moveProgress = () => {
       <div class="">
         <img
           src="https://cdn.discordapp.com/attachments/1196805209381404682/1203349161668247602/e6accda7-92b1-47e8-b317-1a6da0333512-removebg-preview.png?ex=65d0c53d&is=65be503d&hm=e6fd7ceaf9b3593b122400a06073c93a7ece7d9009b08583f5b14bc18ce53916&"
-          alt="mr.Simon"
-          class="rounded-3xl size-[30rem] items-center max-sm:rounded-full max-sm:size-56"
-        />
+          alt="mr.Simon" class="rounded-3xl size-[30rem] items-center max-sm:rounded-full max-sm:size-56" />
       </div>
     </div>
 
     <div class="flex justify-center">
       <button
-        @click="startToggle"
+        @click="togglePopupMode"
         class="btn btn-primary bg-orange-500 rounded-3xl text-white size-20 max-sm:size-14"
       >
         PLAY
@@ -217,20 +204,56 @@ const moveProgress = () => {
     </div>
 
     <div class="flex justify-end m-5">
-      <button
-        @click="togglePopupTutorial"
-        class="btn btn-circle btn-primary bg-blue-400 text-white size-14"
-      >
+      <button @click="togglePopupTutorial" class="btn btn-circle btn-primary bg-blue-400 text-white size-14">
         Tutorial
       </button>
     </div>
   </section>
 
-  <!-- Tutorial pop-up -->
+  <!-- mode and size -->
   <section
-    v-if="showPopupTutorial"
+    v-if="showPopupMode"
     class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
   >
+    <div
+      class="w-full sm:w-96 md:w-2/3 lg:w-1/2 xl:w-1/3 h-96 bg-white rounded-lg flex flex-col justify-center items-center p-4"
+    >
+      <div class="text-center mb-4">
+        <h3 class="text-xl font-bold">Select Mode</h3>
+        <div v-for="difficulty in difficultyLevel">
+          <div>{{ difficulty.mode1 }}</div>
+          <div>{{ difficulty.mode2 }}</div>
+          <div>{{ difficulty.mode3 }}</div>
+        </div>
+      </div>
+
+      <!-- size 2x2 3x3  -->
+      <div class="text-center mb-4">
+        <h3 class="text-xl font-bold">Select Size</h3>
+        <div v-for="size in gameSize">
+          <div>{{ size.size1 }}</div>
+          <div>{{ size.size2 }}</div>
+        </div>
+      </div>
+
+      <button
+        @click="startToggle"
+        class="btn btn-primary text-white w-full sm:w-40 h-10 mt-5"
+      >
+        START
+      </button>
+
+      <!-- <button
+        @click="togglePopupMode"
+        class="btn btn-warning text-white px-4 py-2 mt-4"
+      >
+        Close
+      </button> -->
+    </div>
+  </section>
+
+  <!-- Tutorial pop-up -->
+  <section v-if="showPopupTutorial" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
     <div class="w-full sm:w-96 lg:w-1/2 text-center bg-white p-8 rounded-lg">
       <h1 class="text-2xl font-bold mb-4">This is a tutorial</h1>
 
@@ -241,25 +264,17 @@ const moveProgress = () => {
         recusandae facilis?
       </div>
 
-      <button
-        @click="togglePopupTutorial"
-        class="btn btn-warning text-white px-4 py-2"
-      >
+      <button @click="togglePopupTutorial" class="btn btn-warning text-white px-4 py-2">
         Close
       </button>
     </div>
   </section>
 
   <!-- progress bar -->
-  <section
-    v-if="showProgressBar"
-    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-  >
+  <section v-if="showProgressBar" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
     <div class="w-64 bg-gray-300 rounded-md">
-      <div
-        class="w-[1%] h-8 bg-gradient-to-r from-red-500 from-10% via-green-500 via-30% to-blue-500 to-90% rounded-md"
-        :style="{width: progressBarWidth}"
-      ></div>
+      <div class="w-[1%] h-8 bg-gradient-to-r from-red-500 from-10% via-green-500 via-30% to-blue-500 to-90% rounded-md"
+        :style="{ width: progressBarWidth }"></div>
     </div>
   </section>
 
@@ -268,12 +283,11 @@ const moveProgress = () => {
     v-if="showGamePage"
     class="h-full flex flex-col gap-5 items-center justify-center"
   >
-    <h3 class="text-3xl">Round : {{ round }}</h3>
+    <div>
+      <h3>Round : {{ round }}</h3>
+    </div>
 
-    <img
-      src="https://cdn.discordapp.com/attachments/1196805209381404682/1203349161668247602/e6accda7-92b1-47e8-b317-1a6da0333512-removebg-preview.png?ex=65d0c53d&is=65be503d&hm=e6fd7ceaf9b3593b122400a06073c93a7ece7d9009b08583f5b14bc18ce53916&"
-      class="w-48 rounded-full"
-    />
+    <h1 class="font-bold text-5xl">Simon Says</h1>
     <span class="countdown font-mono text-2xl"
       >{{ secondUint }} : {{ firstUint }}</span
     >
@@ -287,10 +301,28 @@ const moveProgress = () => {
         @click="playerClick"
       ></button>
     </main>
-    <button class="btn btn-primary" @click="displayTrace" :disabled="isPlaying">
+    <button class="btn btn-primary mt-20 max-sm:size-" @click="displayTrace" :disabled="disableStart">
       Start
     </button>
   </section>
+
+  <section v-if="showPopupEnd" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="w-80 text-center bg-white p-8 rounded-lg">
+      <h1 class="text-2xl font-bold mb-4">End!</h1>
+
+      <div>
+        Round: {{ playerLog[playerLog.length - 1].round }}
+        <br>
+        Time: {{ playerLog[playerLog.length - 1].time }}
+      </div>
+
+      <button @click="togglePopupEnd" class="btn btn-warning text-white px-4 py-2 mt-4">
+        Close
+      </button>
+    </div>
+  </section>
 </template>
 
-<style scoped></style>
+<style scoped>
+
+</style>
