@@ -14,7 +14,7 @@ const showPopupEnd = ref(false)
 const firstUint = ref(59)
 const secondUint = ref(9)
 const playerLog = ref([{round: 0}])
-const round = ref(1)
+const round = ref(0)
 
 // [Tinnapop13] Show Trace Variable 
 let gameRoundPointer = 0
@@ -44,8 +44,8 @@ const startToggle = () => {
 }
 
 const resetGame = () => {
-  playerLog.value = [{round: 0}]
-  round.value = 1
+  playerLog.value = [{ round: 0 }]
+  round.value = 0
   gameRoundPointer = 0
   traceButtonIndex.value = -1
   traces.splice(0, traces.length)
@@ -73,7 +73,8 @@ const displayTrace = () => {
   disablePlay = true
   disableReset = false
   // Start Timer While Game Start Once
-  if (round.value === 1) {
+  if (round.value === 0) {
+    round.value++
     playerTimer()
   }
   // Set Button to Change Style while Show Trace
@@ -110,7 +111,8 @@ const playerClick = (event) => {
   setTimeout(() => {
     traceButtonIndex.value = -1
   }, 100)
-  if (logLst[logIndex] === traces[logIndex]) {
+  if (logLst[logIndex] === traces[logIndex]) {    
+    new Audio("https://cdn.discordapp.com/attachments/1196805209381404682/1203715260742238268/pop-cat-original-meme.mp3?ex=65d21a32&is=65bfa532&hm=011af7cfcb702bb425a2ca043e29decd78bcb3b7ce4751ed44d573dffd27ad4a&").play()
     logIndex++
     if (logLst.length === traces.length) {
       logLst.splice(0, logLst.length) // reset Array
@@ -132,7 +134,7 @@ const playerClick = (event) => {
 // [phatcharadol] Game Result function , Timer function , Calculate Score Level
 const togglePopupEnd = () => {
   showPopupEnd.value = !showPopupEnd.value
-  round.value = 1
+  round.value = 0
   firstUint.value = 59
   secondUint.value = 9
   disableReset = true
@@ -153,12 +155,10 @@ const playerTimer = () => {
       clearInterval(timer)
       playerLog.value.push({
         time: `${secondUint.value}:${firstUint.value}`,
-        round: round.value - 1,
+        round: round.value,
       })
       showPopupEnd.value = true
-
-      var audio = new Audio("https://cdn.discordapp.com/attachments/1196805209381404682/1203710805413986344/rock-eyebrow-raise-sound-effect.mp3?ex=65d2160b&is=65bfa10b&hm=289ed8577d1a08479c2cd3f9607a37cb48240dac25744204c1ab4181e91992c1&")
-      audio.play()
+      new Audio("https://cdn.discordapp.com/attachments/1196805209381404682/1203710805413986344/rock-eyebrow-raise-sound-effect.mp3?ex=65d2160b&is=65bfa10b&hm=289ed8577d1a08479c2cd3f9607a37cb48240dac25744204c1ab4181e91992c1&").play()
     }
   }, 1000)
 }
@@ -168,9 +168,7 @@ const playerTimer = () => {
 <template>
   <!-- Homepage -->
   <section v-if="showHomePage" class="flex flex-col h-screen">
-    <div
-      class="max-w-screen-lg mx-auto my-4 flex flex-col gap-20 items-center justify-center h-screen px-4 md:flex-row"
-    >
+    <div class="max-w-screen-lg mx-auto my-4 flex flex-col gap-20 items-center justify-center h-screen px-4 md:flex-row">
       <div class="flex flex-col justify-center">
         <h1 class="text-2xl sm:text-7xl font-bold text-white">Simon Says</h1>
         <p class="text-gray-400 py-4 max-w-md">
@@ -184,36 +182,26 @@ const playerTimer = () => {
       <div class="">
         <img
           src="https://cdn.discordapp.com/attachments/1196805209381404682/1203349161668247602/e6accda7-92b1-47e8-b317-1a6da0333512-removebg-preview.png?ex=65d0c53d&is=65be503d&hm=e6fd7ceaf9b3593b122400a06073c93a7ece7d9009b08583f5b14bc18ce53916&"
-          alt="mr.Simon"
-          class="rounded-3xl size-[30rem] items-center max-sm:rounded-full max-sm:size-56"
-        />
+          alt="mr.Simon" class="rounded-3xl size-[30rem] items-center max-sm:rounded-full max-sm:size-56" />
       </div>
     </div>
 
     <div class="flex justify-center">
-      <button
-        @click="startToggle"
-        class="btn btn-primary rounded-2xl w-64 text-white transition duration-300 ease-in-out"
-      >
+      <button @click="startToggle"
+        class="btn btn-primary rounded-2xl w-64 text-white transition duration-300 ease-in-out">
         PLAY
       </button>
     </div>
 
     <div class="flex justify-end m-5">
-      <button
-        @click="togglePopupTutorial"
-        class="btn btn-circle btn-primary bg-blue-400 text-white size-14 text-xl"
-      >
+      <button @click="togglePopupTutorial" class="btn btn-circle btn-primary bg-blue-400 text-white size-14 text-xl">
         ?
       </button>
     </div>
   </section>
 
   <!-- Tutorial pop-up -->
-  <section
-    v-if="showPopupTutorial"
-    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-  >
+  <section v-if="showPopupTutorial" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
     <div class="w-full sm:w-96 lg:w-1/2 text-center bg-white p-8 rounded-lg">
       <h1 class="text-2xl font-bold mb-4">This is a tutorial</h1>
 
@@ -224,10 +212,7 @@ const playerTimer = () => {
         recusandae facilis?
       </div>
 
-      <button
-        @click="togglePopupTutorial"
-        class="btn btn-warning text-white px-4 py-2"
-      >
+      <button @click="togglePopupTutorial" class="btn btn-warning text-white px-4 py-2">
         Close
       </button>
     </div>
@@ -235,52 +220,35 @@ const playerTimer = () => {
 
   <!-- Gamepage UI -->
   <Transition name="scale">
-  <section v-if="showGamePage" class="min-h-screen flex flex-col items-center justify-center transition-all">
-    <h1 class="font-bold text-5xl my-10">Simon Says</h1>
-    <div class="flex justify-between w-96 my-4 max-sm:w-80">
-      <span class="countdown font-mono text-2xl">Round : {{ round }}</span>
-      <span class="countdown font-mono text-2xl"
-        >{{ secondUint }} : {{ firstUint }}</span
-      >
-    </div>
+    <section v-if="showGamePage" class="min-h-screen flex flex-col items-center justify-center transition-all">
+      <h1 class="font-bold text-5xl my-10">Simon Says</h1>
+      <div class="flex justify-between w-96 my-4 max-sm:w-80">
+        <span class="countdown font-mono text-2xl">Round : {{ round }}</span>
+        <span class="countdown font-mono text-2xl">{{ secondUint }} : {{ firstUint }}</span>
+      </div>
 
-    <main class="grid grid-cols-2 gap-x-5 gap-y-5 w-96 sm:h-96 max-sm:w-80">
-      <button
-        v-for="buttonNumber in buttons"
-        :class="showTraceState(buttonNumber.number)"
-        :disabled="disablePlay"
-        :key="buttonNumber"
-        :id="buttonNumber.number"
-        class="rounded-md h-44 hover:brightness-90 active:brightness-150"
-        @click="playerClick"
-      ></button>
-    </main>
-    <button
-      class="btn btn-primary m-10 max-sm:size- w-96 max-sm:w-80"
-      @click="displayTrace"
-      :disabled="disableStart"
-    >
-      START
-    </button>
+      <main class="grid grid-cols-2 gap-x-5 gap-y-5 w-96 sm:h-96 max-sm:w-80">
+        <button v-for="buttonNumber in buttons" :class="showTraceState(buttonNumber.number)" :disabled="disablePlay"
+          :key="buttonNumber" :id="buttonNumber.number" class="rounded-md h-44 hover:brightness-90 active:brightness-150"
+          @click="playerClick"></button>
+      </main>
+      <button class="btn btn-primary m-10 max-sm:size- w-96 max-sm:w-80" @click="displayTrace" :disabled="disableStart">
+        START
+      </button>
+      <button class="btn btn-primary" @click="resetGame" :disabled="disableReset">
+        Reset
+      </button>
+      <button class="btn btn-primary w-96 max-sm:w-80" @click="showGamePage = false; showHomePage = true"
+        :disabled="disableStart">
+        HOME
+      </button>
+    </section>
+  </Transition>
 
-    <button class="btn btn-primary" @click="resetGame" :disabled="disableReset">
-      Reset
-    <button class="btn btn-primary w-96 max-sm:w-80" @click="showGamePage = false; showHomePage = true" :disabled="disableStart">
-      HOME
-    </button>
-  </section>
-</Transition>
-
-  <section
-    v-if="showPopupEnd"
-    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-  >
+  <section v-if="showPopupEnd" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
     <div class="w-80 text-center bg-white p-8 rounded-lg">
       <h1 class="text-2xl font-bold mb-4">End!</h1>
       <div>
-        Round: {{ playerLog[playerLog.length - 1].round }}
-        <br />
-        Time: {{ playerLog[playerLog.length - 1].time }}
         <div v-if="playerLog[playerLog.length - 1].round <= 10">
           TRY AGAIN NOOB!
         </div>
@@ -296,25 +264,23 @@ const playerTimer = () => {
         Finished Time: {{ playerLog[playerLog.length - 1].time }}
       </div>
 
-      <button
-        @click="togglePopupEnd"
-        class="btn btn-warning text-white px-4 py-2 mt-4"
-      >
+      <button @click="togglePopupEnd" class="btn btn-warning text-white px-4 py-2 mt-4">
         Close
       </button>
     </div>
   </section>
 </template>
 
-
 <style scoped>
 .scale-enter-active {
   animation: scale 1s;
 }
+
 @keyframes scale {
   0% {
     transform: scale(0);
   }
+
   100% {
     transform: scale(1);
   }
