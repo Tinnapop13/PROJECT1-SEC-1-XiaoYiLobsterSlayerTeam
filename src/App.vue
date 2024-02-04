@@ -1,52 +1,53 @@
 <script setup>
 import {ref, reactive} from "vue"
 
+// [papangkorn00] Homepage UI Variable , Handle Malfunction Player Input ,  Loading Variable
 const showHomePage = ref(true)
 const showGamePage = ref(false)
 const showPopupTutorial = ref(false)
-
 const showProgressBar = ref(false)
-
-const showPopupEnd = ref(false)
-
-const playerLog = ref([{round: 0}])
-const round = ref(1)
-
-const firstUint = ref(59)
-const secondUint = ref(9)
-
+const i = ref(0)
+const progressBarWidth = ref(0)
 let disableStart = false
 let disablePlay = true
 
+// [phatcharadol] Game Result Variable , Game Result UI Variable , Timer Variable
+const showPopupEnd = ref(false)
+const firstUint = ref(59)
+const secondUint = ref(9)
+const playerLog = ref([{round: 0}])
+const round = ref(1)
+
+// [Tinnapop13] Show Trace Variable
 let gameRoundPointer = 0
 const traceButtonIndex = ref(-1)
 const traces = []
 
+// [Nxts0] Handle Player Click Variable
 const logLst = []
 let logIndex = 0
 
-const i = ref(0)
-const progressBarWidth = ref(0)
+// Game Properties Variable
+const buttons = reactive([
+  {number: 0, color: "bg-[#FF0000]"},
+  {number: 1, color: "bg-[#228B22]"},
+  {number: 2, color: "bg-[#0000FF]"},
+  {number: 3, color: "bg-[#FFFF00]"},
+])
 
+// [papangkorn00] Homepage UI function (Tutorial,Start Button,Loading Bar)
 const togglePopupTutorial = () => {
   showPopupTutorial.value = !showPopupTutorial.value
 }
 
-const togglePopupEnd = () => {
-  showPopupEnd.value = !showPopupEnd.value
-  round.value = 1
-  firstUint.value = 59
-  secondUint.value = 9
-}
-
 const startToggle = () => {
+  setTimeout(() => {
+    showGamePage.value = true
+  }, 1000)
   showHomePage.value = false
   showProgressBar.value = true
   move()
   progressBarShow()
-  setTimeout(() => {
-    showGamePage.value = true
-  }, 1000)
 }
 
 const progressBarShow = () => {
@@ -55,15 +56,45 @@ const progressBarShow = () => {
   }, 1000)
 }
 
+const move = () => {
+  if (i.value === 0) {
+    i.value = 1
+    let width = 1
+    const id = setInterval(() => {
+      if (width >= 100) {
+        clearInterval(id)
+        i.value = 0
+      } else {
+        width++
+        progressBarWidth.value = `${width}%`
+      }
+    }, 10)
+  }
+}
+
+// [Tinnapop13] Display Trace function
+const randomNumber = (max) => {
+  return Math.floor(Math.random() * max)
+}
+
+const showTraceState = (buttonNumber) => {
+  return {
+    "bg-[#fff]": traceButtonIndex.value === buttonNumber,
+    [buttons[buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
+  }
+}
+
 const displayTrace = () => {
+  // Block Player From Clicking
   disableStart = true
   disablePlay = true
+  // Start Timer While Game Start Once
   if (round.value === 1) {
     playerTimer()
   }
+  // Set Button to Change Style while Show Trace
   const gameInterval = setInterval(() => {
     const randomButtonId = randomNumber(4)
-
     setTimeout(() => {
       if (gameRoundPointer < round.value) {
         traceButtonIndex.value = traces[gameRoundPointer - 1]
@@ -78,8 +109,8 @@ const displayTrace = () => {
     }, 750)
 
     gameRoundPointer++
+
     if (gameRoundPointer > round.value) {
-      console.log(traces)
       clearInterval(gameInterval)
       gameRoundPointer = 0
       disablePlay = false
@@ -87,24 +118,7 @@ const displayTrace = () => {
   }, 750)
 }
 
-const randomNumber = (max) => {
-  return Math.floor(Math.random() * max)
-}
-
-const buttons = reactive([
-  {number: 0, color: "bg-[#FF0000]"},
-  {number: 1, color: "bg-[#228B22]"},
-  {number: 2, color: "bg-[#0000FF]"},
-  {number: 3, color: "bg-[#FFFF00]"},
-])
-
-const showTraceState = (buttonNumber) => {
-  return {
-    "bg-[#fff]": traceButtonIndex.value === buttonNumber,
-    [buttons[buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
-  }
-}
-
+// [Nxts0] Handle Player Click function
 const playerClick = (event) => {
   let itemClick = Number(event.target.id)
   traceButtonIndex.value = itemClick
@@ -128,6 +142,14 @@ const playerClick = (event) => {
     disableStart = false
     showPopupEnd.value = true
   }
+}
+
+// [phatcharadol] Game Result function , Timer function , Calculate Score Level
+const togglePopupEnd = () => {
+  showPopupEnd.value = !showPopupEnd.value
+  round.value = 1
+  firstUint.value = 59
+  secondUint.value = 9
 }
 
 const playerTimer = () => {
@@ -161,22 +183,6 @@ const calculateScore = () => {
   // if (playerLog.score < 5 && timeCounter.value >= 10) {
   // } else if (playerLog.score < 15 && timeCounter.value >= 20)
   // } else if (playerLog.score < 20 && timeCounter.value >= 30)
-}
-
-const move = () => {
-  if (i.value === 0) {
-    i.value = 1
-    let width = 1
-    const id = setInterval(() => {
-      if (width >= 100) {
-        clearInterval(id)
-        i.value = 0
-      } else {
-        width++
-        progressBarWidth.value = `${width}%`
-      }
-    }, 10)
-  }
 }
 </script>
 
