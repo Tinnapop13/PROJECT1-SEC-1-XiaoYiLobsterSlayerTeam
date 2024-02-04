@@ -148,6 +148,9 @@ const playerTimer = () => {
         round: round.value-1,
       })
       showPopupEnd.value = true
+
+      var audio = new Audio("https://cdn.discordapp.com/attachments/1196805209381404682/1203710805413986344/rock-eyebrow-raise-sound-effect.mp3?ex=65d2160b&is=65bfa10b&hm=289ed8577d1a08479c2cd3f9607a37cb48240dac25744204c1ab4181e91992c1&")
+      audio.play()
     }
   }, 1000)
 }
