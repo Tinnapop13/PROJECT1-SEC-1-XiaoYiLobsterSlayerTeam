@@ -16,7 +16,10 @@ const secondUint = ref(9)
 const playerLog = ref([{round: 0}])
 const round = ref(1)
 
+
 // [Tinnapop13] Show Trace Variable
+=======
+// [Tinnapop13] Show Trace Variable 
 let gameRoundPointer = 0
 const traceButtonIndex = ref(-1)
 const traces = []
@@ -72,7 +75,6 @@ const displayTrace = () => {
   disableStart = true
   disablePlay = true
   disableReset = false
-
   // Start Timer While Game Start Once
   if (round.value === 1) {
     playerTimer()
@@ -157,20 +159,13 @@ const playerTimer = () => {
         round: round.value - 1,
       })
       showPopupEnd.value = true
+
+      var audio = new Audio("https://cdn.discordapp.com/attachments/1196805209381404682/1203710805413986344/rock-eyebrow-raise-sound-effect.mp3?ex=65d2160b&is=65bfa10b&hm=289ed8577d1a08479c2cd3f9607a37cb48240dac25744204c1ab4181e91992c1&")
+      audio.play()
     }
   }, 1000)
 }
 
-const calculateScore = () => {
-  // Temp....
-  // if (playerLog.score < 5 && timeCounter.value >= 10) {
-  // } else if (playerLog.score < 15 && timeCounter.value >= 20) {
-  // } else if (playerLog.score < 20 && timeCounter.value >= 30) {
-  // }
-  // if (playerLog.score < 5 && timeCounter.value >= 10) {
-  // } else if (playerLog.score < 15 && timeCounter.value >= 20)
-  // } else if (playerLog.score < 20 && timeCounter.value >= 30)
-}
 </script>
 
 <template>
@@ -242,10 +237,8 @@ const calculateScore = () => {
   </section>
 
   <!-- Gamepage UI -->
-  <section
-    v-if="showGamePage"
-    class="min-h-screen flex flex-col items-center justify-center"
-  >
+  <Transition name="scale">
+  <section v-if="showGamePage" class="min-h-screen flex flex-col items-center justify-center transition-all">
     <h1 class="font-bold text-5xl my-10">Simon Says</h1>
     <div class="flex justify-between w-96 my-4 max-sm:w-80">
       <span class="countdown font-mono text-2xl">Round : {{ round }}</span>
@@ -275,8 +268,11 @@ const calculateScore = () => {
 
     <button class="btn btn-primary" @click="resetGame" :disabled="disableReset">
       Reset
+    <button class="btn btn-primary w-96 max-sm:w-80" @click="showGamePage = false; showHomePage = true" :disabled="disableStart">
+      HOME
     </button>
   </section>
+</Transition>
 
   <section
     v-if="showPopupEnd"
@@ -288,6 +284,19 @@ const calculateScore = () => {
         Round: {{ playerLog[playerLog.length - 1].round }}
         <br />
         Time: {{ playerLog[playerLog.length - 1].time }}
+        <div v-if="playerLog[playerLog.length - 1].round <= 10">
+          TRY AGAIN NOOB!
+        </div>
+        <div v-else-if="playerLog[playerLog.length - 1].round > 10 && playerLog[playerLog.length - 1].round < 30">
+          THAT KINDA DECENT...
+        </div>
+        <div v-else>
+          EXCELLENT!
+        </div>
+        <br>
+        Finished Round: {{ playerLog[playerLog.length - 1].round }}
+        <br>
+        Finished Time: {{ playerLog[playerLog.length - 1].time }}
       </div>
 
       <button
@@ -300,4 +309,18 @@ const calculateScore = () => {
   </section>
 </template>
 
-<style scoped></style>
+
+<style scoped>
+.scale-enter-active {
+  animation: scale 1s;
+}
+@keyframes scale {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+</style>
+
