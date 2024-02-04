@@ -40,18 +40,19 @@ const togglePopupEnd = () => {
 }
 
 const startToggle = () => {
-  showGamePage.value = true
   showHomePage.value = false
-
   showProgressBar.value = true
   move()
   progressBarShow()
+  setTimeout(() => {
+    showGamePage.value = true
+  }, 1000)
 }
 
 const progressBarShow = () => {
   setTimeout(() => {
     showProgressBar.value = false
-  }, 1001)
+  }, 1000)
 }
 
 const displayTrace = () => {
@@ -180,9 +181,10 @@ const move = () => {
 </script>
 
 <template>
+  <!-- Homepage -->
   <section v-if="showHomePage" class="flex flex-col h-screen">
     <div
-      class="max-w-screen-lg mx-auto flex flex-col gap-20 items-center justify-center h-screen px-4 md:flex-row"
+      class="max-w-screen-lg mx-auto my-4 flex flex-col gap-20 items-center justify-center h-screen px-4 md:flex-row"
     >
       <div class="flex flex-col justify-center">
         <h1 class="text-2xl sm:text-7xl font-bold text-white">Simon Says</h1>
@@ -206,7 +208,7 @@ const move = () => {
     <div class="flex justify-center">
       <button
         @click="startToggle"
-        class="btn btn-primary bg-orange-500 rounded-3xl text-white size-20 max-sm:size-14"
+        class="btn btn-primary rounded-2xl w-64 text-white transition duration-300 ease-in-out"
       >
         PLAY
       </button>
@@ -215,9 +217,9 @@ const move = () => {
     <div class="flex justify-end m-5">
       <button
         @click="togglePopupTutorial"
-        class="btn btn-circle btn-primary bg-blue-400 text-white size-14"
+        class="btn btn-circle btn-primary bg-blue-400 text-white size-14 text-xl"
       >
-        Tutorial
+        ?
       </button>
     </div>
   </section>
@@ -246,7 +248,7 @@ const move = () => {
     </div>
   </section>
 
-  <!-- progress bar -->
+  <!--Loading progress bar -->
   <section
     v-if="showProgressBar"
     class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
@@ -259,15 +261,19 @@ const move = () => {
     </div>
   </section>
 
-  <!-- game page -->
+  <!-- Gamepage UI -->
   <section
     v-if="showGamePage"
     class="min-h-screen flex flex-col items-center justify-center"
   >
-    <h1 class="font-bold text-5xl py-20">Simon Says</h1>
-    <span class="countdown font-mono text-2xl"
-      >{{ secondUint }} : {{ firstUint }}</span
-    >
+    <h1 class="font-bold text-5xl my-10">Simon Says</h1>
+    <div class="flex justify-between w-96 my-4 max-sm:w-80">
+      <span class="countdown font-mono text-2xl">Round : {{ round }}</span>
+      <span class="countdown font-mono text-2xl"
+        >{{ secondUint }} : {{ firstUint }}</span
+      >
+    </div>
+
     <main class="grid grid-cols-2 gap-x-5 gap-y-5 w-96 sm:h-96 max-sm:w-80">
       <button
         v-for="buttonNumber in buttons"
@@ -280,11 +286,11 @@ const move = () => {
       ></button>
     </main>
     <button
-      class="btn btn-primary mt-20 max-sm:size-"
+      class="btn btn-primary m-10 max-sm:size- w-96 max-sm:w-80"
       @click="displayTrace"
       :disabled="disableStart"
     >
-      Start
+      START
     </button>
   </section>
 
@@ -294,7 +300,6 @@ const move = () => {
   >
     <div class="w-80 text-center bg-white p-8 rounded-lg">
       <h1 class="text-2xl font-bold mb-4">End!</h1>
-
       <div>
         Round: {{ playerLog[playerLog.length - 1].round }}
         <br />
