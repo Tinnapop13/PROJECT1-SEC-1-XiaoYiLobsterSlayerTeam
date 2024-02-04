@@ -5,7 +5,6 @@ import { ref, reactive } from "vue"
 const showHomePage = ref(true)
 const showGamePage = ref(false)
 const showPopupTutorial = ref(false)
-const showPopupMode = ref(false)
 const showProgressBar = ref(false)
 const i = ref(0)
 const progressBarWidth = ref(0)
@@ -33,21 +32,6 @@ let logIndex = 0
 
 
 // Game Properties Variable
-const gameSize = reactive([
-  {
-    size1: "2 x 2",
-    size2: "3 x 3",
-  },
-])
-
-const difficultyLevel = reactive([
-  {
-    mode1: "easy",
-    mode2: "normal",
-    mode3: "hard",
-  },
-])
-
 const buttons = reactive([
   { number: 0, color: "bg-[#FF0000]" },
   { number: 1, color: "bg-[#228B22]" },
@@ -57,10 +41,6 @@ const buttons = reactive([
 
 
 // [papangkorn00] Homepage UI function (Tutorial,Start Button,Loading Bar)
-const togglePopupMode = () => {
-  showPopupMode.value = !showPopupMode.value
-}
-
 const togglePopupTutorial = () => {
   showPopupTutorial.value = !showPopupTutorial.value
 }
@@ -68,8 +48,6 @@ const togglePopupTutorial = () => {
 const startToggle = () => {
   showGamePage.value = true
   showHomePage.value = false
-  showPopupMode.value = false
-
   showProgressBar.value = true
   move()
   progressBarShow()
@@ -78,7 +56,7 @@ const startToggle = () => {
 const progressBarShow = () => {
   setTimeout(() => {
     showProgressBar.value = false
-  }, 1001)
+  }, 1000)
 }
 
 const move = () => {
@@ -245,7 +223,7 @@ const calculateScore = () => {
     </div>
 
     <div class="flex justify-center">
-      <button @click="togglePopupMode"
+      <button @click="startToggle"
         class="btn btn-primary  rounded-2xl w-64 text-white transition duration-300 ease-in-out">
         PLAY
       </button>
@@ -258,42 +236,6 @@ const calculateScore = () => {
     </div>
   </section>
 
-  <!--Select Mode and Size UI-->
-  <section v-if="showPopupMode" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div
-      class="w-full sm:w-96 md:w-2/3 lg:w-1/2 xl:w-1/3 h-96 bg-white rounded-lg flex flex-col justify-center items-center p-4">
-      <div class="text-center mb-4">
-        <h3 class="text-xl font-bold">Select Mode</h3>
-        <div v-for="difficulty in difficultyLevel">
-          <div>{{ difficulty.mode1 }}</div>
-          <div>{{ difficulty.mode2 }}</div>
-          <div>{{ difficulty.mode3 }}</div>
-        </div>
-      </div>
-
-      <!--Select Size 2x2 3x3-->
-      <div class="text-center mb-4">
-        <h3 class="text-xl font-bold">Select Size</h3>
-        <div v-for="size in gameSize">
-          <div>{{ size.size1 }}</div>
-          <div>{{ size.size2 }}</div>
-        </div>
-      </div>
-
-      <button 
-        @click="startToggle" 
-        class="btn btn-primary text-white w-full sm:w-40 h-10 mt-5">
-        START
-      </button>
-
-      <button
-        @click="togglePopupMode"
-        class="btn btn-warning text-white px-4 py-2 mt-4">
-        Close
-      </button>
-
-    </div>
-  </section>
 
   <!-- Tutorial pop-up -->
   <section v-if="showPopupTutorial" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
