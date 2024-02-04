@@ -3,7 +3,6 @@ import { ref, reactive } from "vue"
 import { useDark, useToggle } from "@vueuse/core";
 
 const isDark = useDark()
-console.log(isDark.value)
 const toggleDark = useToggle(isDark)
 
 // [papangkorn00] Homepage UI Variable , Handle Malfunction Player Input ,  Loading Variable
