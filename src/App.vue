@@ -5,11 +5,9 @@ import {ref, reactive} from "vue"
 const showHomePage = ref(true)
 const showGamePage = ref(false)
 const showPopupTutorial = ref(false)
-const showProgressBar = ref(false)
-const i = ref(0)
-const progressBarWidth = ref(0)
 let disableStart = false
 let disablePlay = true
+let disableReset = true
 
 // [phatcharadol] Game Result Variable , Game Result UI Variable , Timer Variable
 const showPopupEnd = ref(false)
@@ -41,35 +39,20 @@ const togglePopupTutorial = () => {
 }
 
 const startToggle = () => {
-  setTimeout(() => {
-    showGamePage.value = true
-  }, 1000)
+  showGamePage.value = true
   showHomePage.value = false
-  showProgressBar.value = true
-  move()
-  progressBarShow()
 }
 
-const progressBarShow = () => {
-  setTimeout(() => {
-    showProgressBar.value = false
-  }, 1000)
-}
-
-const move = () => {
-  if (i.value === 0) {
-    i.value = 1
-    let width = 1
-    const id = setInterval(() => {
-      if (width >= 100) {
-        clearInterval(id)
-        i.value = 0
-      } else {
-        width++
-        progressBarWidth.value = `${width}%`
-      }
-    }, 10)
-  }
+const resetGame = () => {
+  playerLog.value = [{round: 0}]
+  round.value = 1
+  gameRoundPointer = 0
+  traceButtonIndex.value = -1
+  traces.splice(0, traces.length)
+  logLst.splice(0, logLst.length)
+  logIndex = 0
+  disableStart = false
+  togglePopupEnd()
 }
 
 // [Tinnapop13] Display Trace function
@@ -88,6 +71,8 @@ const displayTrace = () => {
   // Block Player From Clicking
   disableStart = true
   disablePlay = true
+  disableReset = false
+
   // Start Timer While Game Start Once
   if (round.value === 1) {
     playerTimer()
@@ -141,6 +126,7 @@ const playerClick = (event) => {
     logIndex = 0
     disableStart = false
     showPopupEnd.value = true
+    disableReset = true
   }
 }
 
@@ -150,6 +136,7 @@ const togglePopupEnd = () => {
   round.value = 1
   firstUint.value = 59
   secondUint.value = 9
+  disableReset = true
 }
 
 const playerTimer = () => {
@@ -254,19 +241,6 @@ const calculateScore = () => {
     </div>
   </section>
 
-  <!--Loading progress bar -->
-  <section
-    v-if="showProgressBar"
-    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-  >
-    <div class="w-64 bg-gray-300 rounded-md">
-      <div
-        class="w-[1%] h-8 bg-gradient-to-r from-red-500 from-10% via-green-500 via-30% to-blue-500 to-90% rounded-md"
-        :style="{width: progressBarWidth}"
-      ></div>
-    </div>
-  </section>
-
   <!-- Gamepage UI -->
   <section
     v-if="showGamePage"
@@ -297,6 +271,10 @@ const calculateScore = () => {
       :disabled="disableStart"
     >
       START
+    </button>
+
+    <button class="btn btn-primary" @click="resetGame" :disabled="disableReset">
+      Reset
     </button>
   </section>
 
