@@ -16,7 +16,7 @@ const secondUint = ref(9)
 const playerLog = ref([{round: 0}])
 const round = ref(1)
 
-// [Tinnapop13] Show Trace Variable 
+// [Tinnapop13] Show Trace Variable
 let gameRoundPointer = 0
 const traceButtonIndex = ref(-1)
 const traces = []
@@ -157,12 +157,13 @@ const playerTimer = () => {
       })
       showPopupEnd.value = true
 
-      var audio = new Audio("https://cdn.discordapp.com/attachments/1196805209381404682/1203710805413986344/rock-eyebrow-raise-sound-effect.mp3?ex=65d2160b&is=65bfa10b&hm=289ed8577d1a08479c2cd3f9607a37cb48240dac25744204c1ab4181e91992c1&")
+      var audio = new Audio(
+        "https://cdn.discordapp.com/attachments/1196805209381404682/1203710805413986344/rock-eyebrow-raise-sound-effect.mp3?ex=65d2160b&is=65bfa10b&hm=289ed8577d1a08479c2cd3f9607a37cb48240dac25744204c1ab4181e91992c1&"
+      )
       audio.play()
     }
   }, 1000)
 }
-
 </script>
 
 <template>
@@ -235,41 +236,55 @@ const playerTimer = () => {
 
   <!-- Gamepage UI -->
   <Transition name="scale">
-  <section v-if="showGamePage" class="min-h-screen flex flex-col items-center justify-center transition-all">
-    <h1 class="font-bold text-5xl my-10">Simon Says</h1>
-    <div class="flex justify-between w-96 my-4 max-sm:w-80">
-      <span class="countdown font-mono text-2xl">Round : {{ round }}</span>
-      <span class="countdown font-mono text-2xl"
-        >{{ secondUint }} : {{ firstUint }}</span
-      >
-    </div>
-
-    <main class="grid grid-cols-2 gap-x-5 gap-y-5 w-96 sm:h-96 max-sm:w-80">
-      <button
-        v-for="buttonNumber in buttons"
-        :class="showTraceState(buttonNumber.number)"
-        :disabled="disablePlay"
-        :key="buttonNumber"
-        :id="buttonNumber.number"
-        class="rounded-md h-44 hover:brightness-90 active:brightness-150"
-        @click="playerClick"
-      ></button>
-    </main>
-    <button
-      class="btn btn-primary m-10 max-sm:size- w-96 max-sm:w-80"
-      @click="displayTrace"
-      :disabled="disableStart"
+    <section
+      v-if="showGamePage"
+      class="min-h-screen flex flex-col items-center justify-center transition-all"
     >
-      START
-    </button>
+      <h1 class="font-bold text-5xl my-10">Simon Says</h1>
+      <div class="flex justify-between w-96 my-4 max-sm:w-80">
+        <span class="countdown font-mono text-2xl">Round : {{ round }}</span>
+        <span class="countdown font-mono text-2xl"
+          >{{ secondUint }} : {{ firstUint }}</span
+        >
+      </div>
 
-    <button class="btn btn-primary" @click="resetGame" :disabled="disableReset">
-      Reset
-    <button class="btn btn-primary w-96 max-sm:w-80" @click="showGamePage = false; showHomePage = true" :disabled="disableStart">
-      HOME
-    </button>
-  </section>
-</Transition>
+      <main class="grid grid-cols-2 gap-x-5 gap-y-5 w-96 sm:h-96 max-sm:w-80">
+        <button
+          v-for="buttonNumber in buttons"
+          :class="showTraceState(buttonNumber.number)"
+          :disabled="disablePlay"
+          :key="buttonNumber"
+          :id="buttonNumber.number"
+          class="rounded-md h-44 hover:brightness-90 active:brightness-150"
+          @click="playerClick"
+        ></button>
+      </main>
+      <div class="flex justify-center m-10 gap-x-10">
+        <button
+          class="btn btn-primary w-40 max-sm:w-28"
+          @click="displayTrace"
+          :disabled="disableStart"
+        >
+          START
+        </button>
+
+        <button
+          class="btn btn-primary w-40 max-sm:w-28"
+          @click="resetGame"
+          :disabled="disableReset"
+        >
+          restart
+        </button>
+      </div>
+      <button
+        class="btn btn-primary w-96 max-sm:w-80"
+        @click=";(showGamePage = false), (showHomePage = true)"
+        :disabled="disableStart"
+      >
+        HOME
+      </button>
+    </section>
+  </Transition>
 
   <section
     v-if="showPopupEnd"
@@ -284,15 +299,18 @@ const playerTimer = () => {
         <div v-if="playerLog[playerLog.length - 1].round <= 10">
           TRY AGAIN NOOB!
         </div>
-        <div v-else-if="playerLog[playerLog.length - 1].round > 10 && playerLog[playerLog.length - 1].round < 30">
+        <div
+          v-else-if="
+            playerLog[playerLog.length - 1].round > 10 &&
+            playerLog[playerLog.length - 1].round < 30
+          "
+        >
           THAT KINDA DECENT...
         </div>
-        <div v-else>
-          EXCELLENT!
-        </div>
-        <br>
+        <div v-else>EXCELLENT!</div>
+        <br />
         Finished Round: {{ playerLog[playerLog.length - 1].round }}
-        <br>
+        <br />
         Finished Time: {{ playerLog[playerLog.length - 1].time }}
       </div>
 
@@ -305,7 +323,6 @@ const playerTimer = () => {
     </div>
   </section>
 </template>
-
 
 <style scoped>
 .scale-enter-active {
@@ -320,4 +337,3 @@ const playerTimer = () => {
   }
 }
 </style>
-
