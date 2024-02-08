@@ -1,5 +1,9 @@
 <script setup>
 import {ref, reactive} from "vue"
+import {useDark, useToggle} from "@vueuse/core"
+
+const isDark = useDark()
+const toggleDark = useToggle(isDark)
 
 // [papangkorn00] Homepage UI Variable , Handle Malfunction Player Input ,  Loading Variable
 const showHomePage = ref(true)
@@ -14,7 +18,7 @@ const showPopupEnd = ref(false)
 const firstUint = ref(59)
 const secondUint = ref(9)
 const playerLog = ref([{round: 0}])
-const round = ref(1)
+const round = ref(0)
 
 // [Tinnapop13] Show Trace Variable
 let gameRoundPointer = 0
@@ -45,7 +49,6 @@ const startToggle = () => {
 
 const resetGame = () => {
   playerLog.value = [{round: 0}]
-  round.value = 1
   gameRoundPointer = 0
   traceButtonIndex.value = -1
   traces.splice(0, traces.length)
@@ -62,7 +65,7 @@ const randomNumber = (max) => {
 
 const showTraceState = (buttonNumber) => {
   return {
-    "bg-[#fff]": traceButtonIndex.value === buttonNumber,
+    "bg-[#fff] ": traceButtonIndex.value === buttonNumber,
     [buttons[buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
   }
 }
@@ -73,7 +76,8 @@ const displayTrace = () => {
   disablePlay = true
   disableReset = false
   // Start Timer While Game Start Once
-  if (round.value === 1) {
+  if (round.value === 0) {
+    round.value++
     playerTimer()
   }
   // Set Button to Change Style while Show Trace
@@ -111,6 +115,9 @@ const playerClick = (event) => {
     traceButtonIndex.value = -1
   }, 100)
   if (logLst[logIndex] === traces[logIndex]) {
+    new Audio(
+      "https://cdn.discordapp.com/attachments/1196805209381404682/1203715260742238268/pop-cat-original-meme.mp3?ex=65d21a32&is=65bfa532&hm=011af7cfcb702bb425a2ca043e29decd78bcb3b7ce4751ed44d573dffd27ad4a&"
+    ).play()
     logIndex++
     if (logLst.length === traces.length) {
       logLst.splice(0, logLst.length) // reset Array
@@ -124,7 +131,8 @@ const playerClick = (event) => {
     traces.splice(0, traces.length) // reset Array
     logIndex = 0
     disableStart = false
-    showPopupEnd.value = true
+    disablePlay = true
+    showPopupEnd.value = true //ntf
     disableReset = true
   }
 }
@@ -132,7 +140,7 @@ const playerClick = (event) => {
 // [phatcharadol] Game Result function , Timer function , Calculate Score Level
 const togglePopupEnd = () => {
   showPopupEnd.value = !showPopupEnd.value
-  round.value = 1
+  round.value = 0
   firstUint.value = 59
   secondUint.value = 9
   disableReset = true
@@ -141,19 +149,21 @@ const togglePopupEnd = () => {
 const playerTimer = () => {
   const timer = setInterval(() => {
     firstUint.value--
-
     if (firstUint.value < 10) firstUint.value = `0${firstUint.value}`
 
     if (firstUint.value == 0) {
       secondUint.value--
       secondUint.value === 0 ? (firstUint.value = 0) : (firstUint.value = 59)
     }
+  }, 1000)
 
+  const checkTimer = setInterval(() => {
     if (showPopupEnd.value || secondUint.value <= 0) {
       clearInterval(timer)
+      clearInterval(checkTimer)
       playerLog.value.push({
         time: `${secondUint.value}:${firstUint.value}`,
-        round: round.value - 1,
+        round: round.value,
       })
       showPopupEnd.value = true
 
@@ -162,19 +172,28 @@ const playerTimer = () => {
       )
       audio.play()
     }
-  }, 1000)
+  }, 100)
 }
 </script>
 
 <template>
   <!-- Homepage -->
-  <section v-if="showHomePage" class="flex flex-col h-screen">
+
+  <section v-if="showHomePage" class="flex flex-col h-screen dark:bg-[#121212]">
+    <div class="flex justify-end margin mt-3 mr-5" v-if="isDark">
+      <input type="checkbox" class="toggle" checked @click="toggleDark()" />
+    </div>
+    <div class="flex justify-end margin mt-3 mr-5" v-else>
+      <input type="checkbox" class="toggle" @click="toggleDark()" />
+    </div>
     <div
       class="max-w-screen-lg mx-auto my-4 flex flex-col gap-20 items-center justify-center h-screen px-4 md:flex-row"
     >
       <div class="flex flex-col justify-center">
-        <h1 class="text-2xl sm:text-7xl font-bold text-white">Simon Says</h1>
-        <p class="text-gray-400 py-4 max-w-md">
+        <h1 class="text-2xl sm:text-7xl font-bold dark:text-white">
+          Simon Says
+        </h1>
+        <p class="text-gray-400 py-4 max-w-md dark:text-white">
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas quos et
           vel recusandae illum, voluptates iusto deleniti dolorem obcaecati
           similique optio adipisci assumenda dignissimos, quo quisquam eaque
@@ -213,9 +232,11 @@ const playerTimer = () => {
   <!-- Tutorial pop-up -->
   <section
     v-if="showPopupTutorial"
-    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 dark:bg-[#121212]"
   >
-    <div class="w-full sm:w-96 lg:w-1/2 text-center bg-white p-8 rounded-lg">
+    <div
+      class="w-full sm:w-96 lg:w-1/2 text-center bg-white p-8 rounded-lg dark:bg-[#121212]"
+    >
       <h1 class="text-2xl font-bold mb-4">This is a tutorial</h1>
 
       <div class="mb-4">
@@ -278,7 +299,10 @@ const playerTimer = () => {
       </div>
       <button
         class="btn btn-primary w-96 max-sm:w-80"
-        @click=";(showGamePage = false), (showHomePage = true)"
+        @click="
+          showGamePage = false
+          showHomePage = true
+        "
         :disabled="disableStart"
       >
         HOME
@@ -293,9 +317,6 @@ const playerTimer = () => {
     <div class="w-80 text-center bg-white p-8 rounded-lg">
       <h1 class="text-2xl font-bold mb-4">End!</h1>
       <div>
-        Round: {{ playerLog[playerLog.length - 1].round }}
-        <br />
-        Time: {{ playerLog[playerLog.length - 1].time }}
         <div v-if="playerLog[playerLog.length - 1].round <= 10">
           TRY AGAIN NOOB!
         </div>
@@ -328,10 +349,12 @@ const playerTimer = () => {
 .scale-enter-active {
   animation: scale 1s;
 }
+
 @keyframes scale {
   0% {
     transform: scale(0);
   }
+
   100% {
     transform: scale(1);
   }
