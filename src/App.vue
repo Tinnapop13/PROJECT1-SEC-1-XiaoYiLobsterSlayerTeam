@@ -1,9 +1,9 @@
 <script setup>
 import { ref, reactive } from "vue" 
-import { useDark, useToggle } from "@vueuse/core";
 
-const isDark = useDark()
-const toggleDark = useToggle(isDark)
+// [Nxts0] Toggle Theme
+const isDark = ref(false)
+const toggleDark = () => { isDark.value = !isDark.value}
 
 // [papangkorn00] Homepage UI Variable , Handle Malfunction Player Input ,  Loading Variable
 const showHomePage = ref(true)
@@ -180,13 +180,13 @@ const playerTimer = () => {
 <template>
   <!-- Homepage -->
 
-  <section v-if="showHomePage" class="flex flex-col h-screen dark:bg-[#121212]">
+  <section v-if="showHomePage" class="flex flex-col h-screen" :class = "isDark ? 'bg-[#121212]': ''">
     <div class="flex justify-end margin mt-3 mr-5" v-if="isDark"><input type="checkbox" class="toggle" checked @click="toggleDark()" /></div>
     <div class="flex justify-end margin mt-3 mr-5" v-else><input type="checkbox" class="toggle"  @click="toggleDark()" /></div>
     <div class="max-w-screen-lg mx-auto my-4 flex flex-col gap-20 items-center justify-center h-screen px-4 md:flex-row">
       <div class="flex flex-col justify-center">
-        <h1 class="text-2xl sm:text-7xl font-bold dark:text-white">Simon Says</h1>
-        <p class="text-gray-400 py-4 max-w-md dark:text-white">
+        <h1 class="text-2xl sm:text-7xl font-bold" :class = "isDark ? 'text-white': ''" >Simon Says</h1>
+        <p class="text-gray-400 py-4 max-w-md" :class = "isDark ? 'text-white': ''">
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas quos
           et vel recusandae illum, voluptates iusto deleniti dolorem obcaecati
           similique optio adipisci assumenda dignissimos, quo quisquam eaque
@@ -218,8 +218,8 @@ const playerTimer = () => {
 
 
   <!-- Tutorial pop-up -->
-  <section v-if="showPopupTutorial" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 dark:bg-[#121212]">
-    <div class="w-full sm:w-96 lg:w-1/2 text-center bg-white p-8 rounded-lg dark:bg-[#121212]">
+  <section v-if="showPopupTutorial" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 " >
+    <div class="w-full sm:w-96 lg:w-1/2 text-center bg-white p-8 rounded-lg ">
       <h1 class="text-2xl font-bold mb-4">This is a tutorial</h1>
 
       <div class="mb-4 ">
@@ -238,26 +238,26 @@ const playerTimer = () => {
 
   <!-- Gamepage UI -->
   <Transition name="scale">
-    <section v-if="showGamePage" class="min-h-screen flex flex-col items-center justify-center dark:bg-[#121212]">
+    <section v-if="showGamePage" class="min-h-screen flex flex-col items-center justify-center" :class = "isDark ? 'bg-[#121212]': ''">
       <div class="flex justify-end margin mt-3 mr-5" v-if="isDark"><input type="checkbox" class="toggle" checked @click="toggleDark()" /></div>
       <div class="flex justify-end margin mt-3 mr-5" v-else><input type="checkbox" class="toggle"  @click="toggleDark()" /></div>
-      <h1 class="font-bold text-5xl my-10 dark:text-white">Simon Says</h1>
+      <h1 class="font-bold text-5xl my-10" :class = "isDark ? 'text-white': ''">Simon Says</h1>
       <div class="flex justify-between w-96 my-4 max-sm:w-80" >
-        <span class="countdown font-mono text-2xl dark:text-white">Round : {{ round }}</span>
-        <span class="countdown font-mono text-2xl dark:text-white">{{ secondUint }} : {{ firstUint }}</span>
+        <span class="countdown font-mono text-2xl" :class = "isDark ? 'text-white': ''">Round : {{ round }}</span>
+        <span class="countdown font-mono text-2xl" :class = "isDark ? 'text-white': ''">{{ secondUint }} : {{ firstUint }}</span>
       </div>
       <main class="grid grid-cols-2 gap-x-5 gap-y-5 w-96 sm:h-96 max-sm:w-80">
         <button v-for="buttonNumber in buttons" :class="showTraceState(buttonNumber.number)" :disabled="disablePlay"
           :key="buttonNumber" :id="buttonNumber.number" class="rounded-md h-44 hover:brightness-90 active:brightness-150"
           @click="playerClick"></button>
       </main>
-      <button class="btn btn-primary m-10 max-sm:size- w-96 max-sm:w-80" @click="displayTrace" :disabled="disableStart">
+      <button class="btn btn-primary m-10 max-sm:size- w-96 max-sm:w-80 text-white" @click="displayTrace" :disabled="disableStart">
         START
       </button>
-      <button class="btn btn-primary" @click="resetGame" :disabled="disableReset">
+      <button class="btn btn-primary text-white" @click="resetGame" :disabled="disableReset">
         Reset
       </button>
-      <button class="btn btn-primary w-96 max-sm:w-80" @click="showGamePage = false; showHomePage = true"
+      <button class="btn btn-primary w-96 max-sm:w-80 text-white" @click="showGamePage = false; showHomePage = true"
         :disabled="disableStart">
         HOME
       </button>
