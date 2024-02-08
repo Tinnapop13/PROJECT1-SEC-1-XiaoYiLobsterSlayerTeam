@@ -51,6 +51,10 @@ const startToggle = () => {
 
 const resetGame = () => {
   playerLog.value = [{ round: 0 }]
+<<<<<<< HEAD
+=======
+  round.value = 0
+>>>>>>> cb6c2909c7d0fb28059daed0cd7b3723b1952035
   gameRoundPointer = 0
   traceButtonIndex.value = -1
   traces.splice(0, traces.length)
@@ -60,6 +64,21 @@ const resetGame = () => {
   togglePopupEnd()
 }
 
+<<<<<<< HEAD
+=======
+// [Tinnapop13] Display Trace function
+const randomNumber = (max) => {
+  return Math.floor(Math.random() * max)
+}
+
+const showTraceState = (buttonNumber) => {
+  return {
+    "bg-[#fff]": traceButtonIndex.value === buttonNumber,
+    [buttons[buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
+  }
+}
+
+>>>>>>> cb6c2909c7d0fb28059daed0cd7b3723b1952035
 // [Tinnapop13] Display Trace function
 const randomNumber = (max) => {
   return Math.floor(Math.random() * max)
@@ -132,11 +151,16 @@ const playerClick = (event) => {
     traces.splice(0, traces.length) // reset Array
     logIndex = 0
     disableStart = false
+<<<<<<< HEAD
     disablePlay = true
     showPopupEnd.value = true //ntf
     disableReset = true
 
     
+=======
+    showPopupEnd.value = true
+    disableReset = true
+>>>>>>> cb6c2909c7d0fb28059daed0cd7b3723b1952035
   }
 }
 
@@ -157,6 +181,19 @@ const playerTimer = () => {
     if (firstUint.value == 0) {
       secondUint.value--
       secondUint.value === 0 ? (firstUint.value = 0) : (firstUint.value = 59)
+<<<<<<< HEAD
+=======
+    }
+
+    if (showPopupEnd.value || secondUint.value <= 0) {
+      clearInterval(timer)
+      playerLog.value.push({
+        time: `${secondUint.value}:${firstUint.value}`,
+        round: round.value,
+      })
+      showPopupEnd.value = true
+      new Audio("https://cdn.discordapp.com/attachments/1196805209381404682/1203710805413986344/rock-eyebrow-raise-sound-effect.mp3?ex=65d2160b&is=65bfa10b&hm=289ed8577d1a08479c2cd3f9607a37cb48240dac25744204c1ab4181e91992c1&").play()
+>>>>>>> cb6c2909c7d0fb28059daed0cd7b3723b1952035
     }
   }, 1000)
 
@@ -179,7 +216,11 @@ const playerTimer = () => {
 <template>
   <!-- Homepage -->
 
+<<<<<<< HEAD
   <section v-if="showHomePage" class="flex flex-col h-screen" :class = "isDark ? 'bg-[#121212]': ''">
+=======
+  <section v-if="showHomePage" class="flex flex-col h-screen dark:bg-[#121212]">
+>>>>>>> cb6c2909c7d0fb28059daed0cd7b3723b1952035
     <div class="flex justify-end margin mt-3 mr-5" v-if="isDark"><input type="checkbox" class="toggle" checked @click="toggleDark()" /></div>
     <div class="flex justify-end margin mt-3 mr-5" v-else><input type="checkbox" class="toggle"  @click="toggleDark()" /></div>
     <div class="max-w-screen-lg mx-auto my-4 flex flex-col gap-20 items-center justify-center h-screen px-4 md:flex-row">
@@ -250,13 +291,20 @@ const playerTimer = () => {
           :key="buttonNumber" :id="buttonNumber.number" class="rounded-md h-44 hover:brightness-90 active:brightness-150"
           @click="playerClick"></button>
       </main>
-      <button class="btn btn-primary m-10 max-sm:size- w-96 max-sm:w-80 text-white" @click="displayTrace" :disabled="disableStart">
+      <button class="btn btn-primary m-10 max-sm:size- w-96 max-sm:w-80" @click="displayTrace" :disabled="disableStart">
         START
       </button>
+<<<<<<< HEAD
       <button class="btn btn-primary text-white" @click="resetGame" :disabled="disableReset">
         Reset
       </button>
       <button class="btn btn-primary w-96 max-sm:w-80 text-white" @click="showGamePage = false; showHomePage = true"
+=======
+      <button class="btn btn-primary" @click="resetGame" :disabled="disableReset">
+        Reset
+      </button>
+      <button class="btn btn-primary w-96 max-sm:w-80" @click="showGamePage = false; showHomePage = true"
+>>>>>>> cb6c2909c7d0fb28059daed0cd7b3723b1952035
         :disabled="disableStart">
         HOME
       </button>
@@ -302,4 +350,8 @@ const playerTimer = () => {
     transform: scale(1);
   }
 }
+<<<<<<< HEAD
 </style>
+=======
+</style>
+>>>>>>> cb6c2909c7d0fb28059daed0cd7b3723b1952035
