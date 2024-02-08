@@ -1,9 +1,5 @@
 <script setup>
 import {ref, reactive} from "vue"
-import {useDark, useToggle} from "@vueuse/core"
-
-const isDark = useDark()
-const toggleDark = useToggle(isDark)
 
 // [papangkorn00] Homepage UI Variable , Handle Malfunction Player Input ,  Loading Variable
 const showHomePage = ref(true)
@@ -31,11 +27,47 @@ let logIndex = 0
 
 // Game Properties Variable
 const buttons = reactive([
-  {number: 0, color: "bg-[#FF0000]"},
-  {number: 1, color: "bg-[#228B22]"},
-  {number: 2, color: "bg-[#0000FF]"},
-  {number: 3, color: "bg-[#FFFF00]"},
+  [
+    {number: 0, color: "bg-[#FF0000]"},
+    {number: 1, color: "bg-[#228B22]"},
+    {number: 2, color: "bg-[#0000FF]"},
+    {number: 3, color: "bg-[#FFFF00]"},
+  ],
+  [
+    {number: 0, color: "bg-[#FF0000]"},
+    {number: 1, color: "bg-[#228B22]"},
+    {number: 2, color: "bg-[#0000FF]"},
+    {number: 3, color: "bg-[#FFFF00]"},
+    {number: 4, color: "bg-[#FF0000]"},
+    {number: 5, color: "bg-[#228B22]"},
+    {number: 6, color: "bg-[#0000FF]"},
+    {number: 7, color: "bg-[#FFFF00]"},
+    {number: 8, color: "bg-[#FF0000]"},
+  ],
 ])
+
+// แยก function 
+
+console.log(buttons[0])
+console.log(buttons[1])
+
+// const buttons2 = reactive([
+//   {number: 0, color: "bg-[#FF0000]"},
+//   {number: 1, color: "bg-[#228B22]"},
+//   {number: 2, color: "bg-[#0000FF]"},
+//   {number: 3, color: "bg-[#FFFF00]"},
+//   {number: 4, color: "bg-[#FF0000]"},
+//   {number: 5, color: "bg-[#228B22]"},
+//   {number: 6, color: "bg-[#0000FF]"},
+//   {number: 7, color: "bg-[#FFFF00]"},
+//   {number: 8, color: "bg-[#FF0000]"},
+// ])
+
+// console.log(buttons2)
+
+// const selectMode = (mode) => {
+//   selectedMode = mode
+// }
 
 // [papangkorn00] Homepage UI function (Tutorial,Start Button,Loading Bar)
 const togglePopupTutorial = () => {
@@ -63,10 +95,12 @@ const randomNumber = (max) => {
   return Math.floor(Math.random() * max)
 }
 
-const showTraceState = (buttonNumber) => {
+const showTraceState = (buttonNumberOne, buttonNumberTwo) => {
   return {
-    "bg-[#fff] ": traceButtonIndex.value === buttonNumber,
-    [buttons[buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
+    // "bg-[#fff]": traceButtonIndex.value === buttonNumberOne,
+    "bg-[#fff]": traceButtonIndex.value === buttonNumberTwo,
+    // [buttons[0][buttonNumberOne].color]: traceButtonIndex.value !== buttonNumberOne,
+    [buttons[1][buttonNumberTwo].color]: traceButtonIndex.value !== buttonNumberTwo,
   }
 }
 
@@ -201,13 +235,18 @@ const playerTimer = () => {
         </p>
       </div>
 
-      <div class="">
+      <div>
         <img
           src="https://cdn.discordapp.com/attachments/1196805209381404682/1203349161668247602/e6accda7-92b1-47e8-b317-1a6da0333512-removebg-preview.png?ex=65d0c53d&is=65be503d&hm=e6fd7ceaf9b3593b122400a06073c93a7ece7d9009b08583f5b14bc18ce53916&"
-          alt="mr.Simon"
+          alt="Mr.Simon"
           class="rounded-3xl size-[30rem] items-center max-sm:rounded-full max-sm:size-56"
         />
       </div>
+    </div>
+
+    <div class="flex justify-center gap-x-10">
+      <button @click="selectMode(2)" class="btn bg-blue-500">2 x 2</button>
+      <button @click="selectMode(3)" class="btn bg-blue-500">3 x 3</button>
     </div>
 
     <div class="flex justify-center">
@@ -269,20 +308,33 @@ const playerTimer = () => {
         >
       </div>
 
-      <main class="grid grid-cols-2 gap-x-5 gap-y-5 w-96 sm:h-96 max-sm:w-80">
+      <!-- <main class="grid grid-cols-2 gap-5 w-96 sm:h-96 max-sm:w-80">
         <button
-          v-for="buttonNumber in buttons"
+          v-for="buttonNumber in buttons[0]"
           :class="showTraceState(buttonNumber.number)"
           :disabled="disablePlay"
-          :key="buttonNumber"
+          :key="buttonNumber.number"
           :id="buttonNumber.number"
-          class="rounded-md h-44 hover:brightness-90 active:brightness-150"
+          class="rounded-md h-44 shadow-md hover:brightness-90 active:brightness-150"
+          @click="playerClick"
+        ></button>
+      </main> -->
+
+      <main class="grid grid-cols-3 gap-5 w-72 sm:h-80 max-sm:w-80">
+        <button
+          v-for="buttonNumber in buttons[1]"
+          :class="showTraceState(buttonNumber.number)"
+          :disabled="disablePlay"
+          :key="buttonNumber.number"
+          :id="buttonNumber.number"
+          class="rounded-md h-44 shadow-md hover:brightness-90 active:brightness-150"
           @click="playerClick"
         ></button>
       </main>
-      <div class="flex justify-center m-10 gap-x-10">
+
+      <div class="flex justify-center m-8 gap-x-10">
         <button
-          class="btn btn-primary w-40 max-sm:w-28"
+          class="btn btn-success w-40 max-sm:w-28 bg-green-500 shadow-md hover:shadow-green-500/50"
           @click="displayTrace"
           :disabled="disableStart"
         >
@@ -290,19 +342,16 @@ const playerTimer = () => {
         </button>
 
         <button
-          class="btn btn-primary w-40 max-sm:w-28"
+          class="btn btn-warning w-40 max-sm:w-28 shadow-md hover:shadow-yellow-500/50"
           @click="resetGame"
           :disabled="disableReset"
         >
-          restart
+          RESTART
         </button>
       </div>
       <button
-        class="btn btn-primary w-96 max-sm:w-80"
-        @click="
-          showGamePage = false
-          showHomePage = true
-        "
+        class="btn btn-primary w-96 max-sm:w-80 shadow-md hover:shadow-indigo-500/50"
+        @click=";(showGamePage = false), (showHomePage = true)"
         :disabled="disableStart"
       >
         HOME
