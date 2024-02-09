@@ -12,8 +12,6 @@ const showPopupTutorial = ref(false)
 let disableStart = false
 let disablePlay = true
 let disableReset = true
-const gameSize = ref(1)
-const disablePlayBtn = ref(true)
 
 // [phatcharadol] Game Result Variable , Game Result UI Variable , Timer Variable
 const showPopupEnd = ref(false)
@@ -23,6 +21,8 @@ const playerLog = ref([{ round: 0 }])
 const round = ref(0)
 const btnSpeed = ref(0)
 const gameMode = ref(0)
+const gameSize = ref(1)
+const disablePlayBtn = ref(true)
 
 // [Tinnapop13] Show Trace Variable
 let gameRoundPointer = 0
@@ -51,8 +51,43 @@ const buttons = reactive([
     { number: 6, color: "bg-[#0000FF]" },
     { number: 7, color: "bg-[#FFFF00]" },
     { number: 8, color: "bg-[#FF0000]" },
+    {number: 0, color: "bg-[#FF0000]"},
+  ],
+  [
+    {number: 0, color: "bg-[#FF0000]"},
+    {number: 1, color: "bg-[#228B22]"},
+    {number: 2, color: "bg-[#0000FF]"},
+    {number: 3, color: "bg-[#FFFF00]"},
+    {number: 4, color: "bg-[#FF0000]"},
+    {number: 5, color: "bg-[#228B22]"},
+    {number: 6, color: "bg-[#0000FF]"},
+    {number: 7, color: "bg-[#FFFF00]"},
+    {number: 8, color: "bg-[#FF0000]"},
   ],
 ])
+
+// แยก function 
+
+console.log(buttons[0])
+console.log(buttons[1])
+
+// const buttons2 = reactive([
+//   {number: 0, color: "bg-[#FF0000]"},
+//   {number: 1, color: "bg-[#228B22]"},
+//   {number: 2, color: "bg-[#0000FF]"},
+//   {number: 3, color: "bg-[#FFFF00]"},
+//   {number: 4, color: "bg-[#FF0000]"},
+//   {number: 5, color: "bg-[#228B22]"},
+//   {number: 6, color: "bg-[#0000FF]"},
+//   {number: 7, color: "bg-[#FFFF00]"},
+//   {number: 8, color: "bg-[#FF0000]"},
+// ])
+
+// console.log(buttons2)
+
+// const selectMode = (mode) => {
+//   selectedMode = mode
+// }
 
 // [papangkorn00] Homepage UI function (Tutorial,Start Button,Loading Bar)
 const togglePopupTutorial = () => {
@@ -65,7 +100,7 @@ const startToggle = () => {
 }
 
 const resetGame = () => {
-  playerLog.value = [{ round: 0 }]
+  playerLog.value = [{round: 0}]
   gameRoundPointer = 0
   traceButtonIndex.value = -1
   traces.splice(0, traces.length)
@@ -86,6 +121,7 @@ const randomNumber = (max) => {
 
 const showTraceState = (buttonNumber) => {
   return {
+    // "bg-[#fff]": traceButtonIndex.value === buttonNumberOne,
     "bg-[#fff]": traceButtonIndex.value === buttonNumber,
     [buttons[1][buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
   }
@@ -102,6 +138,8 @@ const selectDifficults = (mode) => {
   } else {
     btnSpeed.value = 100
     disablePlayBtn.value = false
+    // [buttons[0][buttonNumberOne].color]: traceButtonIndex.value !== buttonNumberOne,
+    [buttons[1][buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
   }
 }
 
@@ -211,7 +249,6 @@ const playerTimer = () => {
     }
   }, 100)
 }
-
 </script>
 
 <template>
@@ -254,12 +291,24 @@ const playerTimer = () => {
     <div class="flex justify-center">
       <button @click="startToggle" class="btn btn-primary rounded-2xl w-64 text-white transition duration-300 ease-in-out"
         :disabled="disablePlayBtn">
+      <button @click="selectMode(2)" class="btn bg-blue-500">2 x 2</button>
+      <button @click="selectMode(3)" class="btn bg-blue-500">3 x 3</button>
+    </div>
+
+    <div class="flex justify-center">
+      <button
+        @click="startToggle"
+        class="btn btn-primary rounded-2xl w-64 text-white transition duration-300 ease-in-out"
+      >
         PLAY
       </button>
     </div>
 
     <div class="flex justify-end m-5">
-      <button @click="togglePopupTutorial" class="btn btn-circle btn-primary bg-blue-400 text-white size-14 text-xl">
+      <button
+        @click="togglePopupTutorial"
+        class="btn btn-circle btn-primary bg-blue-400 text-white size-14 text-xl"
+      >
         ?
       </button>
     </div>
@@ -277,7 +326,10 @@ const playerTimer = () => {
         recusandae facilis?
       </div>
 
-      <button @click="togglePopupTutorial" class="btn btn-warning text-white px-4 py-2">
+      <button
+        @click="togglePopupTutorial"
+        class="btn btn-warning text-white px-4 py-2"
+      >
         Close
       </button>
     </div>
@@ -328,7 +380,10 @@ const playerTimer = () => {
     </section>
   </Transition>
 
-  <section v-if="showPopupEnd" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+  <section
+    v-if="showPopupEnd"
+    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+  >
     <div class="w-80 text-center bg-white p-8 rounded-lg">
       <h1 class="text-2xl font-bold mb-4">End!</h1>
       <div>
@@ -347,7 +402,10 @@ const playerTimer = () => {
         Finished Time: {{ playerLog[playerLog.length - 1].time }}
       </div>
 
-      <button @click="togglePopupEnd" class="btn btn-warning text-white px-4 py-2 mt-4">
+      <button
+        @click="togglePopupEnd"
+        class="btn btn-warning text-white px-4 py-2 mt-4"
+      >
         Close
       </button>
     </div>
