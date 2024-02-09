@@ -1,5 +1,9 @@
 <script setup>
-import {ref, reactive} from "vue"
+import { ref, reactive } from "vue"
+
+// [Nxts0] Toggle Theme
+const isDark = ref(false)
+const toggleDark = () => { isDark.value = !isDark.value }
 
 // [papangkorn00] Homepage UI Variable , Handle Malfunction Player Input ,  Loading Variable
 const showHomePage = ref(true)
@@ -13,8 +17,12 @@ let disableReset = true
 const showPopupEnd = ref(false)
 const firstUint = ref(59)
 const secondUint = ref(9)
-const playerLog = ref([{round: 0}])
+const playerLog = ref([{ round: 0 }])
 const round = ref(0)
+const btnSpeed = ref(0)
+const gameMode = ref(0)
+const gameSize = ref(1)
+const disablePlayBtn = ref(true)
 
 // [Tinnapop13] Show Trace Variable
 let gameRoundPointer = 0
@@ -28,10 +36,22 @@ let logIndex = 0
 // Game Properties Variable
 const buttons = reactive([
   [
+    { number: 0, color: "bg-[#FF0000]" },
+    { number: 1, color: "bg-[#228B22]" },
+    { number: 2, color: "bg-[#0000FF]" },
+    { number: 3, color: "bg-[#FFFF00]" },
+  ],
+  [
+    { number: 0, color: "bg-[#FF0000]" },
+    { number: 1, color: "bg-[#228B22]" },
+    { number: 2, color: "bg-[#0000FF]" },
+    { number: 3, color: "bg-[#FFFF00]" },
+    { number: 4, color: "bg-[#FF0000]" },
+    { number: 5, color: "bg-[#228B22]" },
+    { number: 6, color: "bg-[#0000FF]" },
+    { number: 7, color: "bg-[#FFFF00]" },
+    { number: 8, color: "bg-[#FF0000]" },
     {number: 0, color: "bg-[#FF0000]"},
-    {number: 1, color: "bg-[#228B22]"},
-    {number: 2, color: "bg-[#0000FF]"},
-    {number: 3, color: "bg-[#FFFF00]"},
   ],
   [
     {number: 0, color: "bg-[#FF0000]"},
@@ -46,7 +66,7 @@ const buttons = reactive([
   ],
 ])
 
-// แยก function
+// แยก function 
 
 console.log(buttons[0])
 console.log(buttons[1])
@@ -90,18 +110,36 @@ const resetGame = () => {
   togglePopupEnd()
 }
 
+const selectSize = (size) => {
+  gameSize.value = size
+}
+
 // [Tinnapop13] Display Trace function
 const randomNumber = (max) => {
   return Math.floor(Math.random() * max)
 }
 
-const showTraceState = (buttonNumberOne, buttonNumberTwo) => {
+const showTraceState = (buttonNumber) => {
   return {
     // "bg-[#fff]": traceButtonIndex.value === buttonNumberOne,
-    "bg-[#fff]": traceButtonIndex.value === buttonNumberTwo,
+    "bg-[#fff]": traceButtonIndex.value === buttonNumber,
+    [buttons[1][buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
+  }
+}
+
+const selectDifficults = (mode) => {
+  gameMode.value = mode
+  if (gameMode.value === 3) {
+    btnSpeed.value = 300
+    disablePlayBtn.value = false
+  } else if (gameMode.value === 2) {
+    btnSpeed.value = 200
+    disablePlayBtn.value = false
+  } else {
+    btnSpeed.value = 100
+    disablePlayBtn.value = false
     // [buttons[0][buttonNumberOne].color]: traceButtonIndex.value !== buttonNumberOne,
-    [buttons[1][buttonNumberTwo].color]:
-      traceButtonIndex.value !== buttonNumberTwo,
+    [buttons[1][buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
   }
 }
 
@@ -124,12 +162,12 @@ const displayTrace = () => {
       } else {
         traceButtonIndex.value = randomButtonId
         traces.push(traceButtonIndex.value)
-      }
-    }, 500)
+      } Í
+    }, btnSpeed.value - (gameMode.value * 100))
 
     setTimeout(() => {
       traceButtonIndex.value = -1
-    }, 750)
+    }, btnSpeed.value)
 
     gameRoundPointer++
 
@@ -138,7 +176,8 @@ const displayTrace = () => {
       gameRoundPointer = 0
       disablePlay = false
     }
-  }, 750)
+    console.log(btnSpeed.value)
+  }, 500)
 }
 
 // [Nxts0] Handle Player Click function
@@ -178,6 +217,7 @@ const togglePopupEnd = () => {
   round.value = 0
   firstUint.value = 59
   secondUint.value = 9
+  disablePlay = true
   disableReset = true
 }
 
@@ -213,24 +253,17 @@ const playerTimer = () => {
 
 <template>
   <!-- Homepage -->
-
-  <section v-if="showHomePage" class="flex flex-col h-screen dark:bg-[#121212]">
-    <div class="flex justify-end margin mt-3 mr-5" v-if="isDark">
-      <input type="checkbox" class="toggle" checked @click="toggleDark()" />
+  <section v-if="showHomePage" class="flex flex-col h-screen" :class="isDark ? 'bg-[#121212]' : ''">
+    <div class="flex justify-end margin mt-3 mr-5" v-if="isDark"><input type="checkbox" class="toggle" checked
+        @click="toggleDark()" /></div>
+    <div class="flex justify-end margin mt-3 mr-5" v-else><input type="checkbox" class="toggle" @click="toggleDark()" />
     </div>
-    <div class="flex justify-end margin mt-3 mr-5" v-else>
-      <input type="checkbox" class="toggle" @click="toggleDark()" />
-    </div>
-    <div
-      class="max-w-screen-lg mx-auto my-4 flex flex-col gap-20 items-center justify-center h-screen px-4 md:flex-row"
-    >
+    <div class="max-w-screen-lg mx-auto my-4 flex flex-col gap-20 items-center justify-center h-screen px-4 md:flex-row">
       <div class="flex flex-col justify-center">
-        <h1 class="text-2xl sm:text-7xl font-bold dark:text-white">
-          Simon Says
-        </h1>
-        <p class="text-gray-400 py-4 max-w-md dark:text-white">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas quos et
-          vel recusandae illum, voluptates iusto deleniti dolorem obcaecati
+        <h1 class="text-2xl sm:text-7xl font-bold" :class="isDark ? 'text-white' : ''">Simon Says</h1>
+        <p class="text-gray-400 py-4 max-w-md" :class="isDark ? 'text-white' : ''">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas quos
+          et vel recusandae illum, voluptates iusto deleniti dolorem obcaecati
           similique optio adipisci assumenda dignissimos, quo quisquam eaque
           rerum! Et, molestias?
         </p>
@@ -239,13 +272,25 @@ const playerTimer = () => {
       <div>
         <img
           src="https://cdn.discordapp.com/attachments/1196805209381404682/1203349161668247602/e6accda7-92b1-47e8-b317-1a6da0333512-removebg-preview.png?ex=65d0c53d&is=65be503d&hm=e6fd7ceaf9b3593b122400a06073c93a7ece7d9009b08583f5b14bc18ce53916&"
-          alt="Mr.Simon"
-          class="rounded-3xl size-[30rem] items-center max-sm:rounded-full max-sm:size-56"
-        />
+          alt="Mr.Simon" class="rounded-3xl size-[30rem] items-center max-sm:rounded-full max-sm:size-56" />
       </div>
     </div>
 
     <div class="flex justify-center gap-x-10">
+      <button @click="selectSize(2)" class="btn bg-blue-500">2 x 2</button>
+      <button @click="selectSize(3)" class="btn bg-blue-500">3 x 3</button>
+    </div>
+
+    <div class="flex justify-center gap-x-10">
+      <button @click="selectDifficults(3)" class="btn bg-blue-500">EASY</button>
+      <button @click="selectDifficults(2)" class="btn bg-blue-500">NORMAL</button>
+      <button @click="selectDifficults(1)" class="btn bg-blue-500">HARD</button>
+    </div>
+
+
+    <div class="flex justify-center">
+      <button @click="startToggle" class="btn btn-primary rounded-2xl w-64 text-white transition duration-300 ease-in-out"
+        :disabled="disablePlayBtn">
       <button @click="selectMode(2)" class="btn bg-blue-500">2 x 2</button>
       <button @click="selectMode(3)" class="btn bg-blue-500">3 x 3</button>
     </div>
@@ -270,13 +315,8 @@ const playerTimer = () => {
   </section>
 
   <!-- Tutorial pop-up -->
-  <section
-    v-if="showPopupTutorial"
-    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 dark:bg-[#121212]"
-  >
-    <div
-      class="w-full sm:w-96 lg:w-1/2 text-center bg-white p-8 rounded-lg dark:bg-[#121212]"
-    >
+  <section v-if="showPopupTutorial" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 ">
+    <div class="w-full sm:w-96 lg:w-1/2 text-center bg-white p-8 rounded-lg ">
       <h1 class="text-2xl font-bold mb-4">This is a tutorial</h1>
 
       <div class="mb-4">
@@ -297,64 +337,44 @@ const playerTimer = () => {
 
   <!-- Gamepage UI -->
   <Transition name="scale">
-    <section
-      v-if="showGamePage"
-      class="min-h-screen flex flex-col items-center justify-center transition-all"
-    >
-      <h1 class="font-bold text-5xl my-10">Simon Says</h1>
+    <section v-if="showGamePage" class="min-h-screen flex flex-col items-center justify-center"
+      :class="isDark ? 'bg-[#121212]' : ''">
+      <div class="flex justify-end margin mt-3 mr-5" v-if="isDark"><input type="checkbox" class="toggle" checked
+          @click="toggleDark()" /></div>
+      <div class="flex justify-end margin mt-3 mr-5" v-else><input type="checkbox" class="toggle" @click="toggleDark()" />
+      </div>
+      <h1 class="font-bold text-5xl my-10" :class="isDark ? 'text-white' : ''">Simon Says</h1>
       <div class="flex justify-between w-96 my-4 max-sm:w-80">
-        <span class="countdown font-mono text-2xl">Round : {{ round }}</span>
-        <span class="countdown font-mono text-2xl"
-          >{{ secondUint }} : {{ firstUint }}</span
-        >
+        <span class="countdown font-mono text-2xl" :class="isDark ? 'text-white' : ''">Round : {{ round }}</span>
+        <span class="countdown font-mono text-2xl" :class="isDark ? 'text-white' : ''">{{ secondUint }} : {{ firstUint
+        }}</span>
       </div>
 
-      <!-- <main class="grid grid-cols-2 gap-5 w-96 sm:h-96 max-sm:w-80">
-        <button
-          v-for="buttonNumber in buttons[0]"
-          :class="showTraceState(buttonNumber.number)"
-          :disabled="disablePlay"
-          :key="buttonNumber.number"
-          :id="buttonNumber.number"
-          class="rounded-md h-44 shadow-md hover:brightness-90 active:brightness-150"
-          @click="playerClick"
-        ></button>
-      </main> -->
+      <main v-if="gameSize === 2" class="grid grid-cols-2 gap-5 w-96 sm:h-96 max-sm:w-80">
+        <button v-for="buttonNumber in buttons[0]" :class="showTraceState(buttonNumber.number)" :disabled="disablePlay"
+          :key="buttonNumber.number" :id="buttonNumber.number"
+          class="rounded-md h-44 shadow-md hover:brightness-90 active:brightness-150" @click="playerClick"></button>
+      </main>
 
-      <main class="grid grid-cols-3 gap-5 w-72 sm:h-80 max-sm:w-80">
-        <button
-          v-for="buttonNumber in buttons[1]"
-          :class="showTraceState(buttonNumber.number)"
-          :disabled="disablePlay"
-          :key="buttonNumber.number"
-          :id="buttonNumber.number"
-          class="rounded-md h-44 shadow-md hover:brightness-90 active:brightness-150"
-          @click="playerClick"
-        ></button>
+      <main v-else-if="gameSize === 3" class="grid grid-cols-3 gap-5 w-72 sm:h-80 max-sm:w-80">
+        <button v-for="buttonNumber in buttons[1]" :class="showTraceState(buttonNumber.number)" :disabled="disablePlay"
+          :key="buttonNumber.number" :id="buttonNumber.number"
+          class="rounded-md h-44 shadow-md hover:brightness-90 active:brightness-150" @click="playerClick"></button>
       </main>
 
       <div class="flex justify-center m-8 gap-x-10">
-        <button
-          class="btn btn-success w-40 max-sm:w-28 bg-green-500 shadow-md hover:shadow-green-500/50"
-          @click="displayTrace"
-          :disabled="disableStart"
-        >
+        <button class="btn btn-success w-40 max-sm:w-28 bg-green-500 shadow-md hover:shadow-green-500/50"
+          @click="displayTrace" :disabled="disableStart">
           START
         </button>
 
-        <button
-          class="btn btn-warning w-40 max-sm:w-28 shadow-md hover:shadow-yellow-500/50"
-          @click="resetGame"
-          :disabled="disableReset"
-        >
+        <button class="btn btn-warning w-40 max-sm:w-28 shadow-md hover:shadow-yellow-500/50" @click="resetGame"
+          :disabled="disableReset">
           RESTART
         </button>
       </div>
-      <button
-        class="btn btn-primary w-96 max-sm:w-80 shadow-md hover:shadow-indigo-500/50"
-        @click=";(showGamePage = false), (showHomePage = true)"
-        :disabled="disableStart"
-      >
+      <button class="btn btn-primary w-96 max-sm:w-80 shadow-md hover:shadow-indigo-500/50"
+        @click="; (showGamePage = false), (showHomePage = true)" :disabled="disableStart">
         HOME
       </button>
     </section>
@@ -370,12 +390,9 @@ const playerTimer = () => {
         <div v-if="playerLog[playerLog.length - 1].round <= 10">
           TRY AGAIN NOOB!
         </div>
-        <div
-          v-else-if="
-            playerLog[playerLog.length - 1].round > 10 &&
-            playerLog[playerLog.length - 1].round < 30
-          "
-        >
+        <div v-else-if="playerLog[playerLog.length - 1].round > 10 &&
+          playerLog[playerLog.length - 1].round < 30
+          ">
           THAT KINDA DECENT...
         </div>
         <div v-else>EXCELLENT!</div>
