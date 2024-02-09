@@ -46,7 +46,7 @@ const buttons = reactive([
   ],
 ])
 
-// แยก function 
+// แยก function
 
 console.log(buttons[0])
 console.log(buttons[1])
@@ -100,7 +100,8 @@ const showTraceState = (buttonNumberOne, buttonNumberTwo) => {
     // "bg-[#fff]": traceButtonIndex.value === buttonNumberOne,
     "bg-[#fff]": traceButtonIndex.value === buttonNumberTwo,
     // [buttons[0][buttonNumberOne].color]: traceButtonIndex.value !== buttonNumberOne,
-    [buttons[1][buttonNumberTwo].color]: traceButtonIndex.value !== buttonNumberTwo,
+    [buttons[1][buttonNumberTwo].color]:
+      traceButtonIndex.value !== buttonNumberTwo,
   }
 }
 
