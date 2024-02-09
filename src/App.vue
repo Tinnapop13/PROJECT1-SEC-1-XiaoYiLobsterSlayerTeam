@@ -12,6 +12,7 @@ const showPopupTutorial = ref(false)
 let disableStart = false
 let disablePlay = true
 let disableReset = true
+let gameSize = 1
 
 // [phatcharadol] Game Result Variable , Game Result UI Variable , Timer Variable
 const showPopupEnd = ref(false)
@@ -94,17 +95,21 @@ const resetGame = () => {
   togglePopupEnd()
 }
 
+const selectMode = (size) => {
+  gameSize = size
+}
+
 // [Tinnapop13] Display Trace function
 const randomNumber = (max) => {
   return Math.floor(Math.random() * max)
 }
 
-const showTraceState = (buttonNumberOne, buttonNumberTwo) => {
+const showTraceState = (buttonNumber) => {
   return {
     // "bg-[#fff]": traceButtonIndex.value === buttonNumberOne,
-    "bg-[#fff]": traceButtonIndex.value === buttonNumberTwo,
+    "bg-[#fff]": traceButtonIndex.value === buttonNumber,
     // [buttons[0][buttonNumberOne].color]: traceButtonIndex.value !== buttonNumberOne,
-    [buttons[1][buttonNumberTwo].color]: traceButtonIndex.value !== buttonNumberTwo,
+    [buttons[1][buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
   }
 }
 
@@ -181,6 +186,7 @@ const togglePopupEnd = () => {
   round.value = 0
   firstUint.value = 59
   secondUint.value = 9
+  disablePlay = true
   disableReset = true
 }
 
@@ -295,7 +301,7 @@ const playerTimer = () => {
         <span class="countdown font-mono text-2xl" :class = "isDark ? 'text-white': ''">{{ secondUint }} : {{ firstUint }}</span>
       </div>
 
-      <!-- <main class="grid grid-cols-2 gap-5 w-96 sm:h-96 max-sm:w-80">
+      <main v-if="gameSize===2" class="grid grid-cols-2 gap-5 w-96 sm:h-96 max-sm:w-80">
         <button
           v-for="buttonNumber in buttons[0]"
           :class="showTraceState(buttonNumber.number)"
@@ -305,9 +311,9 @@ const playerTimer = () => {
           class="rounded-md h-44 shadow-md hover:brightness-90 active:brightness-150"
           @click="playerClick"
         ></button>
-      </main> -->
+      </main>
 
-      <main class="grid grid-cols-3 gap-5 w-72 sm:h-80 max-sm:w-80">
+      <main v-else-if="gameSize===3" class="grid grid-cols-3 gap-5 w-72 sm:h-80 max-sm:w-80">
         <button
           v-for="buttonNumber in buttons[1]"
           :class="showTraceState(buttonNumber.number)"
