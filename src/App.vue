@@ -112,9 +112,6 @@ const selectDifficulties = (mode) => {
     btnSpeed.value = 100
     disablePlayBtn.value = false
   }
-  // if (gameMode.value !== 3 || gameMode.value !== 2 || gameMode.value !== 1) {
-  //   disablePlayBtn.value = false
-  // }
   currentMode.value = mode
 }
 
