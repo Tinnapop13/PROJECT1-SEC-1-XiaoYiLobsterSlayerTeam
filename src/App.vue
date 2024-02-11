@@ -112,9 +112,6 @@ const selectDifficulties = (mode) => {
     btnSpeed.value = 100
     disablePlayBtn.value = false
   }
-  // if (gameMode.value !== 3 || gameMode.value !== 2 || gameMode.value !== 1) {
-  //   disablePlayBtn.value = false
-  // }
   currentMode.value = mode
 }
 
@@ -122,7 +119,7 @@ const displayTrace = () => {
   // Block Player From Clicking
   disableStart = true
   disableBlock = true
-  disableReset = false
+  disableReset = true
   // Start Timer While Game Start Once
   if (round.value === 0) {
     round.value++
@@ -130,7 +127,7 @@ const displayTrace = () => {
   }
   // Set Button to Change Style while Show Trace
   const gameInterval = setInterval(() => {
-    const randomButtonId = randomNumber(4)
+    const randomButtonId = randomNumber(currentSize.value === 2 ? 4 : 9)
     setTimeout(() => {
       if (gameRoundPointer < round.value) {
         traceButtonIndex.value = traces[gameRoundPointer - 1]
@@ -150,6 +147,7 @@ const displayTrace = () => {
       clearInterval(gameInterval)
       gameRoundPointer = 0
       disableBlock = false
+      disableReset = false
     }
     console.log(btnSpeed.value)
   }, 500)
