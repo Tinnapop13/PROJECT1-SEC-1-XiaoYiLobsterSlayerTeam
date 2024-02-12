@@ -40,23 +40,15 @@ let logIndex = 0
 
 // Game Properties Variable
 const buttons = reactive([
-  [
     {number: 0, color: "bg-[#FF0000]"},
     {number: 1, color: "bg-[#228B22]"},
     {number: 2, color: "bg-[#0000FF]"},
     {number: 3, color: "bg-[#FFFF00]"},
-  ],
-  [
-    {number: 0, color: "bg-[#FF0000]"},
-    {number: 1, color: "bg-[#228B22]"},
-    {number: 2, color: "bg-[#0000FF]"},
-    {number: 3, color: "bg-[#FFFF00]"},
-    {number: 4, color: "bg-[#FF0000]"},
-    {number: 5, color: "bg-[#228B22]"},
-    {number: 6, color: "bg-[#0000FF]"},
-    {number: 7, color: "bg-[#FFFF00]"},
-    {number: 8, color: "bg-[#FF0000]"},
-  ],
+    {number: 4, color: "bg-[#15F5BA]"},
+    {number: 5, color: "bg-[#836FFF]"},
+    {number: 6, color: "bg-[#F57D1F]"},
+    {number: 7, color: "bg-[#F72798]"},
+    {number: 8, color: "bg-[#7E1717]"},
 ])
 
 // [papangkorn00] Homepage UI function (Tutorial,Start Button)
@@ -65,8 +57,12 @@ const togglePopupTutorial = () => {
 }
 
 const startToggle = () => {
-  showGamePage.value = true
-  showHomePage.value = false
+  setTimeout(()=>{
+    showHomePage.value = !showHomePage.value
+  },showHomePage.value === true ? 0 : 500)
+  setTimeout(()=>{
+    showGamePage.value = !showGamePage.value
+  },showGamePage.value === true ? 0 : 500)  
 }
 
 const resetGame = () => {
@@ -96,7 +92,7 @@ const randomNumber = (max) => {
 const showTraceState = (buttonNumber) => {
   return {
     "bg-[#fff]": traceButtonIndex.value === buttonNumber,
-    [buttons[1][buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
+    [buttons[buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
   }
 }
 
@@ -226,9 +222,10 @@ const playerTimer = () => {
 
 <template>
   <!-- Homepage -->
+  <Transition name="homepage" >
   <section
     v-if="showHomePage"
-    class="flex flex-col h-screen"
+    class="flex flex-col h-screen "
     :class="isDark ? 'bg-[#121212]' : ''"
   >
     <div class="flex justify-end margin mt-3 mr-5" v-if="isDark">
@@ -238,29 +235,72 @@ const playerTimer = () => {
       <input type="checkbox" class="toggle" @click="toggleDark()" />
     </div>
     <div
-      class="max-w-screen-lg mx-auto my-4 flex flex-col gap-20 items-center justify-center h-screen px-4 md:flex-row"
+      class="max-w-screen-lg mx-auto flex flex-col gap-10 items-center justify-center h-screen px-4 md:flex-row"
     >
       <div class="flex flex-col justify-center">
         <h1
           class="text-2xl sm:text-7xl font-bold"
           :class="isDark ? 'text-white' : ''"
+          style=" font-family: Honk; "
         >
           Simon Says
         </h1>
         <p
-          class="text-gray-400 py-4 max-w-md"
+          class="text-gray-400 py-4 max-w-md indent-12"
           :class="isDark ? 'text-white' : ''"
         >
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas quos et
-          vel recusandae illum, voluptates iusto deleniti dolorem obcaecati
-          similique optio adipisci assumenda dignissimos, quo quisquam eaque
-          rerum! Et, molestias?
+        Prepare to embark on an exhilarating journey of color and concentration with "Simon Says" – a web-based game that puts your memory and reflexes to the ultimate chromatic test!
         </p>
+        <div>
+          <p class="text-2xl divider">Size</p>
+        <button
+          @click="selectSize(2)"
+          class="btn  btn-secondary mr-2"
+          :class="currentSize === 2 ? '': 'btn-outline'"
+        >
+          2 x 2
+        </button>
+        <button
+          @click="selectSize(3)"
+          class="btn btn-secondary  mr-2" 
+          :class="currentSize === 3 ? '' : 'btn-outline'"
+        >
+          3 x 3
+        </button>
+      </div>
+
+      <div>
+        <p class="text-2xl divider" >Difficulty</p>
+        <button
+          @click="selectDifficulties(3)"
+          class="btn btn-success  mr-2"
+          :class="currentMode === 3 ? '' : 'btn-outline'"
+          :disabled="disableModeBtn"
+        >
+          EASY
+        </button>
+        <button
+          @click="selectDifficulties(2)"
+          class="btn btn-warning  mr-2"
+          :class="currentMode === 2 ? '' : 'btn-outline'"
+          :disabled="disableModeBtn"
+        >
+          NORMAL
+        </button>
+        <button
+          @click="selectDifficulties(1)"
+          class="btn btn-error mr-2"
+          :class="currentMode === 1 ? '' : 'btn-outline'"
+          :disabled="disableModeBtn"
+        >
+          HARD
+        </button>
+      </div>
       </div>
 
       <div>
         <img
-          src="https://cdn.discordapp.com/attachments/1196805209381404682/1203349161668247602/e6accda7-92b1-47e8-b317-1a6da0333512-removebg-preview.png?ex=65d0c53d&is=65be503d&hm=e6fd7ceaf9b3593b122400a06073c93a7ece7d9009b08583f5b14bc18ce53916&"
+          src="https://media.discordapp.net/attachments/1196805209381404682/1203348841080819812/e6accda7-92b1-47e8-b317-1a6da0333512.jpg?ex=65d9ff70&is=65c78a70&hm=4bbae31468fb64cc0cbc715062f44177d5cc0e7653187bb9965d96794036f2bd&=&format=webp&width=655&height=655"
           alt="Mr.Simon"
           class="rounded-3xl size-[30rem] items-center max-sm:rounded-full max-sm:size-56"
         />
@@ -268,54 +308,12 @@ const playerTimer = () => {
     </div>
 
     <div class="flex flex-col items-center gap-5">
-      <div>
-        <button
-          @click="selectSize(2)"
-          class="btn bg-blue-500"
-          :class="currentSize === 2 ? 'bg-red-400 text-white' : ''"
-        >
-          2 x 2
-        </button>
-        <button
-          @click="selectSize(3)"
-          class="btn bg-blue-500"
-          :class="currentSize === 3 ? 'bg-red-400 text-white' : ''"
-        >
-          3 x 3
-        </button>
-      </div>
-
-      <div>
-        <button
-          @click="selectDifficulties(3)"
-          class="btn bg-blue-500"
-          :class="currentMode === 3 ? 'bg-red-400 text-white' : ''"
-          :disabled="disableModeBtn"
-        >
-          EASY
-        </button>
-        <button
-          @click="selectDifficulties(2)"
-          class="btn bg-blue-500"
-          :class="currentMode === 2 ? 'bg-red-400 text-white' : ''"
-          :disabled="disableModeBtn"
-        >
-          NORMAL
-        </button>
-        <button
-          @click="selectDifficulties(1)"
-          class="btn bg-blue-500"
-          :class="currentMode === 1 ? 'bg-red-400 text-white' : ''"
-          :disabled="disableModeBtn"
-        >
-          HARD
-        </button>
-      </div>
+     
 
       <div>
         <button
           @click="startToggle"
-          class="btn btn-primary rounded-2xl w-64 text-white transition duration-300 ease-in-out"
+          class="btn btn-outline btn-primary rounded-2xl w-64 text-white transition duration-300 ease-in-out my-8"
           :disabled="disablePlayBtn"
         >
           PLAY
@@ -323,16 +321,16 @@ const playerTimer = () => {
       </div>
     </div>
 
-    <div class="flex justify-end m-5">
+    <div class="flex justify-end m-5 fixed right-0 bottom-0">
       <button
         @click="togglePopupTutorial"
-        class="btn btn-circle btn-primary bg-blue-400 text-white size-14 text-xl"
+        class="btn btn-circle btn-primary  text-white size-14 text-xl"
       >
         ?
       </button>
     </div>
   </section>
-
+</Transition>
   <!-- Tutorial pop-up -->
   <section
     v-if="showPopupTutorial"
@@ -358,19 +356,19 @@ const playerTimer = () => {
   </section>
 
   <!-- Gamepage UI -->
-  <Transition name="scale">
+  <Transition name="gamepage">
     <section
       v-if="showGamePage"
-      class="h-screen flex flex-col items-center justify-center"
+      class="h-full w-full flex flex-col items-center justify-center"
       :class="isDark ? 'bg-[#121212]' : ''"
     >
-      <div class="flex justify-end margin mr-5" v-if="isDark">
+      <div class="flex justify-end margin mt-3" v-if="isDark">
         <input type="checkbox" class="toggle" checked @click="toggleDark()" />
       </div>
-      <div class="flex justify-end margin mt-3 mr-5" v-else>
+      <div class="flex justify-end margin mt-3" v-else>
         <input type="checkbox" class="toggle" @click="toggleDark()" />
       </div>
-      <h1 class="font-bold text-5xl my-10" :class="isDark ? 'text-white' : ''">
+      <h1 class="font-bold text-5xl my-10" :class="isDark ? 'text-white' : '' " >
         Simon Says
       </h1>
       <div class="flex justify-between w-96 my-4 max-sm:w-80">
@@ -382,6 +380,7 @@ const playerTimer = () => {
         <span
           class="countdown font-mono text-2xl"
           :class="isDark ? 'text-white' : ''"
+          style="--value:${secondUint} : ${firstUint} "
           >{{ secondUint }} : {{ firstUint }}</span
         >
       </div>
@@ -391,7 +390,7 @@ const playerTimer = () => {
         class="grid grid-cols-2 gap-5 w-96 sm:h-96 max-sm:w-80"
       >
         <button
-          v-for="buttonNumber in buttons[0]"
+          v-for="buttonNumber in buttons.slice(0,4)"
           :class="showTraceState(buttonNumber.number)"
           :disabled="disableBlock"
           :key="buttonNumber.number"
@@ -406,7 +405,7 @@ const playerTimer = () => {
         class="grid grid-cols-3 gap-5 w-96 max-sm:w-80"
       >
         <button
-          v-for="buttonNumber in buttons[1]"
+          v-for="buttonNumber in buttons"
           :class="showTraceState(buttonNumber.number)"
           :disabled="disableBlock"
           :key="buttonNumber.number"
@@ -416,9 +415,9 @@ const playerTimer = () => {
         ></button>
       </main>
 
-      <div class="flex justify-center m-8 gap-x-10">
+      <div class="flex my-4 gap-x-10 w-96 max-sm:w-80 justify-between ">
         <button
-          class="btn btn-success w-40 max-sm:w-28 bg-green-500 shadow-md hover:shadow-green-500/50"
+          class="btn btn-success w-44 max-sm:w-28 bg-green-500 shadow-md hover:shadow-green-500/50"
           @click="displayTrace"
           :disabled="disableStart"
         >
@@ -434,8 +433,8 @@ const playerTimer = () => {
         </button>
       </div>
       <button
-        class="btn btn-primary w-96 max-sm:w-80 shadow-md hover:shadow-indigo-500/50"
-        @click=";(showGamePage = false), (showHomePage = true)"
+        class="btn mb-4 btn-primary w-96 max-sm:w-80 shadow-md hover:shadow-indigo-500/50"
+        @click="startToggle()"
         :disabled="disableStart"
       >
         HOME
@@ -479,11 +478,34 @@ const playerTimer = () => {
 </template>
 
 <style scoped>
-.scale-enter-active {
-  animation: scale 1s;
+.gamepage-enter-active {
+  animation: gamepage .5s;
 }
 
-@keyframes scale {
+.gamepage-leave-active {
+  animation: gamepage .5s;
+  animation-direction : reverse;
+}
+
+.homepage-enter-active {
+  animation: homepage .5s;
+  animation-direction : reverse;
+}
+
+.homepage-leave-active {
+  animation: homepage .5s;
+}
+@keyframes homepage {
+  0% {
+    transform: translateX(0vw);
+  }
+
+  100% {
+    transform: translateX(-100vw);
+  }
+}
+
+@keyframes gamepage {
   0% {
     transform: scale(0);
   }
