@@ -40,15 +40,15 @@ let logIndex = 0
 
 // Game Properties Variable
 const buttons = reactive([
-    {number: 0, color: "bg-[#FF0000]"},
-    {number: 1, color: "bg-[#228B22]"},
-    {number: 2, color: "bg-[#0000FF]"},
-    {number: 3, color: "bg-[#FFFF00]"},
-    {number: 4, color: "bg-[#15F5BA]"},
-    {number: 5, color: "bg-[#836FFF]"},
-    {number: 6, color: "bg-[#F57D1F]"},
-    {number: 7, color: "bg-[#F72798]"},
-    {number: 8, color: "bg-[#7E1717]"},
+  {number: 0, color: "bg-[#FF0000]"},
+  {number: 1, color: "bg-[#228B22]"},
+  {number: 2, color: "bg-[#0000FF]"},
+  {number: 3, color: "bg-[#FFFF00]"},
+  {number: 4, color: "bg-[#15F5BA]"},
+  {number: 5, color: "bg-[#836FFF]"},
+  {number: 6, color: "bg-[#F57D1F]"},
+  {number: 7, color: "bg-[#F72798]"},
+  {number: 8, color: "bg-[#7E1717]"},
 ])
 
 // [papangkorn00] Homepage UI function (Tutorial,Start Button)
@@ -57,19 +57,25 @@ const togglePopupTutorial = () => {
 }
 
 const startToggle = () => {
-  setTimeout(()=>{
-    showHomePage.value = !showHomePage.value
-  },showHomePage.value === true ? 0 : 500)
-  setTimeout(()=>{
-    showGamePage.value = !showGamePage.value
-  },showGamePage.value === true ? 0 : 500)  
+  setTimeout(
+    () => {
+      showHomePage.value = !showHomePage.value
+    },
+    showHomePage.value === true ? 0 : 500
+  )
+  setTimeout(
+    () => {
+      showGamePage.value = !showGamePage.value
+    },
+    showGamePage.value === true ? 0 : 500
+  )
 }
 
 const resetGame = () => {
   playerLog.value.push({
-        time: `${secondUint.value}:${firstUint.value}`,
-        round: round.value,
-      })
+    time: `${secondUint.value}:${firstUint.value}`,
+    round: round.value,
+  })
   gameRoundPointer = 0
   traceButtonIndex.value = -1
   traces.splice(0, traces.length)
@@ -177,7 +183,7 @@ const playerClick = (event) => {
     logIndex = 0
     disableStart = false
     disableBlock = true
-    showPopupEnd.value = true 
+    showPopupEnd.value = true
     disableReset = true
   }
 }
@@ -221,115 +227,119 @@ const playerTimer = () => {
 
 <template>
   <!-- Homepage -->
-  <Transition name="homepage" >
-  <section
-    v-if="showHomePage"
-    class="flex flex-col h-screen "
-    :class="isDark ? 'bg-[#121212]' : ''"
-  >
-    <div class="flex justify-end margin mt-3 mr-5" v-if="isDark">
-      <input type="checkbox" class="toggle" checked @click="toggleDark()" />
-    </div>
-    <div class="flex justify-end margin mt-3 mr-5" v-else>
-      <input type="checkbox" class="toggle" @click="toggleDark()" />
-    </div>
-    <div
-      class="max-w-screen-lg mx-auto flex flex-col gap-10 items-center justify-center h-screen px-4 md:flex-row"
+  <Transition name="homepage">
+    <section
+      v-if="showHomePage"
+      class="flex flex-col h-screen"
+      :class="isDark ? 'bg-[#121212]' : ''"
     >
-      <div class="flex flex-col justify-center">
-        <h1
-          class="text-2xl sm:text-7xl font-bold"
-          :class="isDark ? 'text-white' : ''"
-          style=" font-family: Honk; "
-        >
-          Simon Says
-        </h1>
-        <p
-          class="text-gray-400 py-4 max-w-md indent-12"
-          :class="isDark ? 'text-white' : ''"
-        >
-        Prepare to embark on an exhilarating journey of color and concentration with "Simon Says" – a web-based game that puts your memory and reflexes to the ultimate chromatic test!
-        </p>
-        <div>
-          <p class="text-2xl divider" :class="isDark ? 'text-[#FFFF]' : '' ">Size</p>
-        <button
-          @click="selectSize(2)"
-          class="btn  btn-secondary mr-2"
-          :class="currentSize === 2 ? '': 'btn-outline'"
-        >
-          2 x 2
-        </button>
-        <button
-          @click="selectSize(3)"
-          class="btn btn-secondary  mr-2" 
-          :class="currentSize === 3 ? '' : 'btn-outline'"
-        >
-          3 x 3
-        </button>
+      <div class="flex justify-end margin mt-3 mr-5" v-if="isDark">
+        <input type="checkbox" class="toggle" checked @click="toggleDark()" />
       </div>
-
-      <div>
-        <p class="text-2xl divider" :class="isDark ? 'text-[#FFFF]' : ''">Difficulty</p>
-        <button
-          @click="selectDifficulties(3)"
-          class="btn btn-success  mr-2"
-          :class="currentMode === 3 ? '' : 'btn-outline'"
-          :disabled="disableModeBtn"
-        >
-          EASY
-        </button>
-        <button
-          @click="selectDifficulties(2)"
-          class="btn btn-warning  mr-2"
-          :class="currentMode === 2 ? '' : 'btn-outline'"
-          :disabled="disableModeBtn"
-        >
-          NORMAL
-        </button>
-        <button
-          @click="selectDifficulties(1)"
-          class="btn btn-error mr-2"
-          :class="currentMode === 1 ? '' : 'btn-outline'"
-          :disabled="disableModeBtn"
-        >
-          HARD
-        </button>
+      <div class="flex justify-end margin mt-3 mr-5" v-else>
+        <input type="checkbox" class="toggle" @click="toggleDark()" />
       </div>
-      </div>
-
-      <div>
-        <img
-          src="https://media.discordapp.net/attachments/1196805209381404682/1203348841080819812/e6accda7-92b1-47e8-b317-1a6da0333512.jpg?ex=65d9ff70&is=65c78a70&hm=4bbae31468fb64cc0cbc715062f44177d5cc0e7653187bb9965d96794036f2bd&=&format=webp&width=655&height=655"
-          alt="Mr.Simon"
-          class="rounded-3xl size-[30rem] items-center max-sm:rounded-full max-sm:size-56"
-        />
-      </div>
-    </div>
-
-    <div class="flex flex-col items-center gap-5">
-     
-
-      <div>
-        <button
-          @click="startToggle"
-          class="btn btn-outline btn-primary rounded-2xl w-64 text-white transition duration-300 ease-in-out my-8"
-          :disabled="disablePlayBtn"
-        >
-          PLAY
-        </button>
-      </div>
-    </div>
-
-    <div class="flex justify-end m-5 fixed right-0 bottom-0">
-      <button
-        @click="togglePopupTutorial"
-        class="btn btn-circle btn-primary  text-white size-14 text-xl"
+      <div
+        class="max-w-screen-lg mx-auto flex flex-col gap-10 items-center justify-center h-screen px-4 md:flex-row"
       >
-        ?
-      </button>
-    </div>
-  </section>
-</Transition>
+        <div class="flex flex-col justify-center">
+          <h1
+            class="text-2xl sm:text-7xl font-bold"
+            :class="isDark ? 'text-white' : ''"
+            style="font-family: Honk"
+          >
+            Simon Says
+          </h1>
+          <p
+            class="text-gray-400 py-4 max-w-md indent-12"
+            :class="isDark ? 'text-white' : ''"
+          >
+            Prepare to embark on an exhilarating journey of color and
+            concentration with "Simon Says" – a web-based game that puts your
+            memory and reflexes to the ultimate chromatic test!
+          </p>
+          <div>
+            <p class="text-2xl divider" :class="isDark ? 'text-[#FFFF]' : ''">
+              Size
+            </p>
+            <button
+              @click="selectSize(2)"
+              class="btn btn-secondary mr-2"
+              :class="currentSize === 2 ? '' : 'btn-outline'"
+            >
+              2 x 2
+            </button>
+            <button
+              @click="selectSize(3)"
+              class="btn btn-secondary mr-2"
+              :class="currentSize === 3 ? '' : 'btn-outline'"
+            >
+              3 x 3
+            </button>
+          </div>
+
+          <div>
+            <p class="text-2xl divider" :class="isDark ? 'text-[#FFFF]' : ''">
+              Difficulty
+            </p>
+            <button
+              @click="selectDifficulties(3)"
+              class="btn btn-success mr-2"
+              :class="currentMode === 3 ? '' : 'btn-outline'"
+              :disabled="disableModeBtn"
+            >
+              EASY
+            </button>
+            <button
+              @click="selectDifficulties(2)"
+              class="btn btn-warning mr-2"
+              :class="currentMode === 2 ? '' : 'btn-outline'"
+              :disabled="disableModeBtn"
+            >
+              NORMAL
+            </button>
+            <button
+              @click="selectDifficulties(1)"
+              class="btn btn-error mr-2"
+              :class="currentMode === 1 ? '' : 'btn-outline'"
+              :disabled="disableModeBtn"
+            >
+              HARD
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <img
+            src="https://media.discordapp.net/attachments/1196805209381404682/1203348841080819812/e6accda7-92b1-47e8-b317-1a6da0333512.jpg?ex=65d9ff70&is=65c78a70&hm=4bbae31468fb64cc0cbc715062f44177d5cc0e7653187bb9965d96794036f2bd&=&format=webp&width=655&height=655"
+            alt="Mr.Simon"
+            class="rounded-3xl size-[30rem] items-center max-sm:rounded-full max-sm:size-56"
+          />
+        </div>
+      </div>
+
+      <div class="flex flex-col items-center gap-5">
+        <div>
+          <button
+            @click="startToggle"
+            class="btn btn-outline btn-primary rounded-2xl w-64 text-white transition duration-300 ease-in-out my-8"
+            :disabled="disablePlayBtn"
+          >
+            PLAY
+          </button>
+        </div>
+      </div>
+
+      <div class="flex justify-end m-5 fixed right-0 bottom-0">
+        <button
+          @click="togglePopupTutorial"
+          class="btn btn-circle btn-primary text-white size-14 text-xl"
+        >
+          ?
+        </button>
+      </div>
+    </section>
+  </Transition>
   <!-- Tutorial pop-up -->
   <section
     v-if="showPopupTutorial"
@@ -367,7 +377,7 @@ const playerTimer = () => {
       <div class="flex margin mt-3" v-else>
         <input type="checkbox" class="toggle" @click="toggleDark()" />
       </div>
-      <h1 class="font-bold text-5xl my-10" :class="isDark ? 'text-white' : '' " >
+      <h1 class="font-bold text-5xl my-10" :class="isDark ? 'text-white' : ''">
         Simon Says
       </h1>
       <div class="flex justify-between w-96 my-4 max-sm:w-80">
@@ -389,7 +399,7 @@ const playerTimer = () => {
         class="grid grid-cols-2 gap-5 w-96 sm:h-96 max-sm:w-80"
       >
         <button
-          v-for="buttonNumber in buttons.slice(0,4)"
+          v-for="buttonNumber in buttons.slice(0, 4)"
           :class="showTraceState(buttonNumber.number)"
           :disabled="disableBlock"
           :key="buttonNumber.number"
@@ -414,7 +424,7 @@ const playerTimer = () => {
         ></button>
       </main>
 
-      <div class="flex my-4 gap-x-10 w-96 max-sm:w-80 justify-between ">
+      <div class="flex my-4 gap-x-10 w-96 max-sm:w-80 justify-between">
         <button
           class="btn btn-success w-44 max-sm:w-28 bg-green-500 shadow-md hover:shadow-green-500/50"
           @click="displayTrace"
@@ -478,21 +488,21 @@ const playerTimer = () => {
 
 <style scoped>
 .gamepage-enter-active {
-  animation: gamepage .5s;
+  animation: gamepage 0.5s;
 }
 
 .gamepage-leave-active {
-  animation: gamepage .5s;
-  animation-direction : reverse;
+  animation: gamepage 0.5s;
+  animation-direction: reverse;
 }
 
 .homepage-enter-active {
-  animation: homepage .5s;
-  animation-direction : reverse;
+  animation: homepage 0.5s;
+  animation-direction: reverse;
 }
 
 .homepage-leave-active {
-  animation: homepage .5s;
+  animation: homepage 0.5s;
 }
 @keyframes homepage {
   0% {
