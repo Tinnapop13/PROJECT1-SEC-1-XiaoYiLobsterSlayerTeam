@@ -1,5 +1,5 @@
 # PROJECT1-SEC-1-XiaoYiLobsterSlayerTeam
-⭐⭐⭐⭐
+⭐⭐⭐
 
 ## Member
 - 65130500022 ณัฐศรัณย์ แซ่อึ่ง
