@@ -231,14 +231,14 @@ const playerTimer = () => {
     class="flex flex-col h-screen"
     :class="isDark ? 'bg-[#121212]' : ''"
   >
-    <div class="flex justify-end margin mt-3 mr-5" v-if="isDark">
+    <div class="flex justify-end mt-3 mr-5" v-if="isDark">
       <input type="checkbox" class="toggle" checked @click="toggleDark()" />
     </div>
-    <div class="flex justify-end margin mt-3 mr-5" v-else>
+    <div class="flex justify-end mt-3 mr-5" v-else>
       <input type="checkbox" class="toggle" @click="toggleDark()" />
     </div>
     <div
-      class="max-w-screen-lg mx-auto my-4 flex flex-col gap-20 items-center justify-center h-screen px-4 md:flex-row"
+      class="w-screen-lg mx-auto my-4 flex flex-col gap-20 items-center justify-center h-screen px-4 md:flex-row"
     >
       <div class="flex flex-col justify-center">
         <h1
@@ -364,10 +364,10 @@ const playerTimer = () => {
       class="h-screen flex flex-col items-center justify-center"
       :class="isDark ? 'bg-[#121212]' : ''"
     >
-      <div class="flex justify-end margin mr-5" v-if="isDark">
+      <div class="flex justify-end mr-5" v-if="isDark">
         <input type="checkbox" class="toggle" checked @click="toggleDark()" />
       </div>
-      <div class="flex justify-end margin mt-3 mr-5" v-else>
+      <div class="flex justify-end mt-3 mr-5" v-else>
         <input type="checkbox" class="toggle" @click="toggleDark()" />
       </div>
       <h1 class="font-bold text-5xl my-10" :class="isDark ? 'text-white' : ''">
