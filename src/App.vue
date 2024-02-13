@@ -1,5 +1,6 @@
 <script setup>
 import {ref, reactive} from "vue"
+import simon from './assets/simon.vue'
 
 // [Nxts0] Toggle Theme
 const isDark = ref(false)
@@ -259,11 +260,7 @@ const playerTimer = () => {
       </div>
 
       <div>
-        <img
-          src="https://media.discordapp.net/attachments/1196805209381404682/1203348841080819812/e6accda7-92b1-47e8-b317-1a6da0333512.jpg?ex=65d9ff70&is=65c78a70&hm=4bbae31468fb64cc0cbc715062f44177d5cc0e7653187bb9965d96794036f2bd&=&format=webp&width=655&height=655"
-          alt="Mr.Simon"
-          class="rounded-3xl size-[30rem] items-center max-sm:rounded-full max-sm:size-56"
-        />
+        <simon class="rounded-3xl size-[30rem] items-center max-sm:rounded-full max-sm:size-56" />
       </div>
     </div>
 
@@ -434,6 +431,24 @@ const playerTimer = () => {
   </section>
 </template>
 
-<style scoped>
+<style>
+
+#eye-right , #eye-left{
+  animation-name: eye-ball;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+}
+@keyframes eye-ball {
+  0%{
+    transform: translateY(0);
+  }
+  50%{
+    transform: translateY(-10px);
+  }
+  100%{
+    transform: translateY(0);
+  }
+  
+}
 
 </style>
