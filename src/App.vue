@@ -66,7 +66,10 @@ const startToggle = () => {
 }
 
 const resetGame = () => {
-  playerLog.value = [{round: 0}]
+  playerLog.value.push({
+        time: `${secondUint.value}:${firstUint.value}`,
+        round: round.value,
+      })
   gameRoundPointer = 0
   traceButtonIndex.value = -1
   traces.splice(0, traces.length)
@@ -187,6 +190,10 @@ const togglePopupEnd = () => {
   secondUint.value = 9
   disableBlock = true
   disableReset = true
+  disableStart = false
+
+
+  playerLog.value = []
 }
 
 const playerTimer = () => {
@@ -204,10 +211,7 @@ const playerTimer = () => {
     if (showPopupEnd.value || secondUint.value <= 0) {
       clearInterval(timer)
       clearInterval(checkTimer)
-      playerLog.value.push({
-        time: `${secondUint.value}:${firstUint.value}`,
-        round: round.value,
-      })
+      resetGame()
       showPopupEnd.value = true
 
       var audio = new Audio(
