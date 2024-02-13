@@ -169,13 +169,12 @@ const playerClick = (event) => {
       displayTrace()
     }
   } else {
-    console.log("lose")
     logLst.splice(0, logLst.length) // reset Array
     traces.splice(0, traces.length) // reset Array
     logIndex = 0
     disableStart = false
     disableBlock = true
-    showPopupEnd.value = true //ntf
+    showPopupEnd.value = true 
     disableReset = true
   }
 }
