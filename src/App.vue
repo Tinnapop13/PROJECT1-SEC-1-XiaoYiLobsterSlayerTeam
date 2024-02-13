@@ -1,5 +1,6 @@
 <script setup>
 import {ref, reactive} from "vue"
+import simon from './assets/simon.vue'
 
 // [Nxts0] Toggle Theme
 const isDark = ref(false)
@@ -7,18 +8,12 @@ const toggleDark = () => {
   isDark.value = !isDark.value
 }
 
-// [papangkorn00] Homepage UI Variable , Handle Malfunction Player Input,
-const showHomePage = ref(true)
-const showGamePage = ref(false)
+// [papangkorn00] Homepage UI Variable , Handle Malfunction Player Input
+let disableInterrupt = true
+const showPage = ref(true)
 const showPopupTutorial = ref(false)
-let disableStart = false
-let disableBlock = true
-let disableReset = true
-const gameSize = ref(1)
-const disablePlayBtn = ref(true)
 const currentSize = ref(0)
 const currentMode = ref(0)
-const disableModeBtn = ref(true)
 
 // [phatcharadol] Game Result Variable , Game Result UI Variable , Timer Variable
 const showPopupEnd = ref(false)
@@ -26,8 +21,6 @@ const firstUint = ref(59)
 const secondUint = ref(9)
 const playerLog = ref([{round: 0}])
 const round = ref(0)
-const btnSpeed = ref(0)
-const gameMode = ref(0)
 
 // [Tinnapop13] Show Trace Variable
 let gameRoundPointer = 0
@@ -57,12 +50,7 @@ const togglePopupTutorial = () => {
 }
 
 const startToggle = () => {
-  setTimeout(()=>{
-    showHomePage.value = !showHomePage.value
-  },showHomePage.value === true ? 0 : 500)
-  setTimeout(()=>{
-    showGamePage.value = !showGamePage.value
-  },showGamePage.value === true ? 0 : 500)  
+  showPage.value = !showPage.value
 }
 
 const resetGame = () => {
@@ -75,16 +63,10 @@ const resetGame = () => {
   traces.splice(0, traces.length)
   logLst.splice(0, logLst.length)
   logIndex = 0
-  disableStart = false
-  togglePopupEnd()
 }
 
 const selectSize = (size) => {
-  gameSize.value = size
   currentSize.value = size
-  if (size) {
-    disableModeBtn.value = false
-  }
 }
 
 // [Tinnapop13] Display Trace function
@@ -100,25 +82,12 @@ const showTraceState = (buttonNumber) => {
 }
 
 const selectDifficulties = (mode) => {
-  gameMode.value = mode
-  if (gameMode.value === 3) {
-    btnSpeed.value = 300
-    disablePlayBtn.value = false
-  } else if (gameMode.value === 2) {
-    btnSpeed.value = 200
-    disablePlayBtn.value = false
-  } else {
-    btnSpeed.value = 100
-    disablePlayBtn.value = false
-  }
   currentMode.value = mode
 }
 
 const displayTrace = () => {
   // Block Player From Clicking
-  disableStart = true
-  disableBlock = true
-  disableReset = true
+  disableInterrupt = true
   // Start Timer While Game Start Once
   if (round.value === 0) {
     round.value++
@@ -134,22 +103,20 @@ const displayTrace = () => {
         traceButtonIndex.value = randomButtonId
         traces.push(traceButtonIndex.value)
       }
-    }, btnSpeed.value - gameMode.value * 100)
+    }, ((currentMode.value*currentMode.value) * 100) - 100)
 
     setTimeout(() => {
       traceButtonIndex.value = -1
-    }, btnSpeed.value)
+    }, ((currentMode.value*currentMode.value) * 100))
 
     gameRoundPointer++
 
     if (gameRoundPointer > round.value) {
       clearInterval(gameInterval)
       gameRoundPointer = 0
-      disableBlock = false
-      disableReset = false
+      disableInterrupt = false
     }
-    console.log(btnSpeed.value)
-  }, 500)
+  },((currentMode.value*currentMode.value) * 100))
 }
 
 // [Nxts0] Handle Player Click function
@@ -175,10 +142,8 @@ const playerClick = (event) => {
     logLst.splice(0, logLst.length) // reset Array
     traces.splice(0, traces.length) // reset Array
     logIndex = 0
-    disableStart = false
-    disableBlock = true
+    disableInterrupt = true
     showPopupEnd.value = true 
-    disableReset = true
   }
 }
 
@@ -188,10 +153,8 @@ const togglePopupEnd = () => {
   round.value = 0
   firstUint.value = 59
   secondUint.value = 9
-  disableBlock = true
-  disableReset = true
-  disableStart = false
-  playerLog.value = []
+  disableInterrupt = true
+  playerLog.value = [{round:0}]
 }
 
 const playerTimer = () => {
@@ -221,20 +184,19 @@ const playerTimer = () => {
 
 <template>
   <!-- Homepage -->
-  <Transition name="homepage" >
   <section
-    v-if="showHomePage"
-    class="flex flex-col h-screen "
+    v-if="showPage"
+    class="flex flex-col h-full min-h-screen justify-center "
     :class="isDark ? 'bg-[#121212]' : ''"
   >
-    <div class="flex justify-end margin mt-3 mr-5" v-if="isDark">
+    <div class="flex justify-end margin m-3 mr-5" v-if="isDark">
       <input type="checkbox" class="toggle" checked @click="toggleDark()" />
     </div>
-    <div class="flex justify-end margin mt-3 mr-5" v-else>
+    <div class="flex justify-end margin m-3 mr-5" v-else>
       <input type="checkbox" class="toggle" @click="toggleDark()" />
     </div>
     <div
-      class="max-w-screen-lg mx-auto flex flex-col gap-10 items-center justify-center h-screen px-4 md:flex-row"
+      class="max-w-screen-lg mx-auto flex flex-col gap-10 items-center justify-center  px-4 md:flex-row"
     >
       <div class="flex flex-col justify-center">
         <h1
@@ -274,7 +236,7 @@ const playerTimer = () => {
           @click="selectDifficulties(3)"
           class="btn btn-success  mr-2"
           :class="currentMode === 3 ? '' : 'btn-outline'"
-          :disabled="disableModeBtn"
+          :disabled="currentSize===0"
         >
           EASY
         </button>
@@ -282,7 +244,7 @@ const playerTimer = () => {
           @click="selectDifficulties(2)"
           class="btn btn-warning  mr-2"
           :class="currentMode === 2 ? '' : 'btn-outline'"
-          :disabled="disableModeBtn"
+          :disabled="currentSize===0"
         >
           NORMAL
         </button>
@@ -290,7 +252,7 @@ const playerTimer = () => {
           @click="selectDifficulties(1)"
           class="btn btn-error mr-2"
           :class="currentMode === 1 ? '' : 'btn-outline'"
-          :disabled="disableModeBtn"
+          :disabled="currentSize===0"
         >
           HARD
         </button>
@@ -298,11 +260,7 @@ const playerTimer = () => {
       </div>
 
       <div>
-        <img
-          src="https://media.discordapp.net/attachments/1196805209381404682/1203348841080819812/e6accda7-92b1-47e8-b317-1a6da0333512.jpg?ex=65d9ff70&is=65c78a70&hm=4bbae31468fb64cc0cbc715062f44177d5cc0e7653187bb9965d96794036f2bd&=&format=webp&width=655&height=655"
-          alt="Mr.Simon"
-          class="rounded-3xl size-[30rem] items-center max-sm:rounded-full max-sm:size-56"
-        />
+        <simon class="rounded-3xl size-[30rem] items-center max-sm:rounded-full max-sm:size-56" />
       </div>
     </div>
 
@@ -313,7 +271,7 @@ const playerTimer = () => {
         <button
           @click="startToggle"
           class="btn btn-outline btn-primary rounded-2xl w-64 text-white transition duration-300 ease-in-out my-8"
-          :disabled="disablePlayBtn"
+          :disabled="currentMode===0"
         >
           PLAY
         </button>
@@ -329,7 +287,6 @@ const playerTimer = () => {
       </button>
     </div>
   </section>
-</Transition>
   <!-- Tutorial pop-up -->
   <section
     v-if="showPopupTutorial"
@@ -355,10 +312,9 @@ const playerTimer = () => {
   </section>
 
   <!-- Gamepage UI -->
-  <Transition name="gamepage">
     <section
-      v-if="showGamePage"
-      class="h-screen min-h-screen flex flex-col items-center justify-center"
+      v-if="!showPage"
+      class="h-full min-h-screen flex flex-col items-center justify-center"
       :class="isDark ? 'bg-[#121212]' : ''"
     >
       <div class="flex margin mt-3" v-if="isDark">
@@ -385,13 +341,13 @@ const playerTimer = () => {
       </div>
 
       <main
-        v-if="gameSize === 2"
+        v-if="currentSize === 2"
         class="grid grid-cols-2 gap-5 w-96 sm:h-96 max-sm:w-80"
       >
         <button
           v-for="buttonNumber in buttons.slice(0,4)"
           :class="showTraceState(buttonNumber.number)"
-          :disabled="disableBlock"
+          :disabled="disableInterrupt"
           :key="buttonNumber.number"
           :id="buttonNumber.number"
           class="rounded-md h-44 shadow-md hover:brightness-90 active:brightness-150"
@@ -400,13 +356,13 @@ const playerTimer = () => {
       </main>
 
       <main
-        v-else-if="gameSize === 3"
+        v-else-if="currentSize === 3"
         class="grid grid-cols-3 gap-5 w-96 max-sm:w-80"
       >
         <button
           v-for="buttonNumber in buttons"
           :class="showTraceState(buttonNumber.number)"
-          :disabled="disableBlock"
+          :disabled="disableInterrupt"
           :key="buttonNumber.number"
           :id="buttonNumber.number"
           class="rounded-md h-32 shadow-md hover:brightness-90 active:brightness-150"
@@ -418,15 +374,15 @@ const playerTimer = () => {
         <button
           class="btn btn-success w-44 max-sm:w-28 bg-green-500 shadow-md hover:shadow-green-500/50"
           @click="displayTrace"
-          :disabled="disableStart"
+          :disabled="round > 0 "
         >
           START
         </button>
 
         <button
           class="btn btn-warning w-40 max-sm:w-28 shadow-md hover:shadow-yellow-500/50"
-          @click="resetGame"
-          :disabled="disableReset"
+          @click="showPopupEnd=true"
+          :disabled="disableInterrupt"
         >
           RESTART
         </button>
@@ -434,12 +390,11 @@ const playerTimer = () => {
       <button
         class="btn mb-4 btn-primary w-96 max-sm:w-80 shadow-md hover:shadow-indigo-500/50"
         @click="startToggle()"
-        :disabled="disableStart"
+        :disabled="round > 0"
       >
         HOME
       </button>
     </section>
-  </Transition>
 
   <section
     v-if="showPopupEnd"
@@ -476,41 +431,24 @@ const playerTimer = () => {
   </section>
 </template>
 
-<style scoped>
-.gamepage-enter-active {
-  animation: gamepage .5s;
-}
+<style>
 
-.gamepage-leave-active {
-  animation: gamepage .5s;
-  animation-direction : reverse;
+#eye-right , #eye-left{
+  animation-name: eye-ball;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
 }
-
-.homepage-enter-active {
-  animation: homepage .5s;
-  animation-direction : reverse;
-}
-
-.homepage-leave-active {
-  animation: homepage .5s;
-}
-@keyframes homepage {
-  0% {
-    transform: translateX(0vw);
+@keyframes eye-ball {
+  0%{
+    transform: translateY(0);
   }
-
-  100% {
-    transform: translateX(-100vw);
+  50%{
+    transform: translateY(-10px);
   }
+  100%{
+    transform: translateY(0);
+  }
+  
 }
 
-@keyframes gamepage {
-  0% {
-    transform: scale(0);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-}
 </style>
