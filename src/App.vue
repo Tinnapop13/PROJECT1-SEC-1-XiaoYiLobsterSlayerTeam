@@ -251,7 +251,7 @@ const playerTimer = () => {
         Prepare to embark on an exhilarating journey of color and concentration with "Simon Says" – a web-based game that puts your memory and reflexes to the ultimate chromatic test!
         </p>
         <div>
-          <p class="text-2xl divider">Size</p>
+          <p class="text-2xl divider" :class="isDark ? 'text-[#FFFF]' : '' ">Size</p>
         <button
           @click="selectSize(2)"
           class="btn  btn-secondary mr-2"
@@ -269,7 +269,7 @@ const playerTimer = () => {
       </div>
 
       <div>
-        <p class="text-2xl divider" >Difficulty</p>
+        <p class="text-2xl divider" :class="isDark ? 'text-[#FFFF]' : ''">Difficulty</p>
         <button
           @click="selectDifficulties(3)"
           class="btn btn-success  mr-2"
@@ -358,13 +358,13 @@ const playerTimer = () => {
   <Transition name="gamepage">
     <section
       v-if="showGamePage"
-      class="h-full w-full flex flex-col items-center justify-center"
+      class="h-screen min-h-screen flex flex-col items-center justify-center"
       :class="isDark ? 'bg-[#121212]' : ''"
     >
-      <div class="flex justify-end margin mt-3" v-if="isDark">
+      <div class="flex margin mt-3" v-if="isDark">
         <input type="checkbox" class="toggle" checked @click="toggleDark()" />
       </div>
-      <div class="flex justify-end margin mt-3" v-else>
+      <div class="flex margin mt-3" v-else>
         <input type="checkbox" class="toggle" @click="toggleDark()" />
       </div>
       <h1 class="font-bold text-5xl my-10" :class="isDark ? 'text-white' : '' " >
