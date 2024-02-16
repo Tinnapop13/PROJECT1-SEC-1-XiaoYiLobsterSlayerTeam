@@ -5,6 +5,7 @@ import simonIllust from './assets/animation_components/simon-illust.vue'
 import pocketWatch from './assets/animation_components/pocket-watch.vue'
 import simonHead from './assets/animation_components/simon-head.vue'
 
+document.body.style.backgroundColor = "black";
 // [Nxts0] Toggle Theme
 const isDark = ref(false)
 const toggleDark = () => {
@@ -206,7 +207,7 @@ const playerTimer = () => {
 <template>
   <!-- Homepage -->
   <section v-if="showPage" class="flex flex-col h-full min-h-screen justify-center"
-    :style="{'background-color': isDark ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.2)' }">
+    :style="{'background-color': isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, .9)' }">
     <div class="flex margin mt-3 items-center justify-end" v-if="isDark">
       <img src="/src/assets/svg/dark-theme-moon.svg" class="size-6 mx-3 ">
       <input type="checkbox" class="toggle" checked @click="toggleDark()" />
@@ -217,15 +218,15 @@ const playerTimer = () => {
     </div>
     <div class="max-w-screen-lg mx-auto flex flex-col gap-10 items-center justify-center  px-4 md:flex-row">
       <div class="flex flex-col justify-center">
-        <h1 class="text-2xl sm:text-7xl font-bold" :class="isDark ? 'text-white' : ''" style=" font-family: Honk; ">
+        <h1 class="text-2xl sm:text-7xl font-bold" style=" font-family: Honk; ">
           Simon Says
         </h1>
-        <p class="text-gray-400 py-4 max-w-md indent-12" :class="isDark ? 'text-white' : ''">
+        <p class="py-4 max-w-md indent-12" :class="isDark ? 'text-white' : 'text-slate-700'">
           Prepare to embark on an exhilarating journey of color and concentration with "Simon Says" – a web-based game
           that puts your memory and reflexes to the ultimate chromatic test!
         </p>
         <div>
-          <p class="text-2xl divider" :class="isDark ? 'text-[#FFFF]' : ''">Size</p>
+          <p class="text-2xl divider" :class="isDark ? 'text-[#FFFF]' : 'text-slate-700'">Size</p>
           <button @click="selectSize(2)" class="btn  btn-secondary mr-2" :class="currentSize === 2 ? '' : 'btn-outline'">
             2 x 2
           </button>
@@ -235,7 +236,7 @@ const playerTimer = () => {
         </div>
 
         <div>
-          <p class="text-2xl divider" :class="isDark ? 'text-[#FFFF]' : ''">Difficulty</p>
+          <p class="text-2xl divider" :class="isDark ? 'text-[#FFFF]' : 'text-slate-700'">Difficulty</p>
           <button @click="selectDifficulties(3)" class="btn btn-success  mr-2"
             :class="currentMode === 3 ? '' : 'btn-outline'" :disabled="currentSize === 0">
             EASY
@@ -347,13 +348,13 @@ const playerTimer = () => {
         <simonHead :lowerTeeth="openMouthState" class="h-1/6 w-1/3 " v-if="round !== 0" />
       </Transition>
     </div>
-    <h1 class="text-2xl sm:text-7xl font-bold" :class="isDark ? 'text-white' : ''" style=" font-family: Honk; ">
+    <h1 class="text-2xl sm:text-7xl font-bold" style=" font-family: Honk; ">
           Simon Says
         </h1>
 
     <div class="flex justify-between w-96 my-4 max-sm:w-80 rainbow p-4 rounded-2xl  border-8 transition-colors" :style="{'border-color' : borderColor}">
-      <span class="countdown font-mono text-2xl" :class="isDark ? 'text-white' : ''">Round : {{ round }}</span>
-      <span class="countdown font-mono text-2xl" :class="isDark ? 'text-white' : ''"
+      <span class="countdown font-mono text-2xl" :class="isDark ? 'text-white' : 'text-slate-700'">Round : {{ round }}</span>
+      <span class="countdown font-mono text-2xl" :class="isDark ? 'text-white' : 'text-slate-700'"
         style="--value:${secondUint} : ${firstUint} ">{{ secondUint }} : {{ firstUint }}</span>
     </div>
 
@@ -388,10 +389,10 @@ const playerTimer = () => {
   <section v-if="showPopupEnd" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 w-full h-full">
     <div class="flip relative flex justify-center items-center text-center w-full h-full " style="transition: transform 0.8s; transform-style: preserve-3d;">
       <div class="flex flex-col justify-between text-center bg-white p-8 rounded-lg absolute max-md:w-screen w-1/3 h-[80%] overflow-y-auto" style="backface-visibility: hidden;">
-        <h1 class=" text-4xl xl:text-6xl font-bold" :class="isDark ? 'text-white' : ''" style=" font-family: Honk; ">
+        <h1 class=" text-4xl xl:text-6xl font-bold" style=" font-family: Honk; ">
           Simon Says
         </h1>
-        <div class="flex flex-col items-center text-center ">
+        <div class="flex flex-col items-center text-center text-slate-700">
           <div v-if="playerLog[playerLog.length - 1].round <= 5" class="font-bold flex items-center flex-col">
             <img src="/src/assets/gif/blink.gif" class="w-[200px] h-[200px] rounded-lg">
             <p class="text-4xl divider divider-error">R..Really??</p>
@@ -428,10 +429,6 @@ const playerTimer = () => {
 </template>
 
 <style>
-:root{
-  color-scheme: dark;
-}
-
 .flip{
   animation: flip 3s;
   transition: all 1s;
