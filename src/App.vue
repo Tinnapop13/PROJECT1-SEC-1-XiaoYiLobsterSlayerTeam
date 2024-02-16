@@ -26,6 +26,7 @@ const firstUint = ref(59)
 const secondUint = ref(9)
 const playerLog = ref([{ round: 0 }])
 const round = ref(0)
+const selectedDiff = ref('')
 
 // [Tinnapop13] Show Trace Variable
 let gameRoundPointer = 0
@@ -96,6 +97,18 @@ const showTraceState = (buttonNumber) => {
 
 const selectDifficulties = (mode) => {
   currentMode.value = mode
+
+  switch (mode) {
+    case 3:
+      selectedDiff.value = "EASY"
+      break;
+    case 2:
+      selectedDiff.value = "NORMAL"
+      break;
+    case 1:
+      selectedDiff.value = "HARD"
+      break;
+  }
 }
 
 const displayTrace = () => {
@@ -187,7 +200,7 @@ const playerTimer = () => {
       secondUint.value--
       secondUint.value === 0 ? (firstUint.value = 0) : (firstUint.value = 59)
     }
-  }, 100)
+  }, 1000)
 
   const checkTimer = setInterval(() => {
     if (showPopupEnd.value || (secondUint.value <= 0 && firstUint.value <= 0)) {
@@ -237,11 +250,11 @@ const playerTimer = () => {
 
         <div>
           <p class="text-2xl divider" :class="isDark ? 'text-[#FFFF]' : 'text-slate-700'">Difficulty</p>
-          <button @click="selectDifficulties(3)" class="btn btn-success  mr-2"
+          <button @click="selectDifficulties(3)" class="btn btn-success mr-2"
             :class="currentMode === 3 ? '' : 'btn-outline'" :disabled="currentSize === 0">
             EASY
           </button>
-          <button @click="selectDifficulties(2)" class="btn btn-warning  mr-2"
+          <button @click="selectDifficulties(2)" class="btn btn-warning mr-2"
             :class="currentMode === 2 ? '' : 'btn-outline'" :disabled="currentSize === 0">
             NORMAL
           </button>
@@ -415,7 +428,7 @@ const playerTimer = () => {
           <div class="text-base xl:text-xl ">
             <p>Finished Round: {{ playerLog[playerLog.length - 1].round }}</p>
             <p>Finished Time: {{ playerLog[playerLog.length - 1].time }}</p>
-            <p>Difficulty: {{ currentMode }}</p>
+            <p>Difficulty: {{ selectedDiff }}</p>
             <p>Size: {{ currentSize }} x {{ currentSize }}</p>
           </div>
         </div>
@@ -686,4 +699,5 @@ const playerTimer = () => {
     border-radius: 50%;
   }
 
-}</style>
+}
+</style>
