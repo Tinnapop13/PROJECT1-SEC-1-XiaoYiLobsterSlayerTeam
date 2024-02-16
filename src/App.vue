@@ -186,7 +186,7 @@ const playerTimer = () => {
       secondUint.value--
       secondUint.value === 0 ? (firstUint.value = 0) : (firstUint.value = 59)
     }
-  }, 100)
+  }, 1000)
 
   const checkTimer = setInterval(() => {
     if (showPopupEnd.value || (secondUint.value <= 0 && firstUint.value <= 0)) {
