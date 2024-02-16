@@ -1,11 +1,10 @@
 <script setup>
 import { ref, reactive, watch } from "vue"
-import { randomNumber }  from './utilities/utility.js'
+import { randomNumber } from './utilities/utility.js'
 import simonIllust from './assets/animation_components/simon-illust.vue'
 import pocketWatch from './assets/animation_components/pocket-watch.vue'
 import simonHead from './assets/animation_components/simon-head.vue'
 
-document.body.style.backgroundColor = "black";
 // [Nxts0] Toggle Theme
 const isDark = ref(false)
 const toggleDark = () => {
@@ -26,6 +25,8 @@ const firstUint = ref(59)
 const secondUint = ref(9)
 const playerLog = ref([{ round: 0 }])
 const round = ref(0)
+const selectedDiff = ref('')
+let timeOutCount = 0
 
 // [Tinnapop13] Show Trace Variable
 let gameRoundPointer = 0
@@ -34,9 +35,9 @@ const traceButtonIndex = ref(-1)
 const traces = []
 const openMouthState = ref(null)
 const borderColor = ref("")
-const changeColor = setInterval(()=>{
-  borderColor.value ="#" + Math.floor(Math.random() * 0xFFFFFF).toString(16);
-},2000)
+const changeColor = setInterval(() => {
+  borderColor.value = "#" + Math.floor(Math.random() * 0xFFFFFF).toString(16);
+}, 2000)
 
 // [Nxts0] Handle Player Click Variable
 const logLst = []
@@ -92,10 +93,6 @@ const showTraceState = (buttonNumber) => {
     "bg-[#fff]": traceButtonIndex.value === buttonNumber,
     [buttons[buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
   }
-}
-
-const selectDifficulties = (mode) => {
-  currentMode.value = mode
 }
 
 const displayTrace = () => {
@@ -182,16 +179,26 @@ const playerTimer = () => {
   const timer = setInterval(() => {
     firstUint.value--
     if (firstUint.value < 10) firstUint.value = `0${firstUint.value}`
-
     if (firstUint.value == 0) {
-      secondUint.value--
-      secondUint.value === 0 ? (firstUint.value = 0) : (firstUint.value = 59)
+      if(secondUint.value > 0){
+        secondUint.value--
+      }
+      if(secondUint.value === 0){
+        timeOutCount++
+        console.log(timeOutCount)
+      }
+      if(timeOutCount === 2){
+        clearInterval(timer)
+        showPopupEnd.value = true
+        console.log(showPopupEnd.value)
+      } 
+      if(timeOutCount !== 2){
+        firstUint.value = 59
+      } 
     }
   }, 100)
-
-  const checkTimer = setInterval(() => {
-    if (showPopupEnd.value || (secondUint.value <= 0 && firstUint.value <= 0)) {
-      showPopupEnd.value === true
+  watch(showPopupEnd.value,()=>{
+    if (showPopupEnd.value) {
       clearInterval(timer)
       clearInterval(checkTimer)
       resetGame()
@@ -200,14 +207,29 @@ const playerTimer = () => {
       )
       audio.play()
     }
-  }, 100)
+  })
+}
+
+const selectDifficulties = (mode) => {
+  currentMode.value = mode
+  switch (mode) {
+    case 3:
+      selectedDiff.value = "EASY"
+      break;
+    case 2:
+      selectedDiff.value = "NORMAL"
+      break;
+    case 1:
+      selectedDiff.value = "HARD"
+      break;
+  }
 }
 </script>
 
 <template>
   <!-- Homepage -->
   <section v-if="showPage" class="flex flex-col h-full min-h-screen justify-center"
-    :style="{'background-color': isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, .9)' }">
+    :style="{ 'background-color': isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, .9)' }">
     <div class="flex margin mt-3 items-center justify-end" v-if="isDark">
       <img src="/src/assets/svg/dark-theme-moon.svg" class="size-6 mx-3 ">
       <input type="checkbox" class="toggle" checked @click="toggleDark()" />
@@ -237,11 +259,11 @@ const playerTimer = () => {
 
         <div>
           <p class="text-2xl divider" :class="isDark ? 'text-[#FFFF]' : 'text-slate-700'">Difficulty</p>
-          <button @click="selectDifficulties(3)" class="btn btn-success  mr-2"
+          <button @click="selectDifficulties(3)" class="btn btn-success mr-2"
             :class="currentMode === 3 ? '' : 'btn-outline'" :disabled="currentSize === 0">
             EASY
           </button>
-          <button @click="selectDifficulties(2)" class="btn btn-warning  mr-2"
+          <button @click="selectDifficulties(2)" class="btn btn-warning mr-2"
             :class="currentMode === 2 ? '' : 'btn-outline'" :disabled="currentSize === 0">
             NORMAL
           </button>
@@ -278,9 +300,9 @@ const playerTimer = () => {
   <!-- Tutorial pop-up -->
   <section v-if="showPopupTutorial" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
     <div class="w-full sm:w-96 lg:w-1/2 text-center bg-white p-8 rounded-lg">
-      <h1 class="text-2xl font-bold mb-4">This is a tutorial</h1>
+      <h1 class="text-2xl font-bold mb-4 text-black">This is a tutorial</h1>
 
-      <div class="mb-4 justify-between mr-5 flex flex-row">
+      <div class="mb-4 justify-between mr-5 flex flex-row text-black">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
         incidunt mollitia alias enim! Hic pariatur, nisi magnam, accusamus
         excepturi corporis dolorum, libero eos aspernatur sequi totam odio ab
@@ -288,7 +310,7 @@ const playerTimer = () => {
         <img src="/src/assets/svg/back-card.svg" width="50px" height="50px">
       </div>
 
-      <div class="mb-4 justify-between mr-5 flex flex-row">
+      <div class="mb-4 justify-between mr-5 flex flex-row text-black">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
         incidunt mollitia alias enim! Hic pariatur, nisi magnam, accusamus
         excepturi corporis dolorum, libero eos aspernatur sequi totam odio ab
@@ -296,7 +318,7 @@ const playerTimer = () => {
         <img src="/src/assets/svg/back-card.svg" width="50px" height="50px">
       </div>
 
-      <div class="mb-4 justify-between mr-5 flex flex-row">
+      <div class="mb-4 justify-between mr-5 flex flex-row text-black">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
         incidunt mollitia alias enim! Hic pariatur, nisi magnam, accusamus
         excepturi corporis dolorum, libero eos aspernatur sequi totam odio ab
@@ -309,31 +331,31 @@ const playerTimer = () => {
       </button>
     </div>
 
-   
- 
+
+
   </section>
-  <ul class="floating-square" >
-    <li v-for="i in 10" :style="{'background': isDark ? borderColor : 'rgba(255, 255, 255, 0.8)' }"></li>          
+  <ul class="floating-square">
+    <li v-for="i in 10" :style="{ 'background': isDark ? borderColor : 'rgba(255, 255, 255, 0.8)' }"></li>
   </ul>
 
-  <div class="flex fixed top-0 left-0 w-screen  z-10 " >
+  <div class="flex fixed top-0 left-0 w-screen  z-10 ">
     <Transition name="slide-to-right">
-      <img class="h-screen w-1/2" src="/src/assets/gif/curtain.png" v-if="showPageTransition===true">
-        
+      <img class="h-screen w-1/2" src="/src/assets/gif/curtain.png" v-if="showPageTransition === true">
+
     </Transition>
     <Transition name="slide-to-left">
-      <img class="h-screen w-1/2 -scale-x-[1]"  src="/src/assets/gif/curtain.png" v-if="showPageTransition===true">
+      <img class="h-screen w-1/2 -scale-x-[1]" src="/src/assets/gif/curtain.png" v-if="showPageTransition === true">
     </Transition>
 
     <Transition name="pocket-watch">
-      <pocketWatch class="fixed -top-1/3 left-auto right-auto h-screen w-screen" v-if="showPageTransition===true"/>
+      <pocketWatch class="fixed -top-1/3 left-auto right-auto h-screen w-screen" v-if="showPageTransition === true" />
     </Transition>
   </div>
 
 
   <!-- Gamepage UI -->
   <section v-if="!showPage" class="h-full min-h-screen flex flex-col items-center justify-center z-50"
-  :style="{'background-color': isDark ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.2)' }">
+    :style="{ 'background-color': isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.9)' }">
     <div class="flex margin mt-3 items-center" v-if="isDark">
       <img src="/src/assets/svg/dark-theme-moon.svg" class="size-6 mx-3 ">
       <input type="checkbox" class="toggle" checked @click="toggleDark()" />
@@ -349,11 +371,13 @@ const playerTimer = () => {
       </Transition>
     </div>
     <h1 class="text-2xl sm:text-7xl font-bold" style=" font-family: Honk; ">
-          Simon Says
-        </h1>
+      Simon Says
+    </h1>
 
-    <div class="flex justify-between w-96 my-4 max-sm:w-80 rainbow p-4 rounded-2xl  border-8 transition-colors" :style="{'border-color' : borderColor}">
-      <span class="countdown font-mono text-2xl" :class="isDark ? 'text-white' : 'text-slate-700'">Round : {{ round }}</span>
+    <div class="flex justify-between w-96 my-4 max-sm:w-80 rainbow p-4 rounded-2xl  border-8 transition-colors"
+      :style="{ 'border-color': borderColor }">
+      <span class="countdown font-mono text-2xl" :class="isDark ? 'text-white' : 'text-slate-700'">Round : {{ round
+      }}</span>
       <span class="countdown font-mono text-2xl" :class="isDark ? 'text-white' : 'text-slate-700'"
         style="--value:${secondUint} : ${firstUint} ">{{ secondUint }} : {{ firstUint }}</span>
     </div>
@@ -386,9 +410,13 @@ const playerTimer = () => {
     </button>
   </section>
 
-  <section v-if="showPopupEnd" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 w-full h-full">
-    <div class="flip relative flex justify-center items-center text-center w-full h-full " style="transition: transform 0.8s; transform-style: preserve-3d;">
-      <div class="flex flex-col justify-between text-center bg-white p-8 rounded-lg absolute max-md:w-screen w-1/3 h-[80%] overflow-y-auto" style="backface-visibility: hidden;">
+  <section v-if="showPopupEnd"
+    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 w-full h-full">
+    <div class="flip relative flex justify-center items-center text-center w-full h-full "
+      style="transition: transform 0.8s; transform-style: preserve-3d;">
+      <div
+        class="flex flex-col justify-between text-center bg-white p-8 rounded-lg absolute max-md:w-screen w-1/3 h-[80%] overflow-y-auto"
+        style="backface-visibility: hidden;">
         <h1 class=" text-4xl xl:text-6xl font-bold" style=" font-family: Honk; ">
           Simon Says
         </h1>
@@ -407,39 +435,38 @@ const playerTimer = () => {
             <p class="text-4xl divider divider-error">Average Simon Says Player</p>
           </div>
           <div class="text-base xl:text-xl ">
-          <p>Finished Round: {{ playerLog[playerLog.length - 1].round }}</p>
-          <p>Finished Time: {{ playerLog[playerLog.length - 1].time }}</p>
-          <p>Difficulty: {{ currentMode }}</p>
-          <p>Size: {{ currentSize }} x {{ currentSize }}</p>
+            <p>Finished Round: {{ playerLog[playerLog.length - 1].round }}</p>
+            <p>Finished Time: {{ playerLog[playerLog.length - 1].time }}</p>
+            <p>Difficulty: {{ selectedDiff }}</p>
+            <p>Size: {{ currentSize }} x {{ currentSize }}</p>
+          </div>
         </div>
-      </div>
         <button @click="togglePopupEnd" class="btn btn-warning text-white px-4 py-2 mt-4">
           Close
         </button>
 
       </div>
-          <div class="absolute w-full h-full flex justify-center" style="backface-visibility: hidden; transform: rotateY(180deg);">
-              <img src="/src/assets/svg/back-card.svg">
-          </div>
+      <div class="absolute w-full h-full flex justify-center"
+        style="backface-visibility: hidden; transform: rotateY(180deg);">
+        <img src="/src/assets/svg/back-card.svg">
+      </div>
     </div>
   </section>
-
-
-            
 </template>
 
 <style>
-.flip{
+.flip {
   animation: flip 3s;
   transition: all 1s;
 }
 
 @keyframes flip {
-  0%{
+  0% {
     transform: translateY(-100%) rotateY(180deg);
-    
+
   }
-  100%{
+
+  100% {
     transform: translateY(0%) rotateY(0deg);
   }
 }
@@ -568,118 +595,116 @@ const playerTimer = () => {
 }
 
 
-.floating-square{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-    z-index:-1;
+.floating-square {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: -1;
 }
 
-.floating-square li{
-    position: absolute;
-    display: block;
-    list-style: none;
-    width: 20px;
-    height: 20px;
-    animation: animate 25s linear infinite;
-    bottom: -150px;
-    mix-blend-mode:difference;
-    text-shadow: 2px 2px 4px #000;
+.floating-square li {
+  position: absolute;
+  display: block;
+  list-style: none;
+  width: 20px;
+  height: 20px;
+  animation: animate 25s linear infinite;
+  bottom: -150px;
+  mix-blend-mode: difference;
+  text-shadow: 2px 2px 4px #000;
 }
 
-.floating-square li:nth-child(1){
-    left: 25%;
-    width: 80px;
-    height: 80px;
-    animation-delay: 0s;
-}
-
-
-.floating-square li:nth-child(2){
-    left: 10%;
-    width: 20px;
-    height: 20px;
-    animation-delay: 2s;
-    animation-duration: 12s;
-}
-
-.floating-square li:nth-child(3){
-    left: 70%;
-    width: 20px;
-    height: 20px;
-    animation-delay: 4s;
-}
-
-.floating-square li:nth-child(4){
-    left: 40%;
-    width: 60px;
-    height: 60px;
-    animation-delay: 0s;
-    animation-duration: 18s;
-}
-
-.floating-square li:nth-child(5){
-    left: 65%;
-    width: 20px;
-    height: 20px;
-    animation-delay: 0s;
-}
-
-.floating-square li:nth-child(6){
-    left: 75%;
-    width: 110px;
-    height: 110px;
-    animation-delay: 3s;
-}
-
-.floating-square li:nth-child(7){
-    left: 35%;
-    width: 150px;
-    height: 150px;
-    animation-delay: 7s;
-}
-
-.floating-square li:nth-child(8){
-    left: 50%;
-    width: 25px;
-    height: 25px;
-    animation-delay: 15s;
-    animation-duration: 45s;
-}
-
-.floating-square li:nth-child(9){
-    left: 20%;
-    width: 15px;
-    height: 15px;
-    animation-delay: 2s;
-    animation-duration: 35s;
-}
-
-.floating-square li:nth-child(10){
-    left: 85%;
-    width: 150px;
-    height: 150px;
-    animation-delay: 0s;
-    animation-duration: 11s;
+.floating-square li:nth-child(1) {
+  left: 25%;
+  width: 80px;
+  height: 80px;
+  animation-delay: 0s;
 }
 
 
+.floating-square li:nth-child(2) {
+  left: 10%;
+  width: 20px;
+  height: 20px;
+  animation-delay: 2s;
+  animation-duration: 12s;
+}
+
+.floating-square li:nth-child(3) {
+  left: 70%;
+  width: 20px;
+  height: 20px;
+  animation-delay: 4s;
+}
+
+.floating-square li:nth-child(4) {
+  left: 40%;
+  width: 60px;
+  height: 60px;
+  animation-delay: 0s;
+  animation-duration: 18s;
+}
+
+.floating-square li:nth-child(5) {
+  left: 65%;
+  width: 20px;
+  height: 20px;
+  animation-delay: 0s;
+}
+
+.floating-square li:nth-child(6) {
+  left: 75%;
+  width: 110px;
+  height: 110px;
+  animation-delay: 3s;
+}
+
+.floating-square li:nth-child(7) {
+  left: 35%;
+  width: 150px;
+  height: 150px;
+  animation-delay: 7s;
+}
+
+.floating-square li:nth-child(8) {
+  left: 50%;
+  width: 25px;
+  height: 25px;
+  animation-delay: 15s;
+  animation-duration: 45s;
+}
+
+.floating-square li:nth-child(9) {
+  left: 20%;
+  width: 15px;
+  height: 15px;
+  animation-delay: 2s;
+  animation-duration: 35s;
+}
+
+.floating-square li:nth-child(10) {
+  left: 85%;
+  width: 150px;
+  height: 150px;
+  animation-delay: 0s;
+  animation-duration: 11s;
+}
 
 @keyframes animate {
-    0%{
-        transform: translateY(0) rotate(0deg);
-        opacity: 1;
-        border-radius: 0;
-    }
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+    border-radius: 0;
+  }
 
-    100%{
-        transform: translateY(-1000px) rotate(720deg);
-        opacity: 0;
-        border-radius: 50%;
-    }
+  100% {
+    transform: translateY(-1000px) rotate(720deg);
+    opacity: 0;
+    border-radius: 50%;
+  }
 
 }
 </style>
