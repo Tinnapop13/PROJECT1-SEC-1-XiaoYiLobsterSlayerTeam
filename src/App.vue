@@ -5,7 +5,6 @@ import simonIllust from './assets/animation_components/simon-illust.vue'
 import pocketWatch from './assets/animation_components/pocket-watch.vue'
 import simonHead from './assets/animation_components/simon-head.vue'
 
-document.body.style.backgroundColor = "black";
 // [Nxts0] Toggle Theme
 const isDark = ref(false)
 const toggleDark = () => {
@@ -27,6 +26,7 @@ const secondUint = ref(9)
 const playerLog = ref([{ round: 0 }])
 const round = ref(0)
 const selectedDiff = ref('')
+let timeOutCount = 0
 
 // [Tinnapop13] Show Trace Variable
 let gameRoundPointer = 0
@@ -94,7 +94,6 @@ const showTraceState = (buttonNumber) => {
     [buttons[buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
   }
 }
-
 const selectDifficulties = (mode) => {
   currentMode.value = mode
 
@@ -195,16 +194,26 @@ const playerTimer = () => {
   const timer = setInterval(() => {
     firstUint.value--
     if (firstUint.value < 10) firstUint.value = `0${firstUint.value}`
-
     if (firstUint.value == 0) {
-      secondUint.value--
-      secondUint.value === 0 ? (firstUint.value = 0) : (firstUint.value = 59)
+      if(secondUint.value > 0){
+        secondUint.value--
+      }
+      if(secondUint.value === 0){
+        timeOutCount++
+        console.log(timeOutCount)
+      }
+      if(timeOutCount === 2){
+        clearInterval(timer)
+        showPopupEnd.value = true
+        console.log(showPopupEnd.value)
+      } 
+      if(timeOutCount !== 2){
+        firstUint.value = 59
+      } 
     }
-  }, 1000)
-
-  const checkTimer = setInterval(() => {
-    if (showPopupEnd.value || (secondUint.value <= 0 && firstUint.value <= 0)) {
-      showPopupEnd.value === true
+  }, 100)
+  watch(showPopupEnd.value,()=>{
+    if (showPopupEnd.value) {
       clearInterval(timer)
       clearInterval(checkTimer)
       resetGame()
@@ -213,7 +222,22 @@ const playerTimer = () => {
       )
       audio.play()
     }
-  }, 100)
+  })
+}
+
+const selectDifficulties = (mode) => {
+  currentMode.value = mode
+  switch (mode) {
+    case 3:
+      selectedDiff.value = "EASY"
+      break;
+    case 2:
+      selectedDiff.value = "NORMAL"
+      break;
+    case 1:
+      selectedDiff.value = "HARD"
+      break;
+  }
 }
 </script>
 
@@ -346,7 +370,7 @@ const playerTimer = () => {
 
   <!-- Gamepage UI -->
   <section v-if="!showPage" class="h-full min-h-screen flex flex-col items-center justify-center z-50"
-    :style="{ 'background-color': isDark ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.2)' }">
+    :style="{ 'background-color': isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.9)' }">
     <div class="flex margin mt-3 items-center" v-if="isDark">
       <img src="/src/assets/svg/dark-theme-moon.svg" class="size-6 mx-3 ">
       <input type="checkbox" class="toggle" checked @click="toggleDark()" />
@@ -683,8 +707,6 @@ const playerTimer = () => {
   animation-delay: 0s;
   animation-duration: 11s;
 }
-
-
 
 @keyframes animate {
   0% {
