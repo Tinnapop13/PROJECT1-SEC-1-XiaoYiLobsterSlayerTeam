@@ -1,8 +1,9 @@
 <script setup>
 import { ref, reactive, watch } from "vue"
-import simonIllust from './assets/simon-illust.vue'
-import pocketWatch from './assets/pocket-watch.vue'
-import simonHead from './assets/simon-head.vue'
+import { randomNumber }  from './utilities/utility.js'
+import simonIllust from './assets/animation_components/simon-illust.vue'
+import pocketWatch from './assets/animation_components/pocket-watch.vue'
+import simonHead from './assets/animation_components/simon-head.vue'
 
 // [Nxts0] Toggle Theme
 const isDark = ref(false)
@@ -31,6 +32,10 @@ let currentPointer = 0
 const traceButtonIndex = ref(-1)
 const traces = []
 const openMouthState = ref(null)
+const borderColor = ref("")
+const changeColor = setInterval(()=>{
+  borderColor.value ="#" + Math.floor(Math.random() * 0xFFFFFF).toString(16);
+},2000)
 
 // [Nxts0] Handle Player Click Variable
 const logLst = []
@@ -80,9 +85,6 @@ const selectSize = (size) => {
 }
 
 // [Tinnapop13] Display Trace function
-const randomNumber = (max) => {
-  return Math.floor(Math.random() * max)
-}
 
 const showTraceState = (buttonNumber) => {
   return {
@@ -95,7 +97,6 @@ const selectDifficulties = (mode) => {
   currentMode.value = mode
 }
 
-//reset ออกมาไวไป
 const displayTrace = () => {
   // Block Player From Clicking
   disableInterrupt = true
@@ -117,15 +118,15 @@ const displayTrace = () => {
         traceButtonIndex.value = traces[currentPointer]
       }
       openMouthState.value = 'lower-teeth'
-    },currentMode.value *200)
+    }, currentMode.value * 200)
     setTimeout(() => {
       traceButtonIndex.value = -1
       openMouthState.value = null
       currentPointer++
-      if(round.value === 1){
+      if (round.value === 1) {
         disableInterrupt = false
       }
-      if(gameRoundPointer === currentPointer){
+      if (gameRoundPointer === currentPointer) {
         disableInterrupt = false
       }
     }, (currentMode.value * 400))
@@ -203,12 +204,14 @@ const playerTimer = () => {
 
 <template>
   <!-- Homepage -->
-  <section v-if="showPage" class="flex flex-col h-full min-h-screen justify-center "
-    :class="isDark ? 'bg-[#121212]' : ''">
-    <div class="flex justify-end margin m-3 mr-5" v-if="isDark">
+  <section v-if="showPage" class="flex flex-col h-full min-h-screen justify-center z-10"
+    :style="{'background-color': isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.9)' }">
+    <div class="flex margin mt-3 items-center justify-end" v-if="isDark">
+      <img src="/src/assets/svg/dark-theme-moon.svg" class="size-6 mx-3 ">
       <input type="checkbox" class="toggle" checked @click="toggleDark()" />
     </div>
-    <div class="flex justify-end margin m-3 mr-5" v-else>
+    <div class="flex margin mt-3 items-center justify-end" v-else>
+      <img src="/src/assets/svg/light-theme-sun.svg" class="size-6 mx-3 ">
       <input type="checkbox" class="toggle" @click="toggleDark()" />
     </div>
     <div class="max-w-screen-lg mx-auto flex flex-col gap-10 items-center justify-center  px-4 md:flex-row">
@@ -286,41 +289,51 @@ const playerTimer = () => {
         Close
       </button>
     </div>
-  </section>
 
-  <div class="flex  fixed top-0 left-0 w-screen z-10 ">
+   
+ 
+  </section>
+  <ul class="floating-square" >
+    <li v-for="i in 10" :style="{'background': isDark ? borderColor : 'rgba(255, 255, 255, 0.8)' }"></li>          
+  </ul>
+
+  <div class="flex fixed top-0 left-0 w-screen  z-10 " >
     <Transition name="slide-to-right">
-      <div class="h-screen w-1/2 bg-[#3c3b3b] " v-if="showPageTransition === true">
-      </div>
+      <img class="h-screen w-1/2" src="/src/assets/gif/curtain.png" v-if="showPageTransition===true">
+        
     </Transition>
     <Transition name="slide-to-left">
-      <div class="h-screen w-1/2 bg-[#3c3b3b]" v-if="showPageTransition === true">
-      </div>
+      <img class="h-screen w-1/2 -scale-x-[1]"  src="/src/assets/gif/curtain.png" v-if="showPageTransition===true">
     </Transition>
 
     <Transition name="pocket-watch">
-      <pocketWatch class="fixed -top-1/3 left-auto right-auto h-screen w-screen" v-if="showPageTransition === true" />
+      <pocketWatch class="fixed -top-1/3 left-auto right-auto h-screen w-screen" v-if="showPageTransition===true"/>
     </Transition>
   </div>
 
 
   <!-- Gamepage UI -->
   <section v-if="!showPage" class="h-full min-h-screen flex flex-col items-center justify-center"
-    :class="isDark ? 'bg-[#121212]' : ''">
-    <div class="flex margin mt-3" v-if="isDark">
+  :style="{'background-color': isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.9)' }">
+    <div class="flex margin mt-3 items-center" v-if="isDark">
+      <img src="/src/assets/svg/dark-theme-moon.svg" class="size-6 mx-3 ">
       <input type="checkbox" class="toggle" checked @click="toggleDark()" />
     </div>
-    <div class="flex margin mt-3" v-else>
+    <div class="flex margin mt-3 items-center" v-else>
+      <img src="/src/assets/svg/light-theme-sun.svg" class="size-6 mx-3 ">
       <input type="checkbox" class="toggle" @click="toggleDark()" />
     </div>
     <div class="flex justify-center items-center">
-      
-  <Transition name="simonHead">
-    <simonHead :lowerTeeth="openMouthState" class="h-1/6 w-72" v-if="round!==0"/>
-  </Transition>
-  </div>
-  
-    <div class="flex justify-between w-96 my-4 max-sm:w-80">
+
+      <Transition name="simonHead">
+        <simonHead :lowerTeeth="openMouthState" class="h-1/6 w-1/3 " v-if="round !== 0" />
+      </Transition>
+    </div>
+    <h1 class="text-2xl sm:text-7xl font-bold" :class="isDark ? 'text-white' : ''" style=" font-family: Honk; ">
+          Simon Says
+        </h1>
+
+    <div class="flex justify-between w-96 my-4 max-sm:w-80 rainbow p-4 rounded-2xl  border-8 transition-colors" :style="{'border-color' : borderColor}">
       <span class="countdown font-mono text-2xl" :class="isDark ? 'text-white' : ''">Round : {{ round }}</span>
       <span class="countdown font-mono text-2xl" :class="isDark ? 'text-white' : ''"
         style="--value:${secondUint} : ${firstUint} ">{{ secondUint }} : {{ firstUint }}</span>
@@ -343,7 +356,6 @@ const playerTimer = () => {
         @click="displayTrace" :disabled="round > 0">
         START
       </button>
-
       <button class="btn btn-warning w-40 max-sm:w-28 shadow-md hover:shadow-yellow-500/50" @click="showPopupEnd = true"
         :disabled="disableInterrupt">
         RESTART
@@ -355,33 +367,67 @@ const playerTimer = () => {
     </button>
   </section>
 
-  <section v-if="showPopupEnd" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="w-80 text-center bg-white p-8 rounded-lg">
-      <h1 class="text-2xl font-bold mb-4">End!</h1>
-      <div class="flex flex-col items-center">
-        <div v-if="playerLog[playerLog.length - 1].round <= 10" class="font-bold">
-          TRY AGAIN NOOB!
+  <section v-if="showPopupEnd" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 w-full h-full">
+    <div class="flip relative flex justify-center items-center text-center w-full h-full " style="transition: transform 0.8s; transform-style: preserve-3d;">
+      <div class="flex flex-col justify-between text-center bg-white p-8 rounded-lg absolute max-md:w-screen w-1/3 h-[80%] overflow-y-auto" style="backface-visibility: hidden;">
+        <h1 class=" text-4xl xl:text-6xl font-bold" :class="isDark ? 'text-white' : ''" style=" font-family: Honk; ">
+          Simon Says
+        </h1>
+        <div class="flex flex-col items-center text-center ">
+          <div v-if="playerLog[playerLog.length - 1].round <= 5" class="font-bold flex items-center flex-col">
+            <img src="/src/assets/gif/blink.gif" class="w-[200px] h-[200px] rounded-lg">
+            <p class="text-4xl divider divider-error">R..Really??</p>
+          </div>
+          <div v-else-if="playerLog[playerLog.length - 1].round <= 10
+            " class="font-bold flex items-center flex-col">
+            <img src="/src/assets/gif/noice.gif" class="w-[200px] h-[200px] rounded-lg">
+            <p class="text-4xl divider divider-error">N O I C E</p>
+          </div>
+          <div v-else class="font-bold flex items-center flex-col">
+            <img src="/src/assets/gif/chad.gif" class="w-[200px] h-[200px] rounded-lg">
+            <p class="text-4xl divider divider-error">Average Simon Says Player</p>
+          </div>
+          <div class="text-base xl:text-xl ">
+          <p>Finished Round: {{ playerLog[playerLog.length - 1].round }}</p>
+          <p>Finished Time: {{ playerLog[playerLog.length - 1].time }}</p>
+          <p>Difficulty: {{ currentMode }}</p>
+          <p>Size: {{ currentSize }} x {{ currentSize }}</p>
         </div>
-        <div v-else-if="playerLog[playerLog.length - 1].round > 10 &&
-          playerLog[playerLog.length - 1].round < 30
-          " class="font-bold">
-          THAT KINDA DECENT...
-        </div>
-        <div v-else class="font-bold">EXCELLENT!</div>
-        <p>Finished Round: {{ playerLog[playerLog.length - 1].round }}</p>
-        <p>Finished Time: {{ playerLog[playerLog.length - 1].time }}</p>
-        <p>Difficulty: {{ currentMode }}</p>
-        <p>Size: {{ currentSize }} x {{ currentSize }}</p>
       </div>
+        <button @click="togglePopupEnd" class="btn btn-warning text-white px-4 py-2 mt-4">
+          Close
+        </button>
 
-      <button @click="togglePopupEnd" class="btn btn-warning text-white px-4 py-2 mt-4">
-        Close
-      </button>
+      </div>
+          <div class="absolute w-full h-full flex justify-center" style="backface-visibility: hidden; transform: rotateY(180deg);">
+              <img src="/src/assets/svg/back-card.svg">
+          </div>
     </div>
   </section>
+
+
+            
 </template>
 
 <style>
+
+
+
+.flip{
+  animation: flip 3s;
+  transition: all 1s;
+}
+
+@keyframes flip {
+  0%{
+    transform: translateY(-100%) rotateY(180deg);
+    
+  }
+  100%{
+    transform: translateY(0%) rotateY(0deg);
+  }
+}
+
 #eye-right,
 #eye-left {
   animation-name: eye-ball;
@@ -389,18 +435,17 @@ const playerTimer = () => {
   animation-iteration-count: infinite;
 }
 
-.simonHead-enter-active{
-  transition: all 1s ;
+.simonHead-enter-active {
+  transition: all 1s;
   animation: rotate 3s;
 
 }
 
-.simonHead-leave-active{
-  transition: all 1s ;
+.simonHead-leave-active {
+  transition: all 1s;
   animation: rotate 3s reverse;
-  
-}
 
+}
 
 .slide-to-right-enter-active {
   animation: slide-to-right 1s;
@@ -432,19 +477,16 @@ const playerTimer = () => {
 
 @keyframes rotate {
   0% {
-   transform: rotate(0deg);
-   opacity: 0;
-   width: 0;
+    transform: rotate(0deg);
+    opacity: 0;
+    width: 0;
   }
 
   100% {
     transform: rotate(360deg);
     opacity: 1;
-    width: 18rem;
-
+    width: 33.33%;
   }
-  
-  
 }
 
 @keyframes pocket-watch {
@@ -485,11 +527,11 @@ const playerTimer = () => {
 
 @keyframes slide-to-left {
   0% {
-    transform: translateX(100%);
+    transform: translateX(100%) scaleX(-1);
   }
 
   100% {
-    transform: translateX(0);
+    transform: translateX(0) scaleX(-1);
 
   }
 }
@@ -500,12 +542,128 @@ const playerTimer = () => {
   }
 
   50% {
-    transform: translateY(-10px);
+    transform: translateY(-30px);
   }
 
   100% {
     transform: translateY(0);
   }
+
+}
+
+
+.floating-square{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index:-1;
+}
+
+.floating-square li{
+    position: absolute;
+    display: block;
+    list-style: none;
+    width: 20px;
+    height: 20px;
+    animation: animate 25s linear infinite;
+    bottom: -150px;
+    mix-blend-mode:difference;
+    
+}
+
+.floating-square li:nth-child(1){
+    left: 25%;
+    width: 80px;
+    height: 80px;
+    animation-delay: 0s;
+}
+
+
+.floating-square li:nth-child(2){
+    left: 10%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 2s;
+    animation-duration: 12s;
+}
+
+.floating-square li:nth-child(3){
+    left: 70%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 4s;
+}
+
+.floating-square li:nth-child(4){
+    left: 40%;
+    width: 60px;
+    height: 60px;
+    animation-delay: 0s;
+    animation-duration: 18s;
+}
+
+.floating-square li:nth-child(5){
+    left: 65%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 0s;
+}
+
+.floating-square li:nth-child(6){
+    left: 75%;
+    width: 110px;
+    height: 110px;
+    animation-delay: 3s;
+}
+
+.floating-square li:nth-child(7){
+    left: 35%;
+    width: 150px;
+    height: 150px;
+    animation-delay: 7s;
+}
+
+.floating-square li:nth-child(8){
+    left: 50%;
+    width: 25px;
+    height: 25px;
+    animation-delay: 15s;
+    animation-duration: 45s;
+}
+
+.floating-square li:nth-child(9){
+    left: 20%;
+    width: 15px;
+    height: 15px;
+    animation-delay: 2s;
+    animation-duration: 35s;
+}
+
+.floating-square li:nth-child(10){
+    left: 85%;
+    width: 150px;
+    height: 150px;
+    animation-delay: 0s;
+    animation-duration: 11s;
+}
+
+
+
+@keyframes animate {
+    0%{
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+        border-radius: 0;
+    }
+
+    100%{
+        transform: translateY(-1000px) rotate(720deg);
+        opacity: 0;
+        border-radius: 50%;
+    }
 
 }
 </style>
