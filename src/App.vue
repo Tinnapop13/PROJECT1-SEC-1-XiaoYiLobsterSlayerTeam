@@ -206,7 +206,7 @@ const playerTimer = () => {
 <template>
   <!-- Homepage -->
   <section v-if="showPage" class="flex flex-col h-full min-h-screen justify-center"
-    :style="{'background-color': isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.8)' }">
+    :style="{'background-color': isDark ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.2)' }">
     <div class="flex margin mt-3 items-center justify-end" v-if="isDark">
       <img src="/src/assets/svg/dark-theme-moon.svg" class="size-6 mx-3 ">
       <input type="checkbox" class="toggle" checked @click="toggleDark()" />
@@ -279,11 +279,28 @@ const playerTimer = () => {
     <div class="w-full sm:w-96 lg:w-1/2 text-center bg-white p-8 rounded-lg">
       <h1 class="text-2xl font-bold mb-4">This is a tutorial</h1>
 
-      <div class="mb-4">
+      <div class="mb-4 justify-between mr-5 flex flex-row">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
         incidunt mollitia alias enim! Hic pariatur, nisi magnam, accusamus
         excepturi corporis dolorum, libero eos aspernatur sequi totam odio ab
         recusandae facilis?
+        <img src="/src/assets/svg/back-card.svg" width="50px" height="50px">
+      </div>
+
+      <div class="mb-4 justify-between mr-5 flex flex-row">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
+        incidunt mollitia alias enim! Hic pariatur, nisi magnam, accusamus
+        excepturi corporis dolorum, libero eos aspernatur sequi totam odio ab
+        recusandae facilis?
+        <img src="/src/assets/svg/back-card.svg" width="50px" height="50px">
+      </div>
+
+      <div class="mb-4 justify-between mr-5 flex flex-row">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
+        incidunt mollitia alias enim! Hic pariatur, nisi magnam, accusamus
+        excepturi corporis dolorum, libero eos aspernatur sequi totam odio ab
+        recusandae facilis?
+        <img src="/src/assets/svg/back-card.svg" width="50px" height="50px">
       </div>
 
       <button @click="togglePopupTutorial" class="btn btn-warning text-white px-4 py-2">
@@ -315,7 +332,7 @@ const playerTimer = () => {
 
   <!-- Gamepage UI -->
   <section v-if="!showPage" class="h-full min-h-screen flex flex-col items-center justify-center z-50"
-  :style="{'background-color': isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.8)' }">
+  :style="{'background-color': isDark ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.2)' }">
     <div class="flex margin mt-3 items-center" v-if="isDark">
       <img src="/src/assets/svg/dark-theme-moon.svg" class="size-6 mx-3 ">
       <input type="checkbox" class="toggle" checked @click="toggleDark()" />
@@ -562,8 +579,6 @@ const playerTimer = () => {
     height: 100vh;
     overflow: hidden;
     z-index:-1;
-    
-    
 }
 
 .floating-square li{
@@ -575,7 +590,7 @@ const playerTimer = () => {
     animation: animate 25s linear infinite;
     bottom: -150px;
     mix-blend-mode:difference;
-    
+    text-shadow: 2px 2px 4px #000;
 }
 
 .floating-square li:nth-child(1){
