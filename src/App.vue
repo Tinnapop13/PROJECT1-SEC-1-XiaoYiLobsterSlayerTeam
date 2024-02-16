@@ -94,6 +94,21 @@ const showTraceState = (buttonNumber) => {
     [buttons[buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
   }
 }
+const selectDifficulties = (mode) => {
+  currentMode.value = mode
+
+  switch (mode) {
+    case 3:
+      selectedDiff.value = "EASY"
+      break;
+    case 2:
+      selectedDiff.value = "NORMAL"
+      break;
+    case 1:
+      selectedDiff.value = "HARD"
+      break;
+  }
+}
 
 const displayTrace = () => {
   // Block Player From Clicking
