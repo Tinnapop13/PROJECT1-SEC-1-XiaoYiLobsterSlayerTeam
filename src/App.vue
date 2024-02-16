@@ -344,31 +344,46 @@ const selectDifficulties = (mode) => {
     v-if="showPopupTutorial"
     class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
   >
-    <div class="w-full sm:w-96 lg:w-1/2 text-center bg-white p-8 rounded-lg">
-      <h1 class="text-2xl font-bold mb-4 text-black">This is a tutorial</h1>
+    <div
+      class="w-full sm:w-96 lg:w-1/2 text-center bg-white p-8 rounded-lg overflow-scroll"
+    >
+      <h1 class="text-2xl font-bold mb-4 text-black">Simon Says Tutorial</h1>
 
-      <div class="mb-4 justify-between mr-5 flex flex-row text-black">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
-        incidunt mollitia alias enim! Hic pariatur, nisi magnam, accusamus
-        excepturi corporis dolorum, libero eos aspernatur sequi totam odio ab
-        recusandae facilis?
-        <img src="/src/assets/svg/back-card.svg" width="50px" height="50px" />
-      </div>
+      <div class="flex flex-col">
+        <div
+          class="flex justify-between items-center text-black font-semibold text-xl"
+        >
+          The player must choose at least one difficulty level and game size to
+          be able to play.
+          <img
+            src="/src/assets/svg/back-card.svg"
+            width="150px"
+            height="100px"
+          />
+        </div>
 
-      <div class="mb-4 justify-between mr-5 flex flex-row text-black">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
-        incidunt mollitia alias enim! Hic pariatur, nisi magnam, accusamus
-        excepturi corporis dolorum, libero eos aspernatur sequi totam odio ab
-        recusandae facilis?
-        <img src="/src/assets/svg/back-card.svg" width="50px" height="50px" />
-      </div>
+        <div
+          class="flex justify-between items-center text-black font-semibold text-xl"
+        >
+          The player needs to click the play button to start the game.
+          <img
+            src="/src/assets/svg/back-card.svg"
+            width="150px"
+            height="100px"
+          />
+        </div>
 
-      <div class="mb-4 justify-between mr-5 flex flex-row text-black">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
-        incidunt mollitia alias enim! Hic pariatur, nisi magnam, accusamus
-        excepturi corporis dolorum, libero eos aspernatur sequi totam odio ab
-        recusandae facilis?
-        <img src="/src/assets/svg/back-card.svg" width="50px" height="50px" />
+        <div
+          class="flex justify-between items-center text-black font-semibold text-xl"
+        >
+          The player needs to click the correct colors based on what Simon has
+          told them to do.
+          <img
+            src="/src/assets/svg/back-card.svg"
+            width="150px"
+            height="100px"
+          />
+        </div>
       </div>
 
       <button
