@@ -186,10 +186,11 @@ const playerTimer = () => {
       secondUint.value--
       secondUint.value === 0 ? (firstUint.value = 0) : (firstUint.value = 59)
     }
-  }, 1000)
+  }, 100)
 
   const checkTimer = setInterval(() => {
-    if (showPopupEnd.value || secondUint.value <= 0) {
+    if (showPopupEnd.value || (secondUint.value <= 0 && firstUint.value <= 0)) {
+      showPopupEnd.value === true
       clearInterval(timer)
       clearInterval(checkTimer)
       resetGame()
@@ -204,8 +205,8 @@ const playerTimer = () => {
 
 <template>
   <!-- Homepage -->
-  <section v-if="showPage" class="flex flex-col h-full min-h-screen justify-center z-10"
-    :style="{'background-color': isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.9)' }">
+  <section v-if="showPage" class="flex flex-col h-full min-h-screen justify-center"
+    :style="{'background-color': isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.8)' }">
     <div class="flex margin mt-3 items-center justify-end" v-if="isDark">
       <img src="/src/assets/svg/dark-theme-moon.svg" class="size-6 mx-3 ">
       <input type="checkbox" class="toggle" checked @click="toggleDark()" />
@@ -313,8 +314,8 @@ const playerTimer = () => {
 
 
   <!-- Gamepage UI -->
-  <section v-if="!showPage" class="h-full min-h-screen flex flex-col items-center justify-center"
-  :style="{'background-color': isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.9)' }">
+  <section v-if="!showPage" class="h-full min-h-screen flex flex-col items-center justify-center z-50"
+  :style="{'background-color': isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.8)' }">
     <div class="flex margin mt-3 items-center" v-if="isDark">
       <img src="/src/assets/svg/dark-theme-moon.svg" class="size-6 mx-3 ">
       <input type="checkbox" class="toggle" checked @click="toggleDark()" />
@@ -410,8 +411,9 @@ const playerTimer = () => {
 </template>
 
 <style>
-
-
+:root{
+  color-scheme: dark;
+}
 
 .flip{
   animation: flip 3s;
@@ -560,6 +562,8 @@ const playerTimer = () => {
     height: 100vh;
     overflow: hidden;
     z-index:-1;
+    
+    
 }
 
 .floating-square li{
