@@ -5,7 +5,7 @@
 |    **ID**   |    **NAME**    |      **ROLE**      | **RESPONSIBILITY** | **%** |
 |:-----------:|:--------------:|:------------------:|--------------------|-------|
 | 65130500022 | ณัฐศรัณย์ แซ่อึ่ง    | Function           | <ul><li>Automatic game ending upon wrong input detection</li>  <li>Theme switch</li> <li>Checking if the player has pressed the correct color sequence</li> </ul>  	 | |
-| 65130500023 | ติณณภพ เทียนบาง  | Function&Anamation | <ul> <li>Randomizing and displaying colors for the player to follow</li> <li>Code optimization</li> </ul>  |       |
+| 65130500023 | ติณณภพ เทียนบาง  | Function&Animation | <ul> <li>Randomizing and displaying colors for the player to follow</li> <li>Code optimization</li> </ul>  |       |
 | 65130500041 | ปภังกร กิจสกุลรัตน์ | Ui Design          | <ul> <li>Gameplay instructions</li> <li>Option to select button size or color quantity</li> <li>Reset button functionality</li>  </ul> |       |
 | 65130500046 | พชรดล แตงพลับ   |  Misc   | <ul>  <li> Timing the game duration and automatic game ending </li>  <li> Selecting game difficulty based on time </li> <li> Summarized game results</li> </ul>| 0 |
 ---
