@@ -38,6 +38,9 @@
 ## GAME DEMO
 
 
+https://github.com/Tinnapop13/PROJECT1-SEC-1-XiaoYiLobsterSlayerTeam/assets/110712994/1eb0e329-6c23-46b6-a1ea-e5eb46242df2
+
+
 ---
 
 ## REFERENCE
