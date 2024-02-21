@@ -13,16 +13,16 @@
 ## FEATURE 💡
 |  📍 |                        **FEATURE**                       | **DESCRIPTION** |
 |:--:|:-------------------------------------------------------------:|:---------------:|
-|  1 | Select game difficulty based on time                          |                 |
-|  2 | Option to select button size or color quantity                |                 |
-| 3  | Theme switch                                                  |                 |
-| 4  | Gameplay instructions                                         |                 |
-| 5  | Timing the game duration and automatic game ending            |                 |
-| 6  | Randomizing and displaying colors for the player to follow    |                 |
-| 7  | Checking if the player has pressed the correct color sequence |                 |
-| 8  | Automatic game ending upon wrong input detection              |                 |
-| 9  | Reset button functionality                                    |                 |
-| 10 | Summarized game results                                       |                 |
+|  1 | Game difficulty  | Player must choose at least one difficulty to be able to play game which's based on time |
+|  2 | Game size  | Player must choose at least one button size which's will generate block quantity base on player selection |
+| 3  | Theme switch   |  Player can switch either dark or light theme(default)  |
+| 4  | Gameplay instructions   |  Complete game instructions with GIF images  |
+| 5  | Game timer  | Timing the game's duration and it's automatic termination |
+| 6  | Color block generator | Randomizing and displaying colors for the player to follow |
+| 7  | Player input corrector | Checking if the player has pressed the correct color sequence |
+| 8  | Game error corrector  | Checking if the player has pressed the wrong color sequence  |
+| 9  | Restart game  | Fucntion to restart game  |
+| 10 | Game summary | Summarized game results    |
 ---
 
 ## TUTORIAL ❓ 
@@ -37,9 +37,7 @@
 
 ## GAME DEMO 🕹️
 
-
 https://github.com/Tinnapop13/PROJECT1-SEC-1-XiaoYiLobsterSlayerTeam/assets/110712994/1eb0e329-6c23-46b6-a1ea-e5eb46242df2
-
 
 ---
 
