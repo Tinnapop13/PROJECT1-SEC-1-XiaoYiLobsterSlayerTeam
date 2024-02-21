@@ -48,7 +48,7 @@ https://github.com/Tinnapop13/PROJECT1-SEC-1-XiaoYiLobsterSlayerTeam/assets/1107
 - Natsaran Sae-oueng 65130500022 -
 - Tinnapop Tienbang 65130500023 -
 - Papangkorn Kijsakulrat 65130500041 - Vue CompositionAPI, Vue Reactive, Elements of Vue 
-- Phatcharadol Thangplub 65130500046 - 
+- Phatcharadol Thangplub 65130500046 - Have more familiar with JS syntax and coding style, Vue directive
 
 ## REFERENCE 📑
 - https://www.mathsisfun.com/games/simon-says.html : Inspiration for creating this game
