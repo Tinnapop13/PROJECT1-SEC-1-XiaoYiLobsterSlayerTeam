@@ -48,7 +48,7 @@ https://github.com/Tinnapop13/PROJECT1-SEC-1-XiaoYiLobsterSlayerTeam/assets/1107
 - Natsaran Sae-oueng 65130500022 -
 - Tinnapop Tienbang 65130500023 - setTimeout & setInterval , vue Transition built-in , Watchers , Conditional Rendering , Reactivity Fundamental
 - Papangkorn Kijsakulrat 65130500041 - Vue CompositionAPI, Vue Reactivity, Computed, watchers, Class and style binding
-- Phatcharadol Thangplub 65130500046 - Have more familiar with JS syntax and coding style, Have more clear picture in web development process, Vue directive
+- Phatcharadol Thangplub 65130500046 - JS syntax and coding style, Web development process, Vue directive
 
 ## REFERENCE 📑
 - https://www.mathsisfun.com/games/simon-says.html : Inspiration for creating this game
