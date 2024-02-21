@@ -50,6 +50,8 @@ https://github.com/Tinnapop13/PROJECT1-SEC-1-XiaoYiLobsterSlayerTeam/assets/1107
 - Papangkorn Kijsakulrat 65130500041 - Vue CompositionAPI, Vue Reactivity, Computed, watchers, Class and style binding
 - Phatcharadol Thangplub 65130500046 - JS syntax and coding style, Web development process, Vue directive
 
+---
+
 ## REFERENCE 📑
 - https://www.mathsisfun.com/games/simon-says.html : Inspiration for creating this game
 - https://codepen.io/mohaiman/pen/MQqMyo : Inspiration for background animation 
