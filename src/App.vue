@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive, watch } from "vue"
-import { randomNumber , randomColor } from './utilities/utility.js'
+import { randomNumber, randomColor } from './utilities/utility.js'
 import simonIllust from './assets/animation_components/simon-illust.vue'
 import pocketWatch from './assets/animation_components/pocket-watch.vue'
 import simonHead from './assets/animation_components/simon-head.vue'
@@ -151,12 +151,12 @@ const playerClick = (event) => {
       logIndex = 0
       round.value++
       gameRoundPointer = 0
-      currentPointer = 0 
+      currentPointer = 0
       displayTrace()
     }
   } else {
-    logLst.splice(0, logLst.length) 
-    traces.splice(0, traces.length) 
+    logLst.splice(0, logLst.length)
+    traces.splice(0, traces.length)
     logIndex = 0
     disableInterrupt = true
     showPopupEnd.value = true
@@ -295,26 +295,19 @@ const selectDifficulties = (mode) => {
       <h1 class="text-2xl font-bold mb-4 text-black">This is a tutorial</h1>
 
       <div class="mb-4 justify-between mr-5 flex flex-row text-black">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
-        incidunt mollitia alias enim! Hic pariatur, nisi magnam, accusamus
-        excepturi corporis dolorum, libero eos aspernatur sequi totam odio ab
-        recusandae facilis?
+        The player must choose at least one difficulty level and game size to
+        be able to play.
         <img src="/src/assets/svg/back-card.svg" width="50px" height="50px">
       </div>
 
       <div class="mb-4 justify-between mr-5 flex flex-row text-black">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
-        incidunt mollitia alias enim! Hic pariatur, nisi magnam, accusamus
-        excepturi corporis dolorum, libero eos aspernatur sequi totam odio ab
-        recusandae facilis?
+        The player needs to click the play button to start the game.
         <img src="/src/assets/svg/back-card.svg" width="50px" height="50px">
       </div>
 
       <div class="mb-4 justify-between mr-5 flex flex-row text-black">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
-        incidunt mollitia alias enim! Hic pariatur, nisi magnam, accusamus
-        excepturi corporis dolorum, libero eos aspernatur sequi totam odio ab
-        recusandae facilis?
+        The player needs to click the correct colors based on what Simon has
+        told them to do.        
         <img src="/src/assets/svg/back-card.svg" width="50px" height="50px">
       </div>
 
