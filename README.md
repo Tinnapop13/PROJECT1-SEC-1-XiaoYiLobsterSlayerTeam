@@ -45,7 +45,7 @@ https://github.com/Tinnapop13/PROJECT1-SEC-1-XiaoYiLobsterSlayerTeam/assets/1107
 
 ## GROWTH 📈
 ### Each member's learning in the past 5 weeks 
-- Natsaran Sae-oueng 65130500022 -
+- Natsaran Sae-oueng 65130500022 - DOM, Vue Instance/directive/reactivity, Handling Events, Timer/asynchronous concepts
 - Tinnapop Tienbang 65130500023 - setTimeout & setInterval , vue Transition built-in , Watchers , Conditional Rendering , Reactivity Fundamental
 - Papangkorn Kijsakulrat 65130500041 - Vue CompositionAPI, Vue Reactivity, Computed, watchers, Class and style binding
 - Phatcharadol Thangplub 65130500046 - JS syntax and coding style, Web development process, Vue directive
