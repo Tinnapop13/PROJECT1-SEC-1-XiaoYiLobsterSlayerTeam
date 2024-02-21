@@ -9,6 +9,8 @@ import simonHead from './assets/animation_components/simon-head.vue'
 const isDark = ref(false)
 const logLst = []
 let logIndex = 0
+const clickSound = new URL('/src/assets/sounds/clickSound.mp3', import.meta.url);
+const endGameSound = new URL('/src/assets/sounds/endGameSound.mp3', import.meta.url);
 
 // [papangkorn00] Homepage UI Variable , Handle Malfunction Player Input
 let disableInterrupt = true
@@ -143,7 +145,7 @@ const playerClick = (event) => {
   }, 100)
   if (logLst[logIndex] === traces[logIndex]) {
     new Audio(
-      "/src/assets/sounds/clickSound.mp3"
+      clickSound
     ).play()
     logIndex++
     if (logLst.length === traces.length) {
@@ -197,7 +199,7 @@ const playerTimer = () => {
     if (showPopupEnd.value) {
       clearInterval(timer)
       resetGame()
-      new Audio("/src/assets/sounds/endGameSound.mp3").play()
+      new Audio(endGameSound).play()
     }
   })
 }
