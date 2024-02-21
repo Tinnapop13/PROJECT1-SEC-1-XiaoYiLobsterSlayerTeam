@@ -1,13 +1,15 @@
 # PROJECT1-SEC-1-XiaoYiLobsterSlayerTeam
 ⭐⭐⭐
 
- ## MEMBER 🤝
+# Simon Says Game 🎮
+
+ ## MEMBER 👨‍👨‍👦‍👦
 |    **ID**   |    **NAME**    |      **ROLE**      | **RESPONSIBILITY** | **%** |
 |:-----------:|:--------------:|:------------------:|--------------------|-------|
-| 65130500022 | ณัฐศรัณย์ แซ่อึ่ง    | Function           | <ul><li>Automatic game ending upon wrong input detection</li>  <li>Theme switch</li> <li>Checking if the player has pressed the correct color sequence</li> </ul>  	 | 25% |
-| 65130500023 | ติณณภพ เทียนบาง  | Function&Animation | <ul> <li>Randomizing and displaying colors for the player to follow</li> <li>Code optimization</li> </ul>  |  25%     |
-| 65130500041 | ปภังกร กิจสกุลรัตน์ | Ui Design          | <ul> <li>Gameplay instructions</li> <li>Option to select button size or color quantity</li> <li>Reset button functionality</li>  </ul> |  25%    |
-| 65130500046 | พชรดล แตงพลับ   |  Misc   | <ul>  <li> Timing the game duration and automatic game ending </li>  <li> Selecting game difficulty based on time </li> <li> Summarized game results</li> </ul>| 25%|
+| 65130500022 | Natsaran Sae-oueng | Function           | <ul><li>Automatic game ending upon wrong input detection</li>  <li>Theme switch</li> <li>Checking if the player has pressed the correct color sequence</li> </ul>  	 | 25% |
+| 65130500023 | Tinnapop Tienbang  | Function&Animation | <ul> <li>Randomizing and displaying colors for the player to follow</li> <li>Code optimization</li> </ul>  |  25%     |
+| 65130500041 | Papangkorn Kijsakulrat | Ui Design          | <ul> <li>Gameplay instructions</li> <li>Option to select button size or color quantity</li> <li>Reset button functionality</li>  </ul> |  25%    |
+| 65130500046 | Phatcharadol Thangplub  |  Misc   | <ul>  <li> Timing the game duration and automatic game ending </li>  <li> Selecting game difficulty based on time </li> <li> Summarized game results</li> </ul>| 25%|
 ---
 
 ## FEATURE 💡
@@ -41,9 +43,16 @@ https://github.com/Tinnapop13/PROJECT1-SEC-1-XiaoYiLobsterSlayerTeam/assets/1107
 
 ---
 
-## REFERENCE
-- https://www.mathsisfun.com/games/simon-says.html
-- https://codepen.io/mohaiman/pen/MQqMyo
+## GROWTH 📈
+### Each member's learning in the past 5 weeks 
+- Natsaran Sae-oueng 65130500022 -
+- Tinnapop Tienbang 65130500023 -
+- Papangkorn Kijsakulrat 65130500041 - Vue CompositionAPI, Vue Reactive, Elements of Vue 
+- Phatcharadol Thangplub 65130500046 - 
+
+## REFERENCE 📑
+- https://www.mathsisfun.com/games/simon-says.html : Inspiration for creating this game
+- https://codepen.io/mohaiman/pen/MQqMyo : Inspiration for background animation 
 
 
 <table align=center>
