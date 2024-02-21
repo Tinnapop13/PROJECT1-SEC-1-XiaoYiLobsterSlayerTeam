@@ -1,16 +1,14 @@
 <script setup>
 import { ref, reactive, watch } from "vue"
-import { randomNumber } from './utilities/utility.js'
+import { randomNumber, randomColor } from './utilities/utility.js'
 import simonIllust from './assets/animation_components/simon-illust.vue'
 import pocketWatch from './assets/animation_components/pocket-watch.vue'
 import simonHead from './assets/animation_components/simon-head.vue'
 
-document.body.style.backgroundColor = "black";
-// [Nxts0] Toggle Theme
+// [Nxts0] Toggle Theme , Handle Player Click Variable
 const isDark = ref(false)
-const toggleDark = () => {
-  isDark.value = !isDark.value
-}
+const logLst = []
+let logIndex = 0
 
 // [papangkorn00] Homepage UI Variable , Handle Malfunction Player Input
 let disableInterrupt = true
@@ -18,7 +16,6 @@ const showPage = ref(true)
 const showPopupTutorial = ref(false)
 const currentSize = ref(0)
 const currentMode = ref(0)
-const showPageTransition = ref(false)
 
 // [phatcharadol] Game Result Variable , Game Result UI Variable , Timer Variable
 const showPopupEnd = ref(false)
@@ -27,21 +24,19 @@ const secondUint = ref(9)
 const playerLog = ref([{ round: 0 }])
 const round = ref(0)
 const selectedDiff = ref('')
+let timeOutCount = 0
 
-// [Tinnapop13] Show Trace Variable
+// [Tinnapop13] Show Trace Variable , Animation
 let gameRoundPointer = 0
 let currentPointer = 0
 const traceButtonIndex = ref(-1)
 const traces = []
 const openMouthState = ref(null)
-const borderColor = ref("")
-const changeColor = setInterval(() => {
-  borderColor.value = "#" + Math.floor(Math.random() * 0xFFFFFF).toString(16);
+const animationColor = ref("")
+const showPageTransition = ref(false)
+setInterval(() => {
+  animationColor.value = randomColor()
 }, 2000)
-
-// [Nxts0] Handle Player Click Variable
-const logLst = []
-let logIndex = 0
 
 // Game Properties Variable
 const buttons = reactive([
@@ -87,27 +82,10 @@ const selectSize = (size) => {
 }
 
 // [Tinnapop13] Display Trace function
-
 const showTraceState = (buttonNumber) => {
   return {
     "bg-[#fff]": traceButtonIndex.value === buttonNumber,
     [buttons[buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
-  }
-}
-
-const selectDifficulties = (mode) => {
-  currentMode.value = mode
-
-  switch (mode) {
-    case 3:
-      selectedDiff.value = "EASY"
-      break;
-    case 2:
-      selectedDiff.value = "NORMAL"
-      break;
-    case 1:
-      selectedDiff.value = "HARD"
-      break;
   }
 }
 
@@ -152,6 +130,10 @@ const displayTrace = () => {
 }
 
 // [Nxts0] Handle Player Click function
+const toggleDark = () => {
+  isDark.value = !isDark.value
+}
+
 const playerClick = (event) => {
   let itemClick = Number(event.target.id)
   traceButtonIndex.value = itemClick
@@ -161,20 +143,20 @@ const playerClick = (event) => {
   }, 100)
   if (logLst[logIndex] === traces[logIndex]) {
     new Audio(
-      "https://cdn.discordapp.com/attachments/1196805209381404682/1203715260742238268/pop-cat-original-meme.mp3?ex=65d21a32&is=65bfa532&hm=011af7cfcb702bb425a2ca043e29decd78bcb3b7ce4751ed44d573dffd27ad4a&"
+      "/src/assets/sounds/clickSound.mp3"
     ).play()
     logIndex++
     if (logLst.length === traces.length) {
       logLst.splice(0, logLst.length) // reset Array
       logIndex = 0
       round.value++
-      gameRoundPointer = 0 //add
-      currentPointer = 0 //add
+      gameRoundPointer = 0
+      currentPointer = 0
       displayTrace()
     }
   } else {
-    logLst.splice(0, logLst.length) // reset Array
-    traces.splice(0, traces.length) // reset Array
+    logLst.splice(0, logLst.length)
+    traces.splice(0, traces.length)
     logIndex = 0
     disableInterrupt = true
     showPopupEnd.value = true
@@ -195,25 +177,44 @@ const playerTimer = () => {
   const timer = setInterval(() => {
     firstUint.value--
     if (firstUint.value < 10) firstUint.value = `0${firstUint.value}`
-
     if (firstUint.value == 0) {
-      secondUint.value--
-      secondUint.value === 0 ? (firstUint.value = 0) : (firstUint.value = 59)
+      if (secondUint.value > 0) {
+        secondUint.value--
+      }
+      if (secondUint.value === 0) {
+        timeOutCount++
+      }
+      if (timeOutCount === 2) {
+        clearInterval(timer)
+        showPopupEnd.value = true
+      }
+      if (timeOutCount !== 2) {
+        firstUint.value = 59
+      }
     }
   }, 1000)
-
-  const checkTimer = setInterval(() => {
-    if (showPopupEnd.value || (secondUint.value <= 0 && firstUint.value <= 0)) {
-      showPopupEnd.value === true
+  watch(showPopupEnd, () => {
+    if (showPopupEnd.value) {
       clearInterval(timer)
-      clearInterval(checkTimer)
       resetGame()
-      var audio = new Audio(
-        "https://cdn.discordapp.com/attachments/1196805209381404682/1203710805413986344/rock-eyebrow-raise-sound-effect.mp3?ex=65d2160b&is=65bfa10b&hm=289ed8577d1a08479c2cd3f9607a37cb48240dac25744204c1ab4181e91992c1&"
-      )
-      audio.play()
+      new Audio("/src/assets/sounds/endGameSound.mp3").play()
     }
-  }, 100)
+  })
+}
+
+const selectDifficulties = (mode) => {
+  currentMode.value = mode
+  switch (mode) {
+    case 3:
+      selectedDiff.value = "EASY"
+      break;
+    case 2:
+      selectedDiff.value = "NORMAL"
+      break;
+    case 1:
+      selectedDiff.value = "HARD"
+      break;
+  }
 }
 </script>
 
@@ -294,26 +295,19 @@ const playerTimer = () => {
       <h1 class="text-2xl font-bold mb-4 text-black">This is a tutorial</h1>
 
       <div class="mb-4 justify-between mr-5 flex flex-row text-black">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
-        incidunt mollitia alias enim! Hic pariatur, nisi magnam, accusamus
-        excepturi corporis dolorum, libero eos aspernatur sequi totam odio ab
-        recusandae facilis?
+        The player must choose at least one difficulty level and game size to
+        be able to play.
         <img src="/src/assets/svg/back-card.svg" width="50px" height="50px">
       </div>
 
       <div class="mb-4 justify-between mr-5 flex flex-row text-black">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
-        incidunt mollitia alias enim! Hic pariatur, nisi magnam, accusamus
-        excepturi corporis dolorum, libero eos aspernatur sequi totam odio ab
-        recusandae facilis?
+        The player needs to click the play button to start the game.
         <img src="/src/assets/svg/back-card.svg" width="50px" height="50px">
       </div>
 
       <div class="mb-4 justify-between mr-5 flex flex-row text-black">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt
-        incidunt mollitia alias enim! Hic pariatur, nisi magnam, accusamus
-        excepturi corporis dolorum, libero eos aspernatur sequi totam odio ab
-        recusandae facilis?
+        The player needs to click the correct colors based on what Simon has
+        told them to do.        
         <img src="/src/assets/svg/back-card.svg" width="50px" height="50px">
       </div>
 
@@ -322,11 +316,9 @@ const playerTimer = () => {
       </button>
     </div>
 
-
-
   </section>
   <ul class="floating-square">
-    <li v-for="i in 10" :style="{ 'background': isDark ? borderColor : 'rgba(255, 255, 255, 0.8)' }"></li>
+    <li v-for="i in 10" :style="{ 'background': isDark ? animationColor : 'rgba(255, 255, 255, 0.8)' }"></li>
   </ul>
 
   <div class="flex fixed top-0 left-0 w-screen  z-10 ">
@@ -343,10 +335,9 @@ const playerTimer = () => {
     </Transition>
   </div>
 
-
   <!-- Gamepage UI -->
   <section v-if="!showPage" class="h-full min-h-screen flex flex-col items-center justify-center z-50"
-    :style="{ 'background-color': isDark ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.2)' }">
+    :style="{ 'background-color': isDark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(255, 255, 255, 0.9)' }">
     <div class="flex margin mt-3 items-center" v-if="isDark">
       <img src="/src/assets/svg/dark-theme-moon.svg" class="size-6 mx-3 ">
       <input type="checkbox" class="toggle" checked @click="toggleDark()" />
@@ -366,7 +357,7 @@ const playerTimer = () => {
     </h1>
 
     <div class="flex justify-between w-96 my-4 max-sm:w-80 rainbow p-4 rounded-2xl  border-8 transition-colors"
-      :style="{ 'border-color': borderColor }">
+      :style="{ 'border-color': animationColor }">
       <span class="countdown font-mono text-2xl" :class="isDark ? 'text-white' : 'text-slate-700'">Round : {{ round
       }}</span>
       <span class="countdown font-mono text-2xl" :class="isDark ? 'text-white' : 'text-slate-700'"
@@ -444,260 +435,3 @@ const playerTimer = () => {
     </div>
   </section>
 </template>
-
-<style>
-.flip {
-  animation: flip 3s;
-  transition: all 1s;
-}
-
-@keyframes flip {
-  0% {
-    transform: translateY(-100%) rotateY(180deg);
-
-  }
-
-  100% {
-    transform: translateY(0%) rotateY(0deg);
-  }
-}
-
-#eye-right,
-#eye-left {
-  animation-name: eye-ball;
-  animation-duration: 5s;
-  animation-iteration-count: infinite;
-}
-
-.simonHead-enter-active {
-  transition: all 1s;
-  animation: rotate 3s;
-
-}
-
-.simonHead-leave-active {
-  transition: all 1s;
-  animation: rotate 3s reverse;
-
-}
-
-.slide-to-right-enter-active {
-  animation: slide-to-right 1s;
-}
-
-.slide-to-right-leave-active {
-  animation: slide-to-right 1s reverse;
-}
-
-.slide-to-left-leave-active {
-  animation: slide-to-left 1s reverse;
-}
-
-.slide-to-left-enter-active {
-  animation: slide-to-left 1s;
-}
-
-.pocket-watch-enter-active {
-  animation: pocket-watch 1s
-}
-
-.pocket-watch-leave-active {
-  animation: pocket-watch 1s reverse
-}
-
-.lower-teeth {
-  animation: open-mouth 1s 1;
-}
-
-@keyframes rotate {
-  0% {
-    transform: rotate(0deg);
-    opacity: 0;
-    width: 0;
-  }
-
-  100% {
-    transform: rotate(360deg);
-    opacity: 1;
-    width: 33.33%;
-  }
-}
-
-@keyframes pocket-watch {
-  0% {
-    transform: translateY(-100%);
-  }
-
-  100% {
-    transform: translateY(0%);
-  }
-
-}
-
-@keyframes slide-to-right {
-  0% {
-    transform: translateX(-100%);
-  }
-
-  100% {
-    transform: translateX(0);
-
-  }
-}
-
-@keyframes open-mouth {
-  0% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(10px);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@keyframes slide-to-left {
-  0% {
-    transform: translateX(100%) scaleX(-1);
-  }
-
-  100% {
-    transform: translateX(0) scaleX(-1);
-
-  }
-}
-
-@keyframes eye-ball {
-  0% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-30px);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-
-}
-
-
-.floating-square {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  z-index: -1;
-}
-
-.floating-square li {
-  position: absolute;
-  display: block;
-  list-style: none;
-  width: 20px;
-  height: 20px;
-  animation: animate 25s linear infinite;
-  bottom: -150px;
-  mix-blend-mode: difference;
-  text-shadow: 2px 2px 4px #000;
-}
-
-.floating-square li:nth-child(1) {
-  left: 25%;
-  width: 80px;
-  height: 80px;
-  animation-delay: 0s;
-}
-
-
-.floating-square li:nth-child(2) {
-  left: 10%;
-  width: 20px;
-  height: 20px;
-  animation-delay: 2s;
-  animation-duration: 12s;
-}
-
-.floating-square li:nth-child(3) {
-  left: 70%;
-  width: 20px;
-  height: 20px;
-  animation-delay: 4s;
-}
-
-.floating-square li:nth-child(4) {
-  left: 40%;
-  width: 60px;
-  height: 60px;
-  animation-delay: 0s;
-  animation-duration: 18s;
-}
-
-.floating-square li:nth-child(5) {
-  left: 65%;
-  width: 20px;
-  height: 20px;
-  animation-delay: 0s;
-}
-
-.floating-square li:nth-child(6) {
-  left: 75%;
-  width: 110px;
-  height: 110px;
-  animation-delay: 3s;
-}
-
-.floating-square li:nth-child(7) {
-  left: 35%;
-  width: 150px;
-  height: 150px;
-  animation-delay: 7s;
-}
-
-.floating-square li:nth-child(8) {
-  left: 50%;
-  width: 25px;
-  height: 25px;
-  animation-delay: 15s;
-  animation-duration: 45s;
-}
-
-.floating-square li:nth-child(9) {
-  left: 20%;
-  width: 15px;
-  height: 15px;
-  animation-delay: 2s;
-  animation-duration: 35s;
-}
-
-.floating-square li:nth-child(10) {
-  left: 85%;
-  width: 150px;
-  height: 150px;
-  animation-delay: 0s;
-  animation-duration: 11s;
-}
-
-
-
-@keyframes animate {
-  0% {
-    transform: translateY(0) rotate(0deg);
-    opacity: 1;
-    border-radius: 0;
-  }
-
-  100% {
-    transform: translateY(-1000px) rotate(720deg);
-    opacity: 0;
-    border-radius: 50%;
-  }
-
-}
-</style>
