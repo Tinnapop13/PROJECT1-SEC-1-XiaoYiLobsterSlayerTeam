@@ -1,224 +1,225 @@
 <script setup>
-import { ref, reactive, watch } from "vue";
-import { randomNumber, randomColor } from "./utilities/utility.js";
-import simonIllust from "./assets/animation_components/simon-illust.vue";
-import pocketWatch from "./assets/animation_components/pocket-watch.vue";
-import simonHead from "./assets/animation_components/simon-head.vue";
+import {ref, reactive, watch} from "vue"
+import {randomNumber, randomColor} from "./utilities/utility.js"
+import simonIllust from "./assets/animation_components/simon-illust.vue"
+import pocketWatch from "./assets/animation_components/pocket-watch.vue"
+import simonHead from "./assets/animation_components/simon-head.vue"
 
 // [Nxts0] Toggle Theme , Handle Player Click Variable
 
 const isDark = ref(false)
 const logLst = []
 let logIndex = 0
-const clickSound = new URL('/src/assets/sounds/clickSound.mp3', import.meta.url);
-const endGameSound = new URL('/src/assets/sounds/endGameSound.mp3', import.meta.url);
+const clickSound = new URL("/src/assets/sounds/clickSound.mp3", import.meta.url)
+const endGameSound = new URL(
+  "/src/assets/sounds/endGameSound.mp3",
+  import.meta.url
+)
 
 // [papangkorn00] Homepage UI Variable , Handle Malfunction Player Input
-let disableInterrupt = true;
-const showPage = ref(true);
-const showPopupTutorial = ref(false);
-const currentSize = ref(0);
-const currentMode = ref(0);
+let disableInterrupt = true
+const showPage = ref(true)
+const showPopupTutorial = ref(false)
+const currentSize = ref(0)
+const currentMode = ref(0)
 
 // [phatcharadol] Game Result Variable , Game Result UI Variable , Timer Variable
-const showPopupEnd = ref(false);
-const firstUint = ref(59);
-const secondUint = ref(9);
-const playerLog = ref([{ round: 0 }]);
-const round = ref(0);
-const selectedDiff = ref("");
-let timeOutCount = 0;
+const showPopupEnd = ref(false)
+const firstUint = ref(59)
+const secondUint = ref(9)
+const playerLog = ref([{round: 0}])
+const round = ref(0)
+const selectedDiff = ref("")
+let timeOutCount = 0
 
 // [Tinnapop13] Show Trace Variable , Animation
-let gameRoundPointer = 0;
-let currentPointer = 0;
-const traceButtonIndex = ref(-1);
-const traces = [];
-const openMouthState = ref(null);
-const animationColor = ref("");
-const showPageTransition = ref(false);
+let gameRoundPointer = 0
+let currentPointer = 0
+const traceButtonIndex = ref(-1)
+const traces = []
+const openMouthState = ref(null)
+const animationColor = ref("")
+const showPageTransition = ref(false)
 setInterval(() => {
-  animationColor.value = randomColor();
-}, 2000);
+  animationColor.value = randomColor()
+}, 2000)
 
 // Game Properties Variable
 const buttons = reactive([
-  { number: 0, color: "bg-[#FF0000]" },
-  { number: 1, color: "bg-[#228B22]" },
-  { number: 2, color: "bg-[#0000FF]" },
-  { number: 3, color: "bg-[#FFFF00]" },
-  { number: 4, color: "bg-[#15F5BA]" },
-  { number: 5, color: "bg-[#836FFF]" },
-  { number: 6, color: "bg-[#F57D1F]" },
-  { number: 7, color: "bg-[#F72798]" },
-  { number: 8, color: "bg-[#7E1717]" },
-]);
+  {number: 0, color: "bg-[#FF0000]"},
+  {number: 1, color: "bg-[#228B22]"},
+  {number: 2, color: "bg-[#0000FF]"},
+  {number: 3, color: "bg-[#FFFF00]"},
+  {number: 4, color: "bg-[#15F5BA]"},
+  {number: 5, color: "bg-[#836FFF]"},
+  {number: 6, color: "bg-[#F57D1F]"},
+  {number: 7, color: "bg-[#F72798]"},
+  {number: 8, color: "bg-[#7E1717]"},
+])
 
 // [papangkorn00] Homepage UI function (Tutorial,Start Button)
 const togglePopupTutorial = () => {
-  showPopupTutorial.value = !showPopupTutorial.value;
-};
+  showPopupTutorial.value = !showPopupTutorial.value
+}
 
 const pageTransition = () => {
-  showPageTransition.value = true;
+  showPageTransition.value = true
   setTimeout(() => {
-    showPage.value = !showPage.value;
-    showPageTransition.value = false;
-  }, 2000);
-};
+    showPage.value = !showPage.value
+    showPageTransition.value = false
+  }, 2000)
+}
 
 const resetGame = () => {
   playerLog.value.push({
     time: `${secondUint.value}:${firstUint.value}`,
     round: round.value,
-  });
-  gameRoundPointer = 0;
-  currentPointer = 0;
-  traceButtonIndex.value = -1;
-  traces.splice(0, traces.length);
-  logLst.splice(0, logLst.length);
-  logIndex = 0;
-};
+  })
+  gameRoundPointer = 0
+  currentPointer = 0
+  traceButtonIndex.value = -1
+  traces.splice(0, traces.length)
+  logLst.splice(0, logLst.length)
+  logIndex = 0
+}
 
 const selectSize = (size) => {
-  currentSize.value = size;
-};
+  currentSize.value = size
+}
 
 // [Tinnapop13] Display Trace function
 const showTraceState = (buttonNumber) => {
   return {
     "bg-[#fff]": traceButtonIndex.value === buttonNumber,
     [buttons[buttonNumber].color]: traceButtonIndex.value !== buttonNumber,
-  };
-};
+  }
+}
 
 const displayTrace = () => {
   // Block Player From Clicking
-  disableInterrupt = true;
+  disableInterrupt = true
   // Start Timer While Game Start Once
   if (round.value === 0) {
-    round.value++;
-    gameRoundPointer = 1;
-    playerTimer();
+    round.value++
+    gameRoundPointer = 1
+    playerTimer()
   }
 
   // Set Button to Change Style while Show Trace
   const gameInterval = setInterval(() => {
-    const randomButtonId = randomNumber(currentSize.value === 2 ? 4 : 9);
+    const randomButtonId = randomNumber(currentSize.value === 2 ? 4 : 9)
     setTimeout(() => {
       if (currentPointer === round.value - 1) {
-        traceButtonIndex.value = randomButtonId;
-        traces.push(traceButtonIndex.value);
+        traceButtonIndex.value = randomButtonId
+        traces.push(traceButtonIndex.value)
       } else {
-        traceButtonIndex.value = traces[currentPointer];
+        traceButtonIndex.value = traces[currentPointer]
       }
-      openMouthState.value = "lower-teeth";
-    }, currentMode.value * 200);
+      openMouthState.value = "lower-teeth"
+    }, currentMode.value * 200)
     setTimeout(() => {
-      traceButtonIndex.value = -1;
-      openMouthState.value = null;
-      currentPointer++;
+      traceButtonIndex.value = -1
+      openMouthState.value = null
+      currentPointer++
       if (round.value === 1) {
-        disableInterrupt = false;
+        disableInterrupt = false
       }
       if (gameRoundPointer === currentPointer) {
-        disableInterrupt = false;
+        disableInterrupt = false
       }
-    }, currentMode.value * 400);
-    gameRoundPointer++;
+    }, currentMode.value * 400)
+    gameRoundPointer++
     if (gameRoundPointer > round.value - 1) {
-      clearInterval(gameInterval);
+      clearInterval(gameInterval)
     }
-  }, currentMode.value * 400);
-};
+  }, currentMode.value * 400)
+}
 
 // [Nxts0] Handle Player Click function
 const toggleDark = () => {
-  isDark.value = !isDark.value;
-};
+  isDark.value = !isDark.value
+}
 
 const playerClick = (event) => {
-  let itemClick = Number(event.target.id);
-  traceButtonIndex.value = itemClick;
-  logLst.push(itemClick);
+  let itemClick = Number(event.target.id)
+  traceButtonIndex.value = itemClick
+  logLst.push(itemClick)
   setTimeout(() => {
-    traceButtonIndex.value = -1;
-  }, 100);
+    traceButtonIndex.value = -1
+  }, 100)
   if (logLst[logIndex] === traces[logIndex]) {
-    new Audio(
-      clickSound
-    ).play()
+    new Audio(clickSound).play()
     logIndex++
     if (logLst.length === traces.length) {
-      logLst.splice(0, logLst.length); // reset Array
-      logIndex = 0;
-      round.value++;
-      gameRoundPointer = 0;
-      currentPointer = 0;
-      displayTrace();
+      logLst.splice(0, logLst.length) // reset Array
+      logIndex = 0
+      round.value++
+      gameRoundPointer = 0
+      currentPointer = 0
+      displayTrace()
     }
   } else {
-    logLst.splice(0, logLst.length);
-    traces.splice(0, traces.length);
-    logIndex = 0;
-    disableInterrupt = true;
-    showPopupEnd.value = true;
+    logLst.splice(0, logLst.length)
+    traces.splice(0, traces.length)
+    logIndex = 0
+    disableInterrupt = true
+    showPopupEnd.value = true
   }
-};
+}
 
 // [phatcharadol] Game Result function , Timer function , Calculate Score Level
 const togglePopupEnd = () => {
-  showPopupEnd.value = !showPopupEnd.value;
-  round.value = 0;
-  firstUint.value = 59;
-  secondUint.value = 9;
-  disableInterrupt = true;
-  playerLog.value = [{ round: 0 }];
-};
+  showPopupEnd.value = !showPopupEnd.value
+  round.value = 0
+  firstUint.value = 59
+  secondUint.value = 9
+  disableInterrupt = true
+  playerLog.value = [{round: 0}]
+}
 
 const playerTimer = () => {
   const timer = setInterval(() => {
-    firstUint.value--;
-    if (firstUint.value < 10) firstUint.value = `0${firstUint.value}`;
+    firstUint.value--
+    if (firstUint.value < 10) firstUint.value = `0${firstUint.value}`
     if (firstUint.value == 0) {
       if (secondUint.value > 0) {
-        secondUint.value--;
+        secondUint.value--
       }
       if (secondUint.value === 0) {
-        timeOutCount++;
+        timeOutCount++
       }
       if (timeOutCount === 2) {
-        clearInterval(timer);
-        showPopupEnd.value = true;
+        clearInterval(timer)
+        showPopupEnd.value = true
       }
       if (timeOutCount !== 2) {
-        firstUint.value = 59;
+        firstUint.value = 59
       }
     }
-  }, 1000);
+  }, 1000)
   watch(showPopupEnd, () => {
     if (showPopupEnd.value) {
       clearInterval(timer)
       resetGame()
       new Audio(endGameSound).play()
     }
-  });
-};
+  })
+}
 
 const selectDifficulties = (mode) => {
-  currentMode.value = mode;
+  currentMode.value = mode
   switch (mode) {
     case 3:
-      selectedDiff.value = "EASY";
-      break;
+      selectedDiff.value = "EASY"
+      break
     case 2:
-      selectedDiff.value = "NORMAL";
-      break;
+      selectedDiff.value = "NORMAL"
+      break
     case 1:
-      selectedDiff.value = "HARD";
-      break;
+      selectedDiff.value = "HARD"
+      break
   }
-};
+}
 </script>
 
 <template>
@@ -345,11 +346,15 @@ const selectDifficulties = (mode) => {
     v-if="showPopupTutorial"
     class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
   >
-    <div class="w-full sm:w-96 lg:w-1/2 text-center bg-white p-8 rounded-lg">
-      <h1 class="text-2xl font-bold mb-4 text-black">This is a tutorial</h1>
+    <div
+      class="max-sm:h-4/5 max-sm:overflow-y-scroll text-center bg-white p-8 rounded-lg"
+    >
+      <h1 class="text-2xl font-bold underline mb-4 text-black">Tutorial</h1>
 
-      <div class="flex flex-col gap-y-10">
-        <div class="flex gap-x-5 max-sm:flex-col items-center text-black">
+      <div class="flex flex-col gap-y-10 max-sm:gap-y-5">
+        <div
+          class="flex gap-x-5 max-sm:flex-col items-center justify-between text-black"
+        >
           The player must choose at least one difficulty level and game size to
           be able to play.
           <img
@@ -359,7 +364,9 @@ const selectDifficulties = (mode) => {
           />
         </div>
 
-        <div class="flex gap-x-5  max-sm:flex-col items-center text-black">
+        <div
+          class="flex gap-x-5 max-sm:flex-col items-center justify-between text-black"
+        >
           The player needs to click the play button to start the game.
           <img
             src="/src/assets/gif/tutorial/step-2.gif"
@@ -368,7 +375,9 @@ const selectDifficulties = (mode) => {
           />
         </div>
 
-        <div class="flex gap-x-5 max-sm:flex-col items-center text-black">
+        <div
+          class="flex gap-x-5 max-sm:flex-col items-center justify-between text-black"
+        >
           The player needs to click the correct colors based on what Simon has
           told them to do.
           <img
@@ -387,6 +396,7 @@ const selectDifficulties = (mode) => {
       </button>
     </div>
   </section>
+
   <ul class="floating-square">
     <li
       v-for="i in 10"
@@ -453,7 +463,7 @@ const selectDifficulties = (mode) => {
 
     <div
       class="flex justify-between w-96 my-4 max-sm:w-80 rainbow p-4 rounded-2xl border-8 transition-colors"
-      :style="{ 'border-color': animationColor }"
+      :style="{'border-color': animationColor}"
     >
       <span
         class="countdown font-mono text-2xl"
