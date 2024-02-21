@@ -6,9 +6,12 @@ import pocketWatch from "./assets/animation_components/pocket-watch.vue";
 import simonHead from "./assets/animation_components/simon-head.vue";
 
 // [Nxts0] Toggle Theme , Handle Player Click Variable
-const isDark = ref(false);
-const logLst = [];
-let logIndex = 0;
+
+const isDark = ref(false)
+const logLst = []
+let logIndex = 0
+const clickSound = new URL('/src/assets/sounds/clickSound.mp3', import.meta.url);
+const endGameSound = new URL('/src/assets/sounds/endGameSound.mp3', import.meta.url);
 
 // [papangkorn00] Homepage UI Variable , Handle Malfunction Player Input
 let disableInterrupt = true;
@@ -142,8 +145,10 @@ const playerClick = (event) => {
     traceButtonIndex.value = -1;
   }, 100);
   if (logLst[logIndex] === traces[logIndex]) {
-    new Audio("/src/assets/sounds/clickSound.mp3").play();
-    logIndex++;
+    new Audio(
+      clickSound
+    ).play()
+    logIndex++
     if (logLst.length === traces.length) {
       logLst.splice(0, logLst.length); // reset Array
       logIndex = 0;
@@ -193,9 +198,9 @@ const playerTimer = () => {
   }, 1000);
   watch(showPopupEnd, () => {
     if (showPopupEnd.value) {
-      clearInterval(timer);
-      resetGame();
-      new Audio("/src/assets/sounds/endGameSound.mp3").play();
+      clearInterval(timer)
+      resetGame()
+      new Audio(endGameSound).play()
     }
   });
 };
