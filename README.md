@@ -46,7 +46,7 @@ https://github.com/Tinnapop13/PROJECT1-SEC-1-XiaoYiLobsterSlayerTeam/assets/1107
 ## GROWTH 📈
 ### Each member's learning in the past 5 weeks 
 - Natsaran Sae-oueng 65130500022 -
-- Tinnapop Tienbang 65130500023 -
+- Tinnapop Tienbang 65130500023 - setTimeout & setInterval , vue Transition built-in , Watchers , Conditional Rendering , Reactivity Fundamental
 - Papangkorn Kijsakulrat 65130500041 - Vue CompositionAPI, Vue Reactive, Elements of Vue 
 - Phatcharadol Thangplub 65130500046 - Have more familiar with JS syntax and coding style, Have more clear picture in web development process, Vue directive
 
