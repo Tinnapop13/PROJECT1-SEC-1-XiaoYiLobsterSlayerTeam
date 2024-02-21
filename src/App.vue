@@ -8,7 +8,7 @@ import simonHead from "./assets/animation_components/simon-head.vue"
 // [Nxts0] Toggle Theme , Handle Player Click Variable
 
 const isDark = ref(false)
-const logLst = []
+const logList = []
 let logIndex = 0
 const clickSound = new URL("/src/assets/sounds/clickSound.mp3", import.meta.url)
 const endGameSound = new URL(
@@ -25,8 +25,8 @@ const currentMode = ref(0)
 
 // [phatcharadol] Game Result Variable , Game Result UI Variable , Timer Variable
 const showPopupEnd = ref(false)
-const firstUint = ref(59)
-const secondUint = ref(9)
+const firstUnit = ref(59)
+const secondUnit = ref(9)
 const playerLog = ref([{round: 0}])
 const round = ref(0)
 const selectedDiff = ref("")
@@ -72,14 +72,14 @@ const pageTransition = () => {
 
 const resetGame = () => {
   playerLog.value.push({
-    time: `${secondUint.value}:${firstUint.value}`,
+    time: `${secondUnit.value}:${firstUnit.value}`,
     round: round.value,
   })
   gameRoundPointer = 0
   currentPointer = 0
   traceButtonIndex.value = -1
   traces.splice(0, traces.length)
-  logLst.splice(0, logLst.length)
+  logList.splice(0, logList.length)
   logIndex = 0
 }
 
@@ -143,15 +143,15 @@ const toggleDark = () => {
 const playerClick = (event) => {
   let itemClick = Number(event.target.id)
   traceButtonIndex.value = itemClick
-  logLst.push(itemClick)
+  logList.push(itemClick)
   setTimeout(() => {
     traceButtonIndex.value = -1
   }, 100)
-  if (logLst[logIndex] === traces[logIndex]) {
+  if (logList[logIndex] === traces[logIndex]) {
     new Audio(clickSound).play()
     logIndex++
-    if (logLst.length === traces.length) {
-      logLst.splice(0, logLst.length) // reset Array
+    if (logList.length === traces.length) {
+      logList.splice(0, logList.length) // reset Array
       logIndex = 0
       round.value++
       gameRoundPointer = 0
@@ -159,7 +159,7 @@ const playerClick = (event) => {
       displayTrace()
     }
   } else {
-    logLst.splice(0, logLst.length)
+    logList.splice(0, logList.length)
     traces.splice(0, traces.length)
     logIndex = 0
     disableInterrupt = true
@@ -171,21 +171,21 @@ const playerClick = (event) => {
 const togglePopupEnd = () => {
   showPopupEnd.value = !showPopupEnd.value
   round.value = 0
-  firstUint.value = 59
-  secondUint.value = 9
+  firstUnit.value = 59
+  secondUnit.value = 9
   disableInterrupt = true
   playerLog.value = [{round: 0}]
 }
 
 const playerTimer = () => {
   const timer = setInterval(() => {
-    firstUint.value--
-    if (firstUint.value < 10) firstUint.value = `0${firstUint.value}`
-    if (firstUint.value == 0) {
-      if (secondUint.value > 0) {
-        secondUint.value--
+    firstUnit.value--
+    if (firstUnit.value < 10) firstUnit.value = `0${firstUnit.value}`
+    if (firstUnit.value == 0) {
+      if (secondUnit.value > 0) {
+        secondUnit.value--
       }
-      if (secondUint.value === 0) {
+      if (secondUnit.value === 0) {
         timeOutCount++
       }
       if (timeOutCount === 2) {
@@ -193,7 +193,7 @@ const playerTimer = () => {
         showPopupEnd.value = true
       }
       if (timeOutCount !== 2) {
-        firstUint.value = 59
+        firstUnit.value = 59
       }
     }
   }, 1000)
@@ -233,11 +233,11 @@ const selectDifficulties = (mode) => {
         : 'rgba(255, 255, 255, .9)',
     }"
   >
-    <div class="flex margin mt-3 items-center justify-end" v-if="isDark">
+    <div class="flex mt-3 items-center justify-end" v-if="isDark">
       <img src="/src/assets/svg/dark-theme-moon.svg" class="size-6 mx-3" />
       <input type="checkbox" class="toggle" checked @click="toggleDark()" />
     </div>
-    <div class="flex margin mt-3 items-center justify-end" v-else>
+    <div class="flex mt-3 items-center justify-end" v-else>
       <img src="/src/assets/svg/light-theme-sun.svg" class="size-6 mx-3" />
       <input type="checkbox" class="toggle" @click="toggleDark()" />
     </div>
@@ -440,11 +440,11 @@ const selectDifficulties = (mode) => {
         : 'rgba(255, 255, 255, 0.9)',
     }"
   >
-    <div class="flex margin mt-3 items-center" v-if="isDark">
+    <div class="flex mt-3 items-center" v-if="isDark">
       <img src="/src/assets/svg/dark-theme-moon.svg" class="size-6 mx-3" />
       <input type="checkbox" class="toggle" checked @click="toggleDark()" />
     </div>
-    <div class="flex margin mt-3 items-center" v-else>
+    <div class="flex mt-3 items-center" v-else>
       <img src="/src/assets/svg/light-theme-sun.svg" class="size-6 mx-3" />
       <input type="checkbox" class="toggle" @click="toggleDark()" />
     </div>
@@ -473,8 +473,8 @@ const selectDifficulties = (mode) => {
       <span
         class="countdown font-mono text-2xl"
         :class="isDark ? 'text-white' : 'text-slate-700'"
-        style="--value:${secondUint} : ${firstUint} "
-        >{{ secondUint }} : {{ firstUint }}</span
+        style="--value:${secondUnit} : ${firstUnit} "
+        >{{ secondUnit }} : {{ firstUnit }}</span
       >
     </div>
 
